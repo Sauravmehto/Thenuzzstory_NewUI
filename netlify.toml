@@ -1,0 +1,12 @@
+# Netlify builds this Next.js app (pages + /api routes).
+# Do not set a static publish folder such as "out" or "public".
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Latest Next.js runtime. Leave this unpinned so Netlify updates it.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

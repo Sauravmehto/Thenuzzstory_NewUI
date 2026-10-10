@@ -1,0 +1,547 @@
+/* ─── Tablet (769px – 1200px) ────────────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1200px) {
+  /* The wrapped sections (MotionCards, ServiceCards) bring their own padding,
+     so the 200px wrapper padding just stacks into dead space. Zero it and let
+     the inner sections own the rhythm. */
+  .content-section {
+    padding: 0 20px;
+  }
+
+  /* The marquee only had desktop + phone rules, so on tablets it kept
+     min-height:100vh, a 120px heading gap and an 850px fixed column — all of
+     which read as dead space. Size it to content instead. */
+  .Double-marquee {
+    min-height: 0;
+    padding: 56px 40px;
+    gap: 32px;
+  }
+
+  .marquee-left h2 {
+    margin-bottom: 48px;
+  }
+
+  .marquee-right {
+    height: 560px;
+    margin-right: 0;
+  }
+
+  /* Full-viewport hero reads as too tall once tablet chrome (nav, address
+     bar) eats into the vertical space — shrink it so content below is
+     reachable without a huge scroll. */
+  .vimeo-hero {
+    height: calc(80vh - 24px);
+    height: calc(80svh - 24px);
+  }
+}
+
+/* ─── Medium screens (≤ 900px) ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .footer-top {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .footer-column h3,
+  .footer-column address,
+  .footer-email {
+    font-size: 1.5rem;
+  }
+
+  .footer-big-text {
+    font-size: clamp(1.85rem, 8.6vw, 6rem);
+  }
+}
+
+/* ─── Mobile (≤ 768px) ───────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* ── Navbar ─────────────────────── */
+  .navbar {
+    padding: 14px 16px;
+  }
+
+  .cozy-logo {
+    width: 124px;
+    height: auto;
+  }
+
+  .logo-work-container {
+    width: 48px;
+    height: 44px;
+  }
+
+  .logo-work-text {
+    font-size: 1.4rem;
+    margin-left: 52px;
+  }
+
+  .nav-bar__whatsapp-svg {
+    width: 26px;
+  }
+
+  /* ── Header Hero ────────────────── */
+  .header-content {
+    height: 100svh;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+  }
+
+  /* ── Content / Hero Title ───────── */
+  /* Inner sections pad themselves — drop the wrapper's top padding so it
+     doesn't stack into a big empty band above each section. */
+  .content-section {
+    padding: 0;
+    overflow: visible;
+  }
+
+  .main-title {
+    font-size: 3rem;
+    letter-spacing: -2px;
+  }
+
+  .title-underline-svg {
+    width: 100px;
+    bottom: -10px;
+  }
+
+  .title-container {
+    margin-bottom: 50px;
+  }
+}
+
+/* ─── Cards — static 2-column grid, ≤ 1440px. Keep the breakpoint in sync
+   with DESKTOP_MIN in ServiceCards.jsx (desktop fan needs ~1400px). All
+   cards render in normal document flow — no scroll container, no autoplay,
+   no scroll-triggered animation. ─────────────────────────────────────────── */
+@media (max-width: 1440px) {
+  .cards-wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    height: auto;
+    margin: 24px auto 0;
+    /* top padding keeps the stickers (which poke ~50px above each card)
+       inside the wrapper, where overflow would otherwise clip them */
+    padding: 64px 24px 32px;
+    gap: 24px 16px;
+  }
+
+  .card {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    min-height: 380px;
+    height: auto;
+  }
+
+  /* Only show 5 cards on the large-screen fan (DESKTOP_MIN) — below that,
+     hide the 5th so the grid stays a clean 4-card, 2-column layout. */
+  .card:nth-child(5) {
+    display: none;
+  }
+
+  /* gentle alternating tilt keeps the hand-placed look without the fan */
+  .card:nth-child(odd) {
+    transform: rotate(2deg);
+  }
+
+  .card:nth-child(even) {
+    transform: rotate(-2deg);
+  }
+
+  .card-sticker {
+    pointer-events: none;
+  }
+}
+
+/* Single column on phones — a 2-up grid squeezes the list text and wraps
+   awkwardly (e.g. "Puzzle Feeders", "Slow Feeders") even on larger phones
+   like iPhone 14 Pro Max (430px). Keep 2-up for tablet and up. */
+@media (max-width: 768px) {
+  .cards-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Mobile (≤ 768px) continued ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* ── Double Marquee ─────────────── */
+  .Double-marquee {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 60px 24px 0;
+    gap: 0;
+    min-height: unset;
+  }
+
+  .marquee-left {
+    max-width: 100%;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: 340px;
+  }
+
+  .marquee-text-container {
+    text-align: left;
+  }
+
+  .marquee-left h2 {
+    font-size: 2.6rem;
+    letter-spacing: -1.5px;
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+
+  .marquee-blob-container {
+    width: 240px;
+    height: 280px;
+    top: 45%;
+    left: 20%;
+  }
+
+  .marquee-svg-item:nth-child(1) {
+    width: 60px;
+    bottom: 10%;
+    left: 55%;
+  }
+
+  .marquee-svg-item:nth-child(2) {
+    width: 220px;
+    bottom: -5%;
+    left: 55%;
+  }
+
+  .marquee-underline {
+    top: 5rem;
+    right: auto;
+    left: 9.5rem;
+    width: 70px;
+  }
+
+  /* ── Logo columns → 2-row auto-scrolling marquee ── */
+  .marquee-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    padding: 20px 0 32px;
+    overflow: hidden;
+  }
+
+  .marquee-column {
+    height: 130px;
+    overflow: hidden;
+  }
+
+  .marquee-column::before,
+  .marquee-column::after {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: auto;
+  }
+
+  .marquee-column::before {
+    background: linear-gradient(to right, var(--bg-color) 0%, transparent 100%);
+  }
+
+  .marquee-column::after {
+    left: auto;
+    right: 0;
+    background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%);
+  }
+
+  .marquee-track {
+    flex-direction: row;
+    height: 100%;
+    gap: 8px;
+  }
+
+  .marquee-column:nth-child(1) .marquee-track {
+    animation: marqueeLeft 18s linear infinite;
+  }
+
+  .marquee-column:nth-child(2) .marquee-track {
+    animation: marqueeRight 18s linear infinite;
+  }
+
+  .marquee-item {
+    width: 130px;
+    height: 130px;
+    flex-shrink: 0;
+  }
+
+  /* ── Footer ─────────────────────── */
+  .main-footer {
+    padding: 6px;
+  }
+
+  .footer-inner {
+    padding: 50px 20px 30px;
+    border-radius: 14px;
+    /* Let content size the footer — forcing a full viewport height left a
+       huge empty blue block between the links and the wordmark. */
+    min-height: 0;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .footer-column h3 {
+    font-size: 1.4rem;
+    letter-spacing: -0.5px;
+  }
+
+  .footer-column address {
+    font-size: 1.25rem;
+  }
+
+  .footer-email {
+    font-size: 1.3rem;
+  }
+
+  .footer-whatsapp {
+    font-size: 1.1rem;
+    margin-top: -6px;
+  }
+
+  .footer-map-link {
+    font-size: 0.95rem;
+  }
+
+  /* ── Footer Stickers (mobile) ──── */
+  .sticker-boom {
+    left: 2%;
+    bottom: 10%;
+    width: 90px;
+  }
+
+  .sticker-smiley {
+    left: 30%;
+    bottom: 5%;
+    width: 90px;
+  }
+
+  .sticker-heart {
+    left: 50%;
+    bottom: 18%;
+    width: 85px;
+  }
+
+  .footer-sticker.sticker-hands {
+    left: 60%;
+    bottom: 2%;
+    width: 90px;
+  }
+
+  .footer-sticker.sticker-100 {
+    left: 72%;
+    bottom: 20%;
+    width: 80px;
+  }
+
+  .footer-sticker.sticker-camera {
+    right: 2%;
+    bottom: 8%;
+    width: 85px;
+  }
+
+  /* ── Footer wordmark ────────────── */
+  .footer-bottom {
+    /* Just enough head-room for the sticker cluster above the wordmark */
+    margin-top: 130px;
+  }
+
+  /* ── Credits badge ──────────────── */
+  .footer-credits-wrapper {
+    margin-right: -15px;
+    margin-bottom: -15px;
+  }
+
+  .footer-credits {
+    font-size: 0.75rem;
+  }
+
+  .credits-box {
+    padding: 16px 20px;
+    gap: 20px;
+  }
+
+  .credits-label {
+    font-size: 0.85rem;
+  }
+
+  .credits-name {
+    font-size: 0.95rem;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   HOMEPAGE ANIMATED SECTIONS — full responsiveness
+   (MotionCards, HorizontalWords, VimeoHero, custom cursor) added so the
+   landing page holds up on tablet + phone the way the shop/about/contact
+   pages already do.
+════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Touch / coarse-pointer devices ─────────────────────────────────────────
+   The mouse-follow bubbles have no meaning without a hovering pointer — hide
+   them so they can never get stuck on-screen on phones/tablets.                */
+@media (hover: none), (pointer: coarse) {
+  .cursor-bubble,
+  .vimeo-mute-bubble {
+    display: none !important;
+  }
+}
+
+/* ─── MotionCards — tablet ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .motion-card-section {
+    padding: 56px 32px 48px;
+  }
+
+  .motion-card__heading {
+    margin-bottom: 36px;
+  }
+
+  .motion-card__title {
+    font-size: clamp(2.4rem, 8vw, 6rem);
+    letter-spacing: -2px;
+  }
+
+  .motion-card__subtitle {
+    font-size: clamp(2.2rem, 8vw, 6rem);
+    letter-spacing: -1px;
+    top: -18px;
+  }
+
+  .motion-card__underline-svg {
+    max-width: 60vw;
+  }
+
+  .motion-card__card {
+    width: 22vw;
+    height: auto;
+  }
+
+  .motion-card__blob {
+    width: 60vw;
+    height: 52vw;
+    transform: translate(-50%, -50%);
+  }
+
+  .motion-card__floating-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* ─── MotionCards — mobile ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .motion-card-section {
+    padding: 40px 20px 32px;
+  }
+
+  .motion-card__heading {
+    margin-bottom: 24px;
+  }
+
+  .motion-card__title {
+    font-size: clamp(2.2rem, 11vw, 3.4rem);
+    letter-spacing: -1.5px;
+  }
+
+  .motion-card__subtitle {
+    font-size: clamp(2rem, 10vw, 3rem);
+    top: -8px;
+  }
+
+  .motion-card__sticker--top {
+    width: 84px;
+    height: auto;
+    top: -6px;
+    right: -6px;
+  }
+
+  .motion-card__underline-svg {
+    max-width: 220px;
+    margin-top: -18px;
+  }
+
+  .motion-card__cards-area {
+    height: 230px;
+    max-width: 100%;
+    margin: 24px auto 40px;
+  }
+
+  .motion-card__card {
+    width: 26vw;
+    height: auto;
+    max-width: 150px;
+  }
+
+  .motion-card__blob {
+    width: 78vw;
+    height: 62vw;
+    transform: translate(-50%, -50%);
+  }
+
+  .motion-card__floating-label {
+    padding: 3px 10px;
+  }
+
+  .motion-card__floating-text {
+    font-size: 0.72rem;
+  }
+
+  .motion-card__floating-label--pink {
+    top: 4%;
+    left: 28%;
+  }
+
+  .motion-card__floating-label--orange {
+    top: 94%;
+    left: 46%;
+  }
+
+  .motion-card__floating-label--red {
+    top: 52%;
+    left: 62%;
+  }
+
+  .motion-card__description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+}
+
+/* NOTE: HorizontalWords mobile rules live in horizontal-words.css — that file
+   is imported by the component itself and loads AFTER this one, so overrides
+   placed here would lose the cascade. */
+
+/* ─── VimeoHero + Showreel — pull chrome in from the edges on phones ──────── */
+@media (max-width: 768px) {
+  .home-header__title {
+    bottom: 56px;
+    padding: 0 24px;
+  }
+
+  .vimeo-hero {
+    height: calc(65vh - 24px);
+    height: calc(65svh - 24px);
+  }
+
+  .vimeo-hero__controls {
+    bottom: 20px;
+    left: 24px;
+  }
+}

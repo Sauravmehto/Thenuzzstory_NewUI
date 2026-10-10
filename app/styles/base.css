@@ -1,0 +1,100 @@
+/* ─── Fonts ─────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/DMSans-VariableFont_opsz,wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Epilogue";
+  src: url("/fonts/Epilogue-VariableFont_wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* ─── Design Tokens ─────────────────────────────────────────────────────────── */
+:root {
+  --color-green: #29725f;
+  --color-lightblue: #82a0ff;
+  --color-darkblue: #4b69f0;
+  --color-lightgreen: #e6fab9;
+  /* Brand gold from the logo. --color-orange is kept as an alias so older
+     palette references (category accents, stickers, scribble) follow it. */
+  --color-yellow: #f9c619;
+  --color-yellow-dark: #e5ad00;  /* hover / pressed */
+  --color-yellow-ink: #8a6400;   /* gold for text on light backgrounds (5.4:1 on white) */
+  --color-navy: #00387d;         /* text on yellow (7:1), the logo's own pairing */
+  --color-orange: var(--color-yellow);
+  --color-maroon: #a0325a;
+  --color-pink: #f0befa;
+  --bg-color: #f0ebe6;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-dark: #1a1a1a;
+  --color-black-soft: #111111;
+  --color-black-deep: #0a0a0a;
+
+  /* Motion tokens: every UI transition picks from these, so the whole site
+     moves with one rhythm. (Hand-tuned GSAP timelines keep their own values.) */
+  --dur-instant: 100ms;
+  --dur-fast: 200ms;   /* hovers, presses, colour changes */
+  --dur-base: 300ms;   /* small movements: badges, pills, toasts */
+  --dur-slow: 450ms;   /* entrances, drawers, dialogs */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* default: fast start, soft landing */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);    /* things moving across the screen */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* playful overshoot, use sparingly */
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background-color: var(--color-pink);
+  color: var(--color-black);
+}
+
+/* Prevent selection on non-text elements */
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ─── Base Elements ──────────────────────────────────────────────────────────── */
+body {
+  background-color: var(--bg-color);
+  font-family: "Epilogue", sans-serif;
+  color: var(--color-dark);
+  /* `clip` kills stray horizontal overflow (100vw rounding, wide decorative
+       SVGs, the full-bleed transition overlay) WITHOUT creating a scroll
+       container — so `position: sticky` headers on the shop/about/etc. pages
+       keep working. */
+  overflow-x: clip;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor:
+    url("/assets/Cursor SVG/cursor-default.svg") 2 0,
+    auto;
+}
+
+html {
+  overflow-x: clip;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}

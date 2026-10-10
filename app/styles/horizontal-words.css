@@ -1,0 +1,246 @@
+/* Styles for HorizontalWords section */
+
+.horizontal-words-section {
+  position: relative;
+  width: 100%;
+  /* Keep section nicely sized so it takes up full viewport.
+     svh = small viewport height, so the mobile URL bar collapsing/expanding
+     doesn't resize the pinned section mid-scroll (which makes GSAP jump). */
+  height: 100vh;
+  height: 100svh;
+  background-color: var(--bg-color);
+  overflow: hidden;
+  /* Removed flex to control absolute positioning manually */
+}
+
+/* User provided CSS */
+.horizontal-words__relative {
+  /* Remove huge margin-left/right so it starts directly at viewport edge */
+  padding-left: 25vw;
+  padding-right: 25vw;
+  position: absolute;
+  /* Lock to track */
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.horizontal-words__arrow-svg {
+  width: 23.75em;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-160%, -35%);
+}
+
+.horizontal-words__bottom-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 9em);
+  width: max-content;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+}
+
+.horizontal-words__bottom-text-l {
+  max-width: 24em;
+  /* Scales smoothly from phones (~15px) to wide screens (24px). */
+  font-size: clamp(0.95rem, 0.8rem + 0.55vw, 1.5rem);
+  line-height: 1.4;
+  font-weight: 400;
+  margin: 0;
+  /* Removed the hacky centered margin */
+}
+
+.horizontal-words__sticker-svg {
+  width: 100%;
+  position: relative;
+}
+
+.horizontal-words__sticker-cursor {
+  width: 7.5em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 10%);
+  z-index: 10;
+  /* Put sticker over text */
+}
+
+.horizontal-words__sticker-phone {
+  width: 8em;
+  position: absolute;
+  top: 50%;
+  left: 79%;
+  transform: translate(-50%, -100%);
+  z-index: 10;
+  /* Put sticker over text */
+}
+
+.horizontal-words__arrow-end-svg {
+  width: 8.4375em;
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(50%);
+}
+
+.horizontal-words__sticker-watch {
+  width: 6em;
+  position: absolute;
+  top: 50%;
+  left: 17.5%;
+  transform: translate(-50%, -110%);
+  z-index: 10;
+  /* Put sticker over text */
+}
+
+.horizontal-words__placeholder-left-svg {
+  opacity: 0.05;
+  width: 90em;
+  position: absolute;
+  top: 50%;
+  right: 101.5%;
+  transform: translate(0%, -50%);
+}
+
+.horizontal-words__h2 {
+  font-size: 8vw;
+  line-height: 1;
+  font-weight: 800;
+  margin: 0;
+  text-transform: lowercase;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────
+   Kept in THIS file (not responsive.css) because the component imports this
+   stylesheet directly, so it loads last and wins the cascade.                 */
+/* Mobile & tablet (≤1024px): the JSX swaps the pinned horizontal scroll for a
+   vertical stagger reveal, so the layout here is a normal auto-height block with
+   the headline wrapped onto multiple centered lines. No pin, no scroll-jacking. */
+@media (max-width: 1024px) {
+  .horizontal-words-section {
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 56px 24px;
+  }
+
+  /* Drop the absolute track positioning and let the words wrap. */
+  .horizontal-words__relative {
+    position: static;
+    transform: none;
+    white-space: normal;
+    padding: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .horizontal-words__h2 {
+    white-space: normal;
+    font-size: 12vw;
+    line-height: 1.05;
+    text-align: center;
+  }
+
+  /* The arrow is anchored to fly off to the left on the wide track — rein it
+     in so it stays on-screen above the wrapped headline. */
+  .horizontal-words__arrow-svg {
+    width: 12em;
+    transform: translate(-55%, -15%);
+  }
+
+  /* Flow the paragraph below the headline instead of absolute-positioning it. */
+  .horizontal-words__bottom-text {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 40em;
+    margin: 1.75rem auto 0;
+    padding: 0 22px;
+    box-sizing: border-box;
+  }
+
+  .horizontal-words__bottom-text-l {
+    max-width: 100%;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 768px) {
+  .horizontal-words__sticker-cursor {
+    width: 5em;
+  }
+
+  .horizontal-words__sticker-phone {
+    width: 5.5em;
+  }
+
+  .horizontal-words__sticker-watch {
+    width: 4.5em;
+  }
+
+  /* Wrapped on a phone, the headline can afford to read big. */
+  .horizontal-words__h2 {
+    font-size: 15vw;
+  }
+}
+
+/* ─── Reduced motion: static, wrapped message (no pin, no scrub) ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  .horizontal-words-section {
+    height: auto;
+    padding: 96px 24px;
+  }
+
+  .horizontal-words__relative {
+    position: static;
+    transform: none;
+    white-space: normal;
+    display: block;
+    padding: 0;
+    text-align: center;
+  }
+
+  .horizontal-words__h2 {
+    white-space: normal;
+    font-size: clamp(2rem, 7vw, 5rem);
+  }
+
+  /* The h2 lives inside .horizontal-words__sticker-svg, so hide only the
+     decorative svg children, not the wrapper itself. */
+  .horizontal-words__sticker-svg {
+    width: auto;
+    position: static;
+  }
+
+  .horizontal-words__sticker-svg > svg,
+  .horizontal-words__arrow-end-svg,
+  .horizontal-words__placeholder-left-svg {
+    display: none;
+  }
+
+  .horizontal-words__bottom-text {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: 2rem;
+  }
+}
+
+/* Each word stays together when the headline wraps. */
+.horizontal-words__word {
+  display: inline-block;
+  white-space: nowrap;
+}

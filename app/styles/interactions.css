@@ -1,0 +1,287 @@
+/* ─── CozyPaws interaction language ──────────────────────────────────────────
+   One consistent "playful & bold" hover/active vocabulary for the whole site.
+
+   LINKS   → color shift to orange + an underline that draws in from the left.
+             The active/current item keeps a solid orange underline.
+   BUTTONS → lift up + soft shadow on hover, press down on :active.
+             Primary CTAs add a touch of scale/tilt for personality.
+
+   Loaded last in globals.css so it can layer on top of per-component styles.
+   Respects prefers-reduced-motion (transforms disabled below).
+──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --hover-ease: var(--ease-out); /* alias kept for older rules */
+  --accent-orange: var(--color-yellow);
+}
+
+/* ── Reusable animated underline (shared by nav + footer links) ────────────── */
+.link-underline,
+.cozy-header__nav a,
+.footer-email,
+.footer-whatsapp {
+  position: relative;
+}
+
+.link-underline::after,
+.cozy-header__nav a::after,
+.footer-email::after,
+.footer-whatsapp::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--color-yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--hover-ease);
+}
+
+.cozy-header__nav a.is-active::after {
+  transform: scaleX(1);
+}
+
+/* ── CozyHero top nav ──────────────────────────────────────────────────────── */
+.cozy-header__nav a {
+  transition: color var(--dur-fast) ease;
+}
+
+.cozy-header__nav a.is-active {
+  color: #1a3d1a;
+}
+
+/* ── Footer links (footer.css previously had no hover states) ──────────────── */
+.footer-email,
+.footer-whatsapp {
+  transition: color var(--dur-fast) ease;
+}
+
+.footer-map-link {
+  transition: color var(--dur-fast) ease;
+}
+
+.footer-socials a {
+  transition:
+    color var(--dur-fast) ease,
+    transform var(--dur-fast) var(--hover-ease);
+}
+
+/* ── Scroll-navbar popout ──────────────────────────────────────────────────── */
+.nav-work-item {
+  transition: transform var(--dur-fast) var(--hover-ease);
+}
+
+.nav-work-item__img {
+  transition: transform var(--dur-base) var(--hover-ease);
+}
+
+.nav-work-title {
+  transition: color var(--dur-fast) ease;
+}
+
+.nav-work-btn {
+  transition:
+    transform var(--dur-fast) var(--hover-ease),
+    background-color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease;
+}
+
+.nav-work-btn:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.nav-wa-link {
+  transition: color var(--dur-fast) ease;
+}
+
+/* ── Primary CTA buttons — lift + shadow + a little life ───────────────────── */
+.cozy-btn-orange,
+.vimeo-hero__btn,
+.about-cta__btn,
+.shop-card__add,
+.product-add,
+.product-buy-now,
+.contact-submit,
+.contact-topic,
+.shop-filter-pill,
+.cart-summary__checkout {
+  transition:
+    transform var(--dur-fast) var(--hover-ease),
+    box-shadow var(--dur-fast) ease,
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.cozy-btn-orange:active,
+.vimeo-hero__btn:active,
+.about-cta__btn:active,
+.product-add:active,
+.contact-submit:active,
+.cart-summary__checkout:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* Secondary / outline buttons — lift without the orange glow */
+.shop-card__add:active,
+.product-buy-now:active,
+.shop-filter-pill:active,
+.contact-topic:active {
+  transform: translateY(0);
+}
+
+/* ── Round icon buttons — pop + gentle rotate ──────────────────────────────── */
+.cozy-icon-btn {
+  transition:
+    background var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    transform var(--dur-fast) var(--hover-ease),
+    box-shadow var(--dur-fast) ease;
+}
+
+.cozy-icon-btn:active {
+  transform: translateY(0) rotate(0deg) scale(0.95);
+}
+
+/* ── Hover effects only where hover exists ─────────────────────────────────
+   On touch screens :hover "sticks" after a tap (a lifted button stays lifted),
+   so every hover lift/colour lives behind a real-pointer check. :active press
+   feedback above still works everywhere. */
+@media (hover: hover) and (pointer: fine) {
+  .link-underline:hover::after,
+  .cozy-header__nav a:hover::after,
+  .footer-email:hover::after,
+  .footer-whatsapp:hover::after {
+    transform: scaleX(1);
+  }
+
+  .cozy-header__nav a:hover {
+    color: #1a3d1a;
+  }
+
+  .footer-email:hover,
+  .footer-whatsapp:hover,
+  .footer-map-link:hover {
+    color: var(--color-yellow);
+  }
+
+  .footer-socials a:hover {
+    color: var(--color-yellow);
+  }
+
+  .nav-work-item:hover {
+    transform: translateX(4px);
+  }
+
+  .nav-work-item:hover .nav-work-item__img {
+    transform: scale(1.08);
+  }
+
+  .nav-work-item:hover .nav-work-title {
+    color: var(--color-yellow-dark);
+  }
+
+  .nav-work-btn:hover {
+    background-color: var(--color-yellow);
+    color: var(--color-navy);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .nav-wa-link:hover {
+    color: var(--color-yellow-dark);
+  }
+
+  .cozy-btn-orange:hover,
+  .vimeo-hero__btn:hover,
+  .about-cta__btn:hover,
+  .product-add:hover,
+  .contact-submit:hover:not(:disabled),
+  .cart-summary__checkout:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 26px rgba(249, 198, 25, 0.28);
+  }
+
+  .shop-card__add:hover,
+  .product-buy-now:hover,
+  .shop-filter-pill:hover,
+  .contact-topic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(26, 61, 26, 0.14);
+  }
+
+  .cozy-icon-btn:hover {
+    transform: translateY(-2px) rotate(-6deg);
+    box-shadow: 0 8px 18px rgba(26, 61, 26, 0.18);
+  }
+}
+
+/* Press states re-stated after the hover block so :active still wins while
+   a pressed button is also hovered (same specificity, later rule wins). */
+.nav-work-btn:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.cozy-btn-orange:active,
+.vimeo-hero__btn:active,
+.about-cta__btn:active,
+.product-add:active,
+.contact-submit:active,
+.cart-summary__checkout:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.shop-card__add:active,
+.product-buy-now:active,
+.shop-filter-pill:active,
+.contact-topic:active {
+  transform: translateY(0);
+}
+
+.cozy-icon-btn:active {
+  transform: translateY(0) rotate(0deg) scale(0.95);
+}
+
+/* ── Respect reduced motion — keep color feedback, drop the movement ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .cozy-btn-orange,
+  .vimeo-hero__btn,
+  .about-cta__btn,
+  .shop-card__add,
+  .product-add,
+  .product-buy-now,
+  .contact-submit,
+  .contact-topic,
+  .shop-filter-pill,
+  .cart-summary__checkout,
+  .cozy-icon-btn,
+  .nav-work-item,
+  .nav-work-item__img,
+  .nav-work-btn,
+  .footer-socials a {
+    transition:
+      background-color var(--dur-fast) ease,
+      color var(--dur-fast) ease,
+      border-color var(--dur-fast) ease;
+  }
+
+  .cozy-btn-orange:hover,
+  .vimeo-hero__btn:hover,
+  .about-cta__btn:hover,
+  .shop-card__add:hover,
+  .product-add:hover,
+  .product-buy-now:hover,
+  .contact-submit:hover,
+  .shop-filter-pill:hover,
+  .contact-topic:hover,
+  .cart-summary__checkout:hover,
+  .cozy-icon-btn:hover,
+  .nav-work-item:hover,
+  .nav-work-item:hover .nav-work-item__img,
+  .nav-work-btn:hover {
+    transform: none;
+  }
+}

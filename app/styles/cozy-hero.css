@@ -1,0 +1,1204 @@
+/* ─── CozyPaws Hero ─────────────────────────────────────────────────────────
+   Full-viewport pet-store hero shown above the main video hero.
+   Palette: bg #EFFDF0 · dark green #1a3d1a · hover #2a5a2a · orange #E86A10
+──────────────────────────────────────────────────────────────────────────── */
+
+.cozy-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #effdf0;
+  font-family: var(--font-inter), "Inter", sans-serif;
+}
+
+/* Mobile + tablet only: lock hero to the viewport height, using svh so the
+   URL bar showing/hiding doesn't resize it. */
+@media (max-width: 1023px) {
+  .cozy-hero {
+    /* min-height, not height: on short phones (iPhone SE) the content is
+       taller than the screen, and a fixed height clipped the headline. */
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+}
+
+/* Desktop keeps the same viewport-height sizing as before, just without the
+   svh fallback since desktop UI chrome doesn't shift. */
+@media (min-width: 1024px) {
+  .cozy-hero {
+    height: 100vh;
+  }
+}
+
+/* The site navbar is fixed and would overlap the hero's own header. It is
+   hidden by default on any page with the hero (so the very first paint,
+   before JavaScript, is already right), and CozyHero sets
+   html[data-past-hero] once the visitor scrolls past it. The flag lives on
+   <html>, which React never re-creates, so a re-mounted navbar can't lose it. */
+.navbar {
+  transition:
+    color 0.5s var(--ease-in-out),
+    opacity 0.35s ease,
+    visibility 0.35s ease;
+}
+
+html:not([data-past-hero]) body:has(.cozy-hero) .navbar {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+.cozy-header {
+  position: relative;
+  z-index: 30;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #003576;
+  color: #ffffff;
+}
+
+.cozy-header__logo {
+  width: 148px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.cozy-header__nav {
+  display: none;
+  gap: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.cozy-header .cozy-header__nav a,
+.cozy-header .cozy-header__nav a:hover,
+.cozy-header .cozy-header__nav a.is-active {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.cozy-header .cozy-icon-btn:not(.cozy-icon-btn--orange) {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.cozy-header .cozy-icon-btn:not(.cozy-icon-btn--orange):hover {
+  background: #ffffff;
+  color: #00408f;
+}
+
+.cozy-header__nav a:hover {
+  color: #1a3d1a;
+}
+
+.cozy-header__nav a.is-active {
+  color: #111827;
+}
+
+.cozy-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.cozy-icon-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(26, 61, 26, 0.2);
+  background: transparent;
+  color: #1a3d1a;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.cozy-icon-btn:hover {
+  background: #1a3d1a;
+  color: #ffffff;
+}
+
+.cozy-icon-btn--orange {
+  background: var(--color-yellow);
+  border-color: var(--color-yellow);
+  color: var(--color-navy);
+}
+
+.cozy-icon-btn--orange:hover {
+  background: var(--color-yellow-dark);
+}
+
+.cozy-header__search {
+  display: none;
+}
+
+.cozy-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ─── Search overlay ───────────────────────────────────────────────────────── */
+.cozy-search {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(4rem, 14vh, 9rem) 1.25rem 1.25rem;
+}
+
+.cozy-search__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: cozy-fade-in 0.25s ease-out both;
+}
+
+.cozy-search__bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(640px, 100%);
+  background: #ffffff;
+  border-radius: 9999px;
+  padding: 0.55rem 0.6rem 0.55rem 1.25rem;
+  box-shadow: 0 24px 60px rgba(26, 61, 26, 0.28);
+  animation: cozy-fade-up 0.35s var(--ease-out) both;
+}
+
+.cozy-search__icon {
+  width: 22px;
+  height: 22px;
+  color: #1a3d1a;
+  flex-shrink: 0;
+}
+
+.cozy-search__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.05rem;
+  color: #1a3d1a;
+}
+
+.cozy-search__input::placeholder {
+  color: #9ca3af;
+}
+
+.cozy-search__submit {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 9999px;
+  background: var(--color-yellow);
+  color: var(--color-navy);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.4rem;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cozy-search__submit:hover {
+  background: var(--color-yellow-dark);
+  transform: translateY(-1px);
+}
+
+.cozy-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-yellow);
+  border: 2px solid #effdf0;
+  color: var(--color-navy);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cozy-header__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+/* ─── Desktop / tablet stage ───────────────────────────────────────────────── */
+.cozy-hero__stage {
+  position: relative;
+  flex: 1;
+  display: none;
+  overflow: hidden;
+}
+
+.cozy-hero__heading-wrap {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 5.4rem 3rem 0;
+}
+
+.cozy-hero__heading {
+  font-family: var(--font-dm-serif), "DM Serif Display", serif;
+  font-weight: 400;
+  color: #1a3d1a;
+  font-size: clamp(60px, 7.5vw, 110px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.cozy-hero__line {
+  display: block;
+}
+
+.cozy-word {
+  display: inline-block;
+  opacity: 0;
+}
+
+/* ─── Side cards ───────────────────────────────────────────────────────────── */
+.cozy-card {
+  position: absolute;
+  z-index: 20;
+}
+
+.cozy-card--product {
+  top: 50px;
+  left: 3rem;
+  width: clamp(160px, 14vw, 260px);
+}
+
+.cozy-card--video {
+  top: 50px;
+  right: 3rem;
+  width: clamp(120px, 10vw, 177px);
+}
+
+.cozy-card__img-wrap {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  aspect-ratio: 260 / 257;
+}
+
+.cozy-card__img-wrap--video {
+  aspect-ratio: 177 / 287;
+}
+
+.cozy-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cozy-card__arrow-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: clamp(28px, 2.6vw, 40px);
+  height: clamp(28px, 2.6vw, 40px);
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: #00387d;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.cozy-card__arrow-btn:hover {
+  background: #024ca7;
+}
+
+.cozy-card__arrow-btn svg {
+  width: 55%;
+  height: 55%;
+}
+
+.cozy-card__name {
+  margin-top: 0.5rem;
+  color: #374151;
+  font-size: clamp(11px, 0.95vw, 14px);
+}
+
+.cozy-card__price {
+  color: #1a3d1a;
+  font-weight: 700;
+  font-size: clamp(12px, 1.05vw, 16px);
+}
+
+.cozy-card__video-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 0.6rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.cozy-card__video-overlay p {
+  color: #ffffff;
+  font-size: clamp(9px, 0.75vw, 11px);
+  line-height: 1.35;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.cozy-play-btn {
+  width: clamp(34px, 3vw, 48px);
+  height: clamp(34px, 3vw, 48px);
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: #00387d;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cozy-play-btn:hover {
+  background: #024ca7;
+  transform: scale(1.06);
+}
+
+.cozy-play-btn svg {
+  width: 38%;
+  height: 38%;
+  margin-left: 2px;
+}
+
+/* ─── Bottom photos ────────────────────────────────────────────────────────── */
+.cozy-photos {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+}
+
+.cozy-photos__item {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.cozy-photos__item--center {
+  flex: 1.265;
+}
+
+.cozy-photos__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.cozy-photos__item--side img {
+  max-height: min(70vh, 55vw);
+}
+
+.cozy-photos__item--center img {
+  max-height: min(85vh, 70vw);
+}
+
+/* ─── Photo overlays ───────────────────────────────────────────────────────── */
+.cozy-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(20px, 4vh, 50px);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.cozy-overlay--side {
+  color: #1a3d1a;
+  text-shadow: none;
+}
+
+.cozy-overlay__heading {
+  font-family: var(--font-dm-serif), "DM Serif Display", serif;
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 40px);
+  line-height: 1.05;
+}
+
+.cozy-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cozy-avatar-stack {
+  display: flex;
+  align-items: center;
+}
+
+.cozy-avatar-stack img,
+.cozy-avatar-plus {
+  width: clamp(32px, 3vw, 44px);
+  height: clamp(32px, 3vw, 44px);
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  object-fit: cover;
+}
+
+.cozy-avatar-plus {
+  margin-left: -12px;
+  background: #1a3d1a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cozy-avatar-plus svg {
+  width: 45%;
+  height: 45%;
+}
+
+.cozy-stat__value {
+  font-size: clamp(20px, 2.2vw, 32px);
+  font-weight: 600;
+}
+
+.cozy-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+}
+
+.cozy-rating__star {
+  width: clamp(18px, 2vw, 26px);
+  height: clamp(18px, 2vw, 26px);
+  color: var(--color-yellow);
+}
+
+.cozy-btn-orange {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-yellow);
+  color: var(--color-navy);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.7rem 1.4rem;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: clamp(12px, 1vw, 15px);
+  text-decoration: none;
+  text-shadow: none;
+  transition: background 0.2s ease;
+}
+
+.cozy-btn-orange:hover {
+  background: var(--color-yellow-dark);
+}
+
+.cozy-btn-orange__icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ─── Mobile layout ────────────────────────────────────────────────────────── */
+.cozy-mobile {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* `safe`: if the content ever overflows, keep the top (the headline)
+     visible instead of centring it off the top edge. */
+  justify-content: center;
+  justify-content: safe center;
+  overflow: hidden;
+}
+
+/* Short phones: shrink the two cards so the hero still fits one screen. */
+@media (max-width: 767px) and (max-height: 720px) {
+  .cozy-mobile__cards {
+    width: min(100%, 320px);
+    margin-inline: auto;
+  }
+}
+
+.cozy-mobile__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+  padding: 0.5rem 1.25rem 1rem;
+}
+
+.cozy-mobile__title {
+  font-family: var(--font-dm-serif), "DM Serif Display", serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.05;
+  color: #1a3d1a;
+}
+
+.cozy-mobile__subtitle {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.cozy-mobile__cards {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+
+.cozy-mcard {
+  flex: 1;
+  min-width: 0;
+}
+
+.cozy-mcard__img--square {
+  aspect-ratio: 1 / 1;
+}
+
+.cozy-mcard__img--tall {
+  aspect-ratio: 3 / 4;
+}
+
+.cozy-mobile__stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.9rem 1.25rem;
+}
+
+.cozy-mobile__divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(26, 61, 26, 0.25);
+}
+
+.cozy-stat--on-light,
+.cozy-rating--on-light {
+  color: #1a3d1a;
+  text-shadow: none;
+}
+
+.cozy-stat--on-light .cozy-avatar-stack img,
+.cozy-stat--on-light .cozy-avatar-plus {
+  border-color: #effdf0;
+}
+
+.cozy-photos--mobile {
+  position: relative;
+  margin-top: clamp(0.75rem, 3vh, 1.5rem);
+}
+
+.cozy-photos--mobile .cozy-photos__item img {
+  max-height: none;
+}
+
+/* ─── Breakpoints ──────────────────────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .cozy-header__search {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .cozy-header__nav {
+    display: flex;
+  }
+}
+
+/* Tablet (600–1023px): keep the stacked mobile layout — the absolute-
+   positioned desktop stage leaves a huge empty hole in portrait — but give
+   it breathing room and cap content width so it doesn't stretch edge-to-edge. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .cozy-mobile__top {
+    max-width: 560px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+  }
+
+  .cozy-mobile__title {
+    font-size: clamp(40px, 6.5vw, 56px);
+  }
+
+  .cozy-mobile__subtitle {
+    font-size: 1rem;
+  }
+
+  .cozy-mobile__cards {
+    max-width: 620px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 1rem;
+  }
+}
+
+/* Desktop (≥1024px): the full stage with side cards + bottom photo strip */
+@media (min-width: 1024px) {
+  .cozy-hero__stage {
+    display: block;
+  }
+
+  .cozy-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cozy-header {
+    padding: 1rem 3rem;
+  }
+
+  .cozy-header__logo {
+    width: 210px;
+    height: auto;
+  }
+}
+
+/* ─── Animations ───────────────────────────────────────────────────────────── */
+@keyframes cozy-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cozy-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cozy-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cozy-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cozy-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cozy-text-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) skewY(3deg);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes cozy-word-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.7) rotate(-4deg);
+    filter: blur(8px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.05) rotate(1deg);
+    filter: blur(0);
+  }
+
+  80% {
+    transform: translateY(3px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes cozy-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cozy-photo-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(80px) scale(1.02);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cozy-fade-up {
+  animation: cozy-fade-up 0.8s var(--ease-out) both;
+}
+
+.cozy-fade-in {
+  animation: cozy-fade-in 0.6s ease-out both;
+}
+
+.cozy-slide-up {
+  animation: cozy-slide-up 0.9s var(--ease-out) both;
+}
+
+.cozy-slide-in-left {
+  animation: cozy-slide-in-left 0.8s var(--ease-out) both;
+}
+
+.cozy-slide-in-right {
+  animation: cozy-slide-in-right 0.8s var(--ease-out) both;
+}
+
+.cozy-text-reveal {
+  animation: cozy-text-reveal 1s var(--ease-out) both;
+}
+
+.cozy-word {
+  animation: cozy-word-pop 0.9s var(--ease-spring) both;
+}
+
+.cozy-scale-in {
+  animation: cozy-scale-in 0.7s var(--ease-out) both;
+}
+
+/* Mobile hero cards hold the page's largest image (its LCP). Starting from a
+   visible 0.25 opacity with no long delay lets the browser count it as
+   painted straight away, while it still eases in. */
+.cozy-card-in {
+  animation: cozy-card-in 0.6s var(--ease-out) both;
+}
+
+@keyframes cozy-card-in {
+  from {
+    opacity: 0.25;
+    transform: scale(0.92) translateY(8px);
+  }
+}
+
+.cozy-photo-reveal {
+  animation: cozy-photo-reveal 1.1s var(--ease-out) both;
+}
+
+.cozy-delay-100 {
+  animation-delay: 100ms;
+}
+.cozy-delay-200 {
+  animation-delay: 200ms;
+}
+.cozy-delay-300 {
+  animation-delay: 300ms;
+}
+.cozy-delay-400 {
+  animation-delay: 400ms;
+}
+.cozy-delay-500 {
+  animation-delay: 500ms;
+}
+.cozy-delay-600 {
+  animation-delay: 600ms;
+}
+.cozy-delay-700 {
+  animation-delay: 700ms;
+}
+.cozy-delay-800 {
+  animation-delay: 800ms;
+}
+.cozy-delay-900 {
+  animation-delay: 900ms;
+}
+.cozy-delay-1000 {
+  animation-delay: 1000ms;
+}
+.cozy-delay-1100 {
+  animation-delay: 1100ms;
+}
+.cozy-delay-1200 {
+  animation-delay: 1200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cozy-fade-up,
+  .cozy-fade-in,
+  .cozy-slide-up,
+  .cozy-slide-in-left,
+  .cozy-slide-in-right,
+  .cozy-text-reveal,
+  .cozy-word,
+  .cozy-scale-in,
+  .cozy-card-in,
+  .cozy-photo-reveal {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ─── Hero interactions (desktop hero, real mouse, motion OK) ─────────────
+   Everything here uses the individual `translate` / `rotate` / `scale`
+   properties, so it never fights the entrance animations (which own
+   `transform`) or GSAP's scroll parallax (which owns the img's transform). */
+
+/* Count-up: reserve the final width so nothing shifts while counting. */
+.cozy-countup {
+  display: inline-grid;
+  font-variant-numeric: tabular-nums;
+}
+.cozy-countup > span,
+.cozy-countup::after {
+  grid-area: 1 / 1;
+}
+.cozy-countup::after {
+  content: attr(data-final);
+  visibility: hidden;
+}
+
+.cozy-rating__star-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The ledge is part of each pet photo, so when a pet lifts, this strip of the
+   same colour fills the gap underneath instead of showing the background. */
+.cozy-photos:not(.cozy-photos--mobile) .cozy-photos__item--side { --ledge: #a9c7ef; }
+.cozy-photos:not(.cozy-photos--mobile) .cozy-photos__item--center { --ledge: #00387d; }
+.cozy-photos:not(.cozy-photos--mobile) .cozy-photos__item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 40px;
+  background: var(--ledge);
+}
+
+/* Speech bubbles (hidden until hover). */
+.cozy-photos__item[data-says]::before {
+  content: attr(data-says);
+  position: absolute;
+  z-index: 12;
+  top: 2%;
+  right: 16%;
+  padding: 0.55em 0.9em;
+  border-radius: 999px 999px 999px 4px;
+  background: #ffffff;
+  color: #1a3d1a;
+  font: 600 clamp(13px, 1.1vw, 17px) / 1 "Epilogue", sans-serif;
+  box-shadow: 0 8px 24px -10px rgb(26 61 26 / 0.45);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.6;
+  translate: 0 10px;
+  transform-origin: bottom left;
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    scale var(--dur-base) var(--ease-spring),
+    translate var(--dur-base) var(--ease-spring);
+}
+.cozy-photos__item--center[data-says]::before {
+  top: 34%;
+  right: 5%;
+}
+.cozy-photos__item--side:last-child[data-says]::before {
+  right: auto;
+  left: 14%;
+  border-radius: 999px 999px 4px 999px;
+  transform-origin: bottom right;
+}
+
+/* Spotlight that follows the cursor (position set by useHeroPointer). */
+.cozy-hero__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    560px circle at var(--mx, 50%) var(--my, 40%),
+    rgb(230 250 185 / 0.85),
+    rgb(230 250 185 / 0) 65%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+.cozy-hero__stage[data-spot]::before {
+  opacity: 1;
+}
+
+/* Side cards: tilt + glare (angles set by useHeroPointer). */
+.cozy-card[data-tilt] .cozy-card__img-wrap {
+  transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 600ms var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.cozy-card[data-tilt] .cozy-card__img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 0%),
+    rgb(255 255 255 / 0.45),
+    rgb(255 255 255 / 0) 55%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.cozy-card__arrow-btn,
+.cozy-card__video-overlay {
+  z-index: 2;
+}
+.cozy-hero .cozy-card__img-wrap img {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    scale 700ms var(--ease-out);
+}
+.cozy-card__arrow-btn svg {
+  transition: rotate var(--dur-base) var(--ease-spring);
+}
+.cozy-play-btn {
+  position: relative;
+}
+.cozy-play-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes cozy-ping {
+  from { opacity: 0.8; scale: 1; }
+  to { opacity: 0; scale: 1.9; }
+}
+
+@keyframes cozy-sparkle {
+  0% { opacity: 0; scale: 0; }
+  40% { opacity: 1; scale: 1.1; }
+  100% { opacity: 0; scale: 0.4; translate: var(--sx) var(--sy); }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  /* Pets: the one you point at pops up and talks, the others duck. */
+  .cozy-photos:not(.cozy-photos--mobile) .cozy-photos__item {
+    transition: translate 500ms var(--ease-spring);
+  }
+  .cozy-photos:not(.cozy-photos--mobile) .cozy-photos__item:hover {
+    translate: 0 -14px;
+  }
+  .cozy-photos:not(.cozy-photos--mobile):has(.cozy-photos__item:hover) .cozy-photos__item:not(:hover) {
+    translate: 0 8px;
+  }
+  .cozy-photos__item[data-says]:hover::before {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+
+  /* Headline: letters ripple under the cursor. */
+  .cozy-letter {
+    display: inline-block;
+    transition:
+      translate 450ms var(--ease-spring),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .cozy-letter:hover {
+    translate: 0 -0.12em;
+    color: var(--color-green);
+  }
+  .cozy-letter:hover + .cozy-letter,
+  .cozy-letter:has(+ .cozy-letter:hover) {
+    translate: 0 -0.05em;
+  }
+
+  /* Cards. */
+  .cozy-card[data-tilt]:hover .cozy-card__img-wrap {
+    transition-duration: 150ms, var(--dur-base);
+    box-shadow: 0 22px 40px -20px rgb(26 61 26 / 0.55);
+  }
+  .cozy-card[data-tilt]:hover .cozy-card__img-wrap::after {
+    opacity: 1;
+  }
+  .cozy-card[data-tilt]:hover .cozy-card__img-wrap img {
+    scale: 1.06;
+  }
+  .cozy-card--product:hover .cozy-card__arrow-btn svg {
+    rotate: 45deg;
+  }
+  .cozy-card--video:hover .cozy-play-btn {
+    transform: scale(1.12);
+  }
+  .cozy-card--video:hover .cozy-play-btn::after {
+    animation: cozy-ping 1.2s var(--ease-out) infinite;
+  }
+
+  /* Stats: avatars fan out, star spins and sparkles. */
+  .cozy-avatar-plus,
+  .cozy-stat__value {
+    transition: translate 450ms var(--ease-spring);
+  }
+  .cozy-avatar-plus svg {
+    transition: rotate 450ms var(--ease-spring);
+  }
+  .cozy-stat:hover .cozy-avatar-plus,
+  .cozy-stat:hover .cozy-stat__value {
+    translate: 10px 0;
+  }
+  .cozy-stat:hover .cozy-avatar-plus svg {
+    rotate: 90deg;
+  }
+  .cozy-rating__star {
+    transition:
+      rotate 600ms var(--ease-spring),
+      scale 600ms var(--ease-spring);
+  }
+  .cozy-rating:hover .cozy-rating__star {
+    rotate: 72deg;
+    scale: 1.2;
+  }
+  .cozy-rating__star-wrap::before,
+  .cozy-rating__star-wrap::after {
+    content: "";
+    position: absolute;
+    width: 0.28em;
+    height: 0.28em;
+    border-radius: 2px;
+    background: var(--color-yellow);
+    rotate: 45deg;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .cozy-rating__star-wrap::before { top: -30%; left: -35%; --sx: -6px; --sy: -6px; }
+  .cozy-rating__star-wrap::after { bottom: -15%; right: -45%; --sx: 6px; --sy: 4px; }
+  .cozy-rating:hover .cozy-rating__star-wrap::before {
+    animation: cozy-sparkle 700ms var(--ease-out) both;
+  }
+  .cozy-rating:hover .cozy-rating__star-wrap::after {
+    animation: cozy-sparkle 700ms 120ms var(--ease-out) both;
+  }
+}
+
+/* ─── Very small phones (320–374px): fit the whole header on one row ───── */
+@media (max-width: 374px) {
+  .cozy-header {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+  .cozy-header__logo {
+    width: 112px;
+    height: auto;
+  }
+  .cozy-header__actions {
+    gap: 0.375rem;
+  }
+  .cozy-header .cozy-icon-btn,
+  .cozy-header .account-menu__trigger {
+    width: 34px;
+    height: 34px;
+  }
+  .cozy-header .nav-burger--cozy {
+    width: 36px;
+    height: 36px;
+  }
+}

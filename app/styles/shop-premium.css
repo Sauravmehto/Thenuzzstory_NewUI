@@ -1,0 +1,512 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   shop-premium.css: /shop visual refresh (blue identity, yellow accents).
+   Everything is scoped to .shop-page so the shared .cozy-page pages (about,
+   cart, contact, product) keep their own look. Imported last in globals.css,
+   so it wins over shop.css / cozypaws.css / flow.css at equal specificity.
+
+   Roles: blue = brand surfaces · yellow = attention (CTA hover, badges,
+   saved, highlights) · white / soft gray = breathing space.
+───────────────────────────────────────────────────────────────────────────── */
+
+.shop-page {
+  --shop-bg: #f5f7fb;
+  --shop-surface: #ffffff;
+  --shop-tint: #edf2fa;
+  --shop-line: #e2e8f2;
+  --shop-line-strong: #c3d0e4;
+  --shop-ink: #0d1f3c;
+  --shop-muted: #5b6b85;
+  --shop-blue: #00408f;
+  --shop-blue-deep: #00387d;
+  --shop-blue-bright: #024ca7;
+  --shop-shadow: 0 22px 40px -24px rgb(0 40 110 / 0.42);
+  --shop-radius: 14px;
+  --shop-gutter: clamp(1rem, 4vw, 2.5rem);
+  --shop-max: 1280px;
+
+  background-color: var(--shop-bg);
+  color: var(--shop-ink);
+}
+
+.shop-page :focus-visible {
+  outline-color: var(--shop-blue-bright);
+}
+
+/* ─── Hero: continues the navy header into one calm brand band ─────────── */
+.shop-page .shop-hero {
+  padding: clamp(3rem, 7vw, 5.5rem) 1.5rem clamp(4.75rem, 8vw, 6.75rem);
+  color: #ffffff;
+  background-color: var(--shop-blue);
+  background-image:
+    radial-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1.5px),
+    linear-gradient(180deg, var(--shop-blue) 0%, var(--shop-blue-deep) 100%);
+  background-size: 24px 24px, 100% 100%;
+}
+
+/* The two decorative blobs become soft light: two blue glows.
+   `.shop-hero > *` (cozypaws.css) made every child relative, so the blobs and
+   paw lost their absolute positioning; restore it here. */
+.shop-page .shop-hero__blob {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  filter: blur(48px);
+  opacity: 1;
+  pointer-events: none;
+}
+
+.shop-page .shop-hero__paw {
+  position: absolute;
+}
+
+.shop-page .shop-hero__blob--1 {
+  width: 420px;
+  height: 420px;
+  top: -180px;
+  left: -120px;
+  background: rgb(2 76 167 / 0.9);
+}
+
+.shop-page .shop-hero__blob--2 {
+  width: 360px;
+  height: 360px;
+  bottom: -220px;
+  right: -80px;
+  background: rgb(30 110 220 / 0.45);
+}
+
+.shop-page .shop-hero__paw {
+  width: clamp(36px, 4.5vw, 60px);
+  opacity: 0.9;
+}
+
+.shop-page .shop-hero__eyebrow {
+  margin-bottom: 1.25rem;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: none;
+  color: var(--color-yellow);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.shop-page .shop-hero__title {
+  color: #ffffff;
+  font-size: clamp(40px, 5.6vw, 76px);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* One short gold rule under the title: the hero's only yellow block. */
+.shop-page .shop-hero__title::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: 1.1rem auto 0;
+  border-radius: 3px;
+  background: var(--color-yellow);
+}
+
+.shop-page .shop-hero__subtitle {
+  max-width: 520px;
+  margin: 1rem auto 0;
+  color: rgb(255 255 255 / 0.78);
+  font-size: clamp(15px, 1.25vw, 17px);
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+/* ─── Search: floats over the hero's bottom edge ───────────────────────── */
+.shop-page .shop-search {
+  z-index: 2;
+  width: min(640px, calc(100% - 2rem));
+  margin: -30px auto 0;
+}
+
+.shop-page .shop-search input {
+  height: 60px;
+  padding: 0 3.25rem 0 3.1rem;
+  border: 1px solid var(--shop-line);
+  border-radius: var(--shop-radius);
+  background: var(--shop-surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6b85' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E")
+    no-repeat 1.1rem center / 20px;
+  color: var(--shop-ink);
+  box-shadow:
+    0 18px 40px -18px rgb(0 40 110 / 0.45),
+    0 2px 4px rgb(13 31 60 / 0.05);
+}
+
+.shop-page .shop-search input::placeholder {
+  color: #8391a8;
+}
+
+.shop-page .shop-search input:focus-visible {
+  border-color: var(--shop-blue-bright);
+  box-shadow:
+    0 0 0 4px rgb(2 76 167 / 0.14),
+    0 18px 40px -18px rgb(0 40 110 / 0.45);
+}
+
+.shop-page .shop-search__kbd {
+  border-color: var(--shop-line-strong);
+  background: var(--shop-bg);
+  color: var(--shop-muted);
+}
+
+/* ─── Category filters ─────────────────────────────────────────────────── */
+.shop-page .shop-filters {
+  gap: 0.5rem;
+  padding: 1.75rem var(--shop-gutter) 0.25rem;
+}
+
+.shop-page .shop-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 1.1rem;
+  border: 1px solid var(--shop-line);
+  background: var(--shop-surface);
+  color: var(--shop-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: none;
+  transform: none;
+}
+
+.shop-page .shop-filter-pill.is-active {
+  border-color: var(--shop-blue-deep);
+  background: var(--shop-blue-deep);
+  color: #ffffff;
+}
+
+/* Sliding highlight: one navy state for every category. */
+.shop-page .shop-filters__indicator {
+  background: var(--shop-blue-deep);
+  box-shadow: 0 8px 18px -10px rgb(0 56 125 / 0.7);
+}
+
+.shop-page .shop-filters[data-indicator] .shop-filter-pill.is-active {
+  border-color: transparent;
+}
+
+/* ─── Toolbar: result count lines up with the grid ─────────────────────── */
+.shop-page .shop-search-status {
+  justify-content: space-between;
+  max-width: var(--shop-max);
+  padding: 1.5rem var(--shop-gutter) 0;
+  color: var(--shop-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.shop-page .shop-search-clear {
+  color: var(--shop-blue-bright);
+}
+
+/* ─── Product grid + cards ─────────────────────────────────────────────── */
+.shop-page .shop-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  max-width: var(--shop-max);
+  padding: 1rem var(--shop-gutter) clamp(3.5rem, 7vw, 6rem);
+}
+
+.shop-page .shop-card {
+  border: 1px solid var(--shop-line);
+  border-radius: var(--shop-radius);
+  background: var(--shop-surface);
+  box-shadow: 0 1px 2px rgb(13 31 60 / 0.04);
+  transition:
+    transform 320ms var(--ease-out),
+    box-shadow 320ms var(--ease-out),
+    border-color var(--dur-fast) ease;
+}
+
+.shop-page .shop-card__img-wrap {
+  background-color: var(--shop-tint);
+}
+
+.shop-page .shop-card__img-wrap img {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    scale 600ms var(--ease-out);
+}
+
+.shop-page .img-slot,
+.shop-page .skeleton {
+  background-color: #e6edf7;
+}
+
+.shop-page .img-slot:has(img[data-img-state="error"]) {
+  background-color: var(--shop-tint);
+}
+
+.shop-page .shop-card__badge {
+  top: 12px;
+  left: 12px;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgb(13 31 60 / 0.12);
+}
+
+.shop-page .shop-card__fav {
+  top: 10px;
+  right: 10px;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--shop-ink);
+  box-shadow: 0 2px 8px rgb(13 31 60 / 0.14);
+  backdrop-filter: blur(6px);
+}
+
+.shop-page .shop-card__fav.is-saved {
+  background: var(--color-yellow);
+  color: var(--color-navy);
+}
+
+.shop-page .shop-card__view {
+  background: var(--shop-blue-deep);
+  color: #ffffff;
+}
+
+.shop-page .shop-card__info {
+  gap: 0.75rem;
+  padding: 1rem 1.1rem 0.25rem;
+}
+
+.shop-page .shop-card__name,
+.shop-page a.shop-card__name {
+  color: var(--shop-ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.shop-page .shop-card__name mark {
+  background: rgb(249 198 25 / 0.45);
+}
+
+.shop-page .shop-card__category {
+  margin-top: 4px;
+  color: var(--shop-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.shop-page .shop-card__price {
+  color: var(--shop-ink);
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quiet blue by default, gold on hover: the CTA lights up where you point. */
+.shop-page .shop-card__add {
+  min-height: 44px;
+  margin: 0.9rem 1.1rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--shop-tint);
+  color: var(--shop-blue-deep);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.shop-page .shop-card__add:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.shop-page .shop-card__add:disabled {
+  background: #f1f4f9;
+  color: var(--shop-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shop-page .shop-filter-pill:not(.is-active):hover {
+    border-color: var(--shop-line-strong);
+    background: var(--shop-tint);
+    color: var(--shop-blue-deep);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .shop-page .shop-card:hover {
+    border-color: var(--shop-line-strong);
+    box-shadow: var(--shop-shadow);
+    transform: translateY(-4px);
+  }
+
+  .shop-page .shop-card:hover .shop-card__img-wrap img {
+    scale: 1.04;
+  }
+
+  .shop-page a.shop-card__name:hover {
+    color: var(--shop-blue-bright);
+  }
+
+  .shop-page .shop-card__fav:hover {
+    color: var(--shop-blue-bright);
+  }
+
+  .shop-page .shop-card__fav.is-saved:hover {
+    color: var(--color-navy);
+  }
+
+  .shop-page .shop-card__add:hover:not(:disabled) {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-navy);
+    box-shadow: 0 10px 20px -12px rgb(229 173 0 / 0.9);
+    transform: translateY(-1px);
+  }
+}
+
+/* ─── Empty state ──────────────────────────────────────────────────────── */
+.shop-page .shop-empty h2 {
+  color: var(--shop-ink);
+}
+
+.shop-page .shop-empty p {
+  color: var(--shop-muted);
+}
+
+/* ─── Loading skeleton: same navy band, so nothing flashes on arrival ──── */
+.shop-page .skeleton-hero {
+  padding: clamp(3rem, 7vw, 5.5rem) 1.5rem clamp(3rem, 6vw, 4.5rem);
+  background: linear-gradient(180deg, var(--shop-blue) 0%, var(--shop-blue-deep) 100%);
+}
+
+.shop-page .skeleton-hero .skeleton {
+  background-color: rgb(255 255 255 / 0.12);
+  background-image: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.12) 50%, transparent 80%);
+}
+
+.shop-page .skeleton-card {
+  border: 1px solid var(--shop-line);
+  border-radius: var(--shop-radius);
+}
+
+/* ─── Tablet ───────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .shop-page .shop-grid {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  }
+}
+
+/* ─── Phones ───────────────────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .shop-page .shop-hero {
+    padding-top: 2.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .shop-page .shop-hero__paw {
+    display: none;
+  }
+
+  .shop-page .shop-search input {
+    height: 54px;
+    padding-right: 1.1rem;
+  }
+
+  .shop-page .shop-search {
+    margin-top: -27px;
+  }
+
+  /* One swipeable row of filters instead of three wrapped rows; the edge
+     fade hints that there's more. The page itself never scrolls sideways. */
+  .shop-page .shop-filters {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-top: 1.25rem;
+    padding-bottom: 0.5rem;
+    padding-inline-end: 3rem; /* last pill can scroll clear of the edge fade */
+    scroll-padding-inline: var(--shop-gutter);
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+
+  .shop-page .shop-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shop-page .shop-filter-pill {
+    flex-shrink: 0;
+    min-height: 44px;
+  }
+
+  .shop-page .shop-search-status {
+    padding-top: 1rem;
+  }
+
+  .shop-page .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0.75rem 1rem 3rem;
+  }
+
+  .shop-page .shop-card {
+    border-radius: 12px;
+  }
+
+  .shop-page .shop-card__info {
+    padding: 0.7rem 0.75rem 0;
+  }
+
+  .shop-page .shop-card__name,
+  .shop-page a.shop-card__name {
+    font-size: 14px;
+  }
+
+  .shop-page .shop-card__category {
+    font-size: 10px;
+  }
+
+  .shop-page .shop-card__price {
+    font-size: 15px;
+  }
+
+  .shop-page .shop-card__add {
+    margin: 0.65rem 0.65rem 0.75rem;
+    font-size: 13px;
+  }
+
+  .shop-page .shop-card__badge {
+    top: 8px;
+    left: 8px;
+    font-size: 9.5px;
+  }
+}
+
+/* ─── Reduced motion: keep every state change, drop the movement ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .shop-page .shop-card,
+  .shop-page .shop-card__img-wrap img,
+  .shop-page .shop-card__add {
+    transition-property: opacity, background-color, border-color, color, box-shadow;
+  }
+
+  .shop-page .shop-card:hover,
+  .shop-page .shop-card__add:hover:not(:disabled),
+  .shop-page .shop-card__add:active:not(:disabled) {
+    transform: none;
+  }
+
+  .shop-page .shop-card:hover .shop-card__img-wrap img {
+    scale: 1;
+  }
+}
