@@ -1,0 +1,2253 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   flow.css: states for the cart → checkout flow.
+   Optimistic updates, pending/rollback feedback, quote review, live search,
+   toast and the demo panel. Every motion here has a reduced-motion fallback.
+───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --flow-ink: #1a3d1a;
+  --flow-muted: #4b5563;
+  --flow-accent: var(--color-yellow-dark);
+  --flow-danger: #b42318;
+  --flow-ease-out: var(--ease-out); /* alias of the global token */
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Focus: always visible for keyboard users ──────────────────────────── */
+.shop-cart :focus-visible,
+.cart-page :focus-visible,
+.shop-page :focus-visible,
+.product-page :focus-visible,
+.demo-panel :focus-visible {
+  outline: 3px solid var(--color-darkblue);
+  outline-offset: 2px;
+}
+
+/* ─── Buttons: disabled states ─────────────────────────────────────────── */
+.cozy-btn-orange:disabled,
+.shop-card__add:disabled,
+.product-buy-now:disabled,
+.shop-cart__qty button:disabled,
+.product-qty button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ─── Quantity stepper: bigger hit targets (WCAG 2.5.8) ────────────────── */
+.shop-cart__qty button {
+  width: 32px;
+  height: 32px;
+}
+
+.shop-cart__qty span {
+  min-width: 1.5ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.cart-line__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cart-line__status {
+  margin-top: 0.5rem;
+  font-size: 12px;
+  color: var(--flow-muted);
+}
+
+/* Pending: shown only after 300ms (see useDelayedFlag), so fast networks never flicker. */
+[data-pending] .shop-cart__qty span {
+  animation: flow-pulse 1s ease-in-out infinite;
+}
+
+[data-pending] .cart-line__status::before {
+  content: "";
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-right: 0.35em;
+  vertical-align: -0.05em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: flow-spin 0.7s linear infinite;
+}
+
+@keyframes flow-pulse {
+  50% { opacity: 0.4; }
+}
+
+@keyframes flow-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Free-delivery progress in the drawer ─────────────────────────────── */
+.shop-cart__ship {
+  margin: 0 1.25rem 0.5rem;
+  font-size: 13px;
+  color: var(--flow-ink);
+}
+
+.shop-cart__ship-bar {
+  margin-top: 0.4rem;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(26, 61, 26, 0.12);
+  overflow: hidden;
+}
+
+.shop-cart__ship-bar span {
+  display: block;
+  height: 100%;
+  background: var(--color-green);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--flow-ease-out);
+}
+
+/* ─── Place-order button + spinner ─────────────────────────────────────── */
+.cart-summary__checkout {
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: flow-spin 0.7s linear infinite;
+}
+
+/* ─── Stale-quote review ───────────────────────────────────────────────── */
+.quote-review {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.9rem;
+  background: #fffbea;
+  border: 1.5px solid var(--color-yellow);
+  animation: flow-rise var(--dur-base) var(--flow-ease-out);
+}
+
+.quote-review h3 {
+  font-size: 16px;
+  color: var(--flow-ink);
+}
+
+.quote-review h3:focus {
+  outline: none;
+}
+
+.quote-review p {
+  margin-top: 0.35rem;
+  font-size: 13px;
+  color: var(--flow-muted);
+}
+
+.quote-review ul {
+  margin: 0.75rem 0 1rem;
+  padding-left: 1.1rem;
+  font-size: 14px;
+  color: var(--flow-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.quote-review li + li {
+  margin-top: 0.3rem;
+}
+
+.quote-review__back {
+  display: block;
+  margin: 0.6rem auto 0;
+  background: none;
+  border: none;
+  color: var(--flow-ink);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@keyframes flow-rise {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/* ─── Order confirmation ───────────────────────────────────────────────── */
+.cart-confirm__check {
+  animation: flow-pop var(--dur-slow) var(--flow-ease-out) both;
+}
+
+.cart-confirm h1:focus {
+  outline: none;
+}
+
+@keyframes flow-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  70% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ─── Product page stock hint ──────────────────────────────────────────── */
+.product-info__stock {
+  margin-top: 0.75rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-maroon);
+}
+
+/* ─── Live search ──────────────────────────────────────────────────────── */
+.shop-search {
+  position: relative;
+  display: block;
+  width: min(560px, calc(100% - 2rem));
+  margin: 0 auto 1rem;
+}
+
+.shop-search input {
+  width: 100%;
+  padding: 0.85rem 3rem 0.85rem 1.2rem;
+  border: 1.5px solid rgba(26, 61, 26, 0.2);
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--flow-ink);
+  font: inherit;
+  font-size: 16px; /* ≥16px stops iOS zooming on focus */
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+
+.shop-search input:focus-visible {
+  outline: none;
+  border-color: var(--color-darkblue);
+  box-shadow: 0 0 0 4px rgba(75, 105, 240, 0.2);
+}
+
+.shop-search__kbd {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.1rem 0.45rem;
+  border: 1px solid rgba(26, 61, 26, 0.25);
+  border-radius: 0.35rem;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--flow-muted);
+  pointer-events: none;
+}
+
+.shop-search input:focus + .shop-search__kbd,
+.shop-search input:not(:placeholder-shown) + .shop-search__kbd {
+  opacity: 0;
+}
+
+.shop-search-status button.shop-search-clear {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.shop-card__name mark {
+  background: var(--color-lightgreen);
+  color: inherit;
+  border-radius: 0.2em;
+  padding: 0 0.05em;
+}
+
+/* While React renders the deferred results, dim the old grid slightly. */
+.shop-grid {
+  transition: opacity var(--dur-fast) ease;
+}
+
+.shop-grid[data-stale] {
+  opacity: 0.6;
+}
+
+/* ─── Toast ────────────────────────────────────────────────────────────── */
+.cart-toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 200;
+  transform: translateX(-50%);
+  width: min(420px, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+.cart-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: var(--flow-ink);
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  animation: flow-rise var(--dur-base) var(--flow-ease-out);
+}
+
+.cart-toast--error {
+  background: var(--flow-danger);
+}
+
+.cart-toast p {
+  flex: 1;
+}
+
+.cart-toast button {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.15);
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ─── Demo panel (dev / ?demo=1 only) ──────────────────────────────────── */
+.demo-panel {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 300;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  color: #111827;
+}
+
+.demo-panel__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.demo-panel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-yellow);
+}
+
+.demo-panel__body {
+  margin-bottom: 0.5rem;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 280px;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.8rem;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.demo-panel fieldset {
+  display: flex;
+  gap: 0.75rem;
+  border: none;
+  padding: 0;
+}
+
+.demo-panel legend {
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.demo-panel label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.demo-panel__row {
+  justify-content: space-between;
+}
+
+.demo-panel select {
+  max-width: 160px;
+  font: inherit;
+}
+
+.demo-panel__actions {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.demo-panel__actions button,
+.demo-panel__reset {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.demo-panel__state {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.demo-panel__state:empty {
+  display: none;
+}
+
+/* ─── Reduced motion: keep feedback, drop movement ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .shop-cart,
+  .shop-cart-backdrop,
+  .shop-cart__ship-bar span,
+  .shop-grid {
+    transition-duration: 0.01ms !important;
+  }
+
+  .quote-review,
+  .cart-toast,
+  .cart-confirm__check {
+    animation: none;
+  }
+
+  [data-pending] .shop-cart__qty span,
+  [data-pending] .cart-line__status::before,
+  .btn-spinner {
+    animation-duration: 2.5s; /* slow, not frozen: it still signals "working" */
+  }
+}
+
+/* ─── Contrast (WCAG 1.4.3) ────────────────────────────────────────────────
+   Yellow buttons and badges carry navy text, like the logo: 7:1.          */
+.cozy-btn-orange,
+.shop-card__badge,
+.product-gallery__badge {
+  background: var(--color-yellow);
+  color: var(--color-navy);
+}
+
+.cozy-btn-orange:hover {
+  background: var(--color-yellow-dark);
+}
+
+/* Category chip: darken the accent for text so every category passes. */
+.product-info__category {
+  color: color-mix(in srgb, var(--accent, #1a3d1a) 45%, #000000);
+}
+
+/* Drawers: fully hidden (not just off-screen) when closed, after sliding out. */
+.shop-cart {
+  visibility: hidden;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base);
+}
+
+.shop-cart.is-open {
+  visibility: visible;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    visibility 0s;
+}
+
+/* Homepage: infinite marquee and custom cursor are decorative. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation-play-state: paused !important;
+  }
+
+  .cursor-bubble {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .cursor-bubble {
+    display: none;
+  }
+}
+
+/* Hide empty error slots so they don't add stray spacing. */
+.contact-error:empty {
+  display: none;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Purchase flow polish: product → drawer → checkout → confirmation
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Product: "added ✓" confirmation on the button itself ─────────────── */
+.product-add {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+}
+
+.product-add > span {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: opacity var(--dur-fast) ease, transform var(--dur-fast) var(--flow-ease-out);
+}
+
+.product-add__done {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.product-add__done svg {
+  width: 16px;
+  height: 16px;
+}
+
+.product-add.is-added {
+  background: var(--color-green);
+}
+
+.product-add.is-added .product-add__label {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.product-add.is-added .product-add__done {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── Product: sticky buy bar (mobile only) ────────────────────────────── */
+.product-sticky {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .product-page {
+    padding-bottom: 88px;
+  }
+
+  /* Two across on phones: one giant photo per screen hid the other suggestions. */
+  .product-related__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .product-sticky {
+    position: fixed;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.6rem 0.6rem 0.7rem;
+    border-radius: 1.1rem;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(26, 61, 26, 0.18);
+    transform: translateY(calc(100% + 1.5rem));
+    transition: transform var(--dur-base) var(--flow-ease-out);
+  }
+
+  .product-sticky[data-visible] {
+    transform: none;
+  }
+
+  .product-sticky img {
+    width: 44px;
+    height: 44px;
+    border-radius: 0.6rem;
+    object-fit: cover;
+  }
+
+  .product-sticky__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .product-sticky__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--flow-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-sticky__price {
+    font-size: 13px;
+    color: var(--flow-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .product-sticky__add {
+    min-height: 44px;
+    flex-shrink: 0;
+  }
+
+  .product-sticky__add.is-added {
+    background: var(--color-green);
+  }
+}
+
+/* ─── Header cart badge: bump when the count goes up ───────────────────── */
+.cozy-badge--bump {
+  animation: flow-bump var(--dur-slow) var(--flow-ease-out);
+}
+
+@keyframes flow-bump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+/* ─── Drawer: highlight the line you just added ────────────────────────── */
+.shop-cart__line {
+  transition: box-shadow var(--dur-slow) ease, background-color var(--dur-slow) ease;
+}
+
+.shop-cart__line[data-just-added] {
+  background: #fffbea;
+  box-shadow: 0 0 0 2px var(--color-yellow);
+  animation: flow-rise var(--dur-base) var(--flow-ease-out);
+}
+
+/* The list only takes the room it needs; suggestions and the footer follow. */
+.shop-cart__list {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+.shop-cart__foot {
+  margin-top: auto;
+}
+
+.shop-cart__keep {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.55rem;
+  border: none;
+  background: none;
+  color: var(--flow-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ─── Drawer: "pairs well with" ────────────────────────────────────────── */
+.cart-suggest {
+  margin: 0.25rem 1.25rem 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(26, 61, 26, 0.2);
+}
+
+.cart-suggest__title {
+  margin-bottom: 0.6rem;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--flow-muted);
+}
+
+.cart-suggest ul {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cart-suggest__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.cart-suggest__item img {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.cart-suggest__item > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.cart-suggest__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--flow-ink);
+  text-decoration: none;
+}
+
+.cart-suggest__name:hover {
+  text-decoration: underline;
+}
+
+.cart-suggest__price {
+  font-size: 13px;
+  color: var(--flow-muted);
+}
+
+.cart-suggest__add {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.cart-suggest__add svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ─── Checkout: progress steps ─────────────────────────────────────────── */
+.checkout-steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: -0.5rem 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--flow-muted);
+}
+
+.checkout-steps__step {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.checkout-steps__step + .checkout-steps__step::before {
+  content: "";
+  width: clamp(16px, 4vw, 40px);
+  height: 2px;
+  margin-right: 0.1rem;
+  border-radius: 2px;
+  background: rgba(26, 61, 26, 0.2);
+}
+
+.checkout-steps__step[data-state="done"] + .checkout-steps__step::before {
+  background: var(--color-green);
+}
+
+.checkout-steps__dot {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(26, 61, 26, 0.3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.checkout-steps__dot svg {
+  width: 12px;
+  height: 12px;
+}
+
+.checkout-steps__step[data-state="done"] .checkout-steps__dot {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: #ffffff;
+}
+
+.checkout-steps__step[data-state="current"] {
+  color: var(--flow-ink);
+}
+
+.checkout-steps__step[data-state="current"] .checkout-steps__dot {
+  background: var(--flow-ink);
+  border-color: var(--flow-ink);
+  color: #ffffff;
+}
+
+/* ─── Checkout: cart heading + fields ──────────────────────────────────── */
+.cart-left__title {
+  margin-bottom: 0.75rem;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--flow-ink);
+}
+
+.cart-left__title span {
+  font-weight: 500;
+  color: var(--flow-muted);
+}
+
+.cart-field__hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 12px;
+  color: var(--flow-muted);
+}
+
+.contact-field {
+  position: relative;
+}
+
+.contact-field input[aria-invalid="true"] {
+  border-color: var(--flow-danger);
+  background: #fff8f7;
+}
+
+.contact-field input[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.15);
+}
+
+/* A quiet tick once a field is valid: confidence, not confetti. */
+.contact-field[data-valid] input {
+  padding-right: 2.4rem;
+}
+
+.contact-field[data-valid]::after {
+  content: "";
+  position: absolute;
+  right: 0.9rem;
+  top: calc(1.35rem + 0.6rem + 0.5rem);
+  width: 14px;
+  height: 8px;
+  border-left: 2px solid var(--color-green);
+  border-bottom: 2px solid var(--color-green);
+  transform: rotate(-45deg);
+  pointer-events: none;
+}
+
+.contact-field .contact-error::before {
+  content: "! ";
+  font-weight: 700;
+}
+
+.cart-form-error {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #fff1ef;
+}
+
+/* ─── Checkout: sticky "place order" bar (single-column layouts) ─────── */
+.checkout-sticky {
+  display: none;
+}
+
+/* Matches the 900px breakpoint where the checkout becomes one column. */
+@media (max-width: 899px) {
+  .checkout-sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    background: #ffffff;
+    box-shadow: 0 -8px 24px rgba(26, 61, 26, 0.12);
+    transform: translateY(110%);
+    transition: transform var(--dur-base) var(--flow-ease-out);
+  }
+
+  .checkout-sticky[data-visible] {
+    transform: none;
+  }
+
+  .checkout-sticky__total {
+    display: grid;
+    line-height: 1.2;
+  }
+
+  .checkout-sticky__total span {
+    font-size: 12px;
+    color: var(--flow-muted);
+  }
+
+  .checkout-sticky__total strong {
+    font-size: 18px;
+    color: var(--flow-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .checkout-sticky__btn {
+    min-height: 48px;
+    padding-inline: 1.6rem;
+  }
+}
+
+/* ─── Confirmation ─────────────────────────────────────────────────────── */
+.order-confirm {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2rem clamp(1.25rem, 4vw, 3rem) 3.5rem;
+}
+
+.order-confirm__loading {
+  min-height: 50vh;
+}
+
+.order-confirm .checkout-steps {
+  justify-content: center;
+  margin: 0 0 2rem;
+}
+
+.order-confirm__hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.order-confirm__check {
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+  border-radius: 9999px;
+  background: var(--color-green);
+  color: #ffffff;
+  animation: flow-pop var(--dur-slow) var(--flow-ease-out) both;
+}
+
+.order-confirm__check svg {
+  width: 28px;
+  height: 28px;
+}
+
+.order-confirm__hero h1 {
+  font-family: var(--font-dm-serif), "DM Serif Display", serif;
+  font-weight: 400;
+  font-size: clamp(34px, 5vw, 56px);
+  color: var(--flow-ink);
+  animation: flow-rise var(--dur-slow) var(--flow-ease-out) 0.1s both;
+}
+
+.order-confirm__hero h1:focus {
+  outline: none;
+}
+
+.order-confirm__lead {
+  max-width: 34rem;
+  margin: 0.5rem auto 1.25rem;
+  color: var(--flow-muted);
+  overflow-wrap: anywhere;
+}
+
+.order-confirm__id {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.4rem 0.4rem 1rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  font-size: 14px;
+  color: var(--flow-muted);
+}
+
+.order-confirm__id code {
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  color: var(--flow-ink);
+  letter-spacing: 0.02em;
+}
+
+.order-confirm__copy {
+  min-width: 72px;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(26, 61, 26, 0.2);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--flow-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.order-confirm__copy:hover {
+  background: var(--color-lightgreen);
+}
+
+.order-confirm__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 860px) {
+  .order-confirm__grid {
+    grid-template-columns: 1.3fr 1fr;
+    align-items: start;
+  }
+}
+
+.order-confirm__side {
+  display: grid;
+  gap: 1rem;
+}
+
+.order-card {
+  padding: 1.25rem 1.4rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+}
+
+.order-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--flow-ink);
+}
+
+.order-card h2 svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-green);
+}
+
+.order-lines {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.order-line {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.order-line img {
+  width: 56px;
+  height: 56px;
+  border-radius: 0.7rem;
+  object-fit: cover;
+}
+
+.order-line__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.order-line__name {
+  font-weight: 600;
+  color: var(--flow-ink);
+}
+
+.order-line__meta,
+.order-line__total {
+  font-size: 14px;
+  color: var(--flow-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-line__total {
+  color: var(--flow-ink);
+  font-weight: 600;
+}
+
+.order-totals {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(26, 61, 26, 0.12);
+}
+
+.order-totals > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  font-size: 14px;
+  color: var(--flow-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-totals dd {
+  margin: 0;
+}
+
+.order-totals__total {
+  margin-top: 0.35rem;
+  padding-top: 0.6rem !important;
+  border-top: 1px solid rgba(26, 61, 26, 0.12);
+  font-size: 16px !important;
+  font-weight: 700;
+  color: var(--flow-ink) !important;
+}
+
+.order-address {
+  font-style: normal;
+  line-height: 1.6;
+  color: var(--flow-ink);
+}
+
+.order-next {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: next;
+}
+
+.order-next li {
+  position: relative;
+  padding-left: 2.2rem;
+  counter-increment: next;
+}
+
+.order-next li::before {
+  content: counter(next);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(26, 61, 26, 0.3);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--flow-muted);
+}
+
+.order-next li[data-active]::before {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: #ffffff;
+}
+
+.order-next__title {
+  font-weight: 600;
+  color: var(--flow-ink);
+}
+
+.order-next__body {
+  font-size: 14px;
+  color: var(--flow-muted);
+}
+
+.order-confirm__actions {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  margin-top: 2rem;
+}
+
+/* ─── Reduced motion for the flow polish ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .product-add > span,
+  .product-sticky,
+  .checkout-sticky,
+  .shop-cart__line {
+    transition-duration: 0.01ms !important;
+  }
+
+  .cozy-badge--bump,
+  .shop-cart__line[data-just-added],
+  .order-confirm__check,
+  .order-confirm__hero h1 {
+    animation: none;
+  }
+}
+
+/* ─── Animated prices ──────────────────────────────────────────────────── */
+.animated-price {
+  display: inline-block;
+  font-variant-numeric: tabular-nums; /* digits don't jitter while counting */
+  transition: color var(--dur-fast) ease;
+}
+
+.animated-price[data-changing] {
+  color: var(--color-green);
+}
+
+/* ─── Place order: success beat ────────────────────────────────────────── */
+.place-order {
+  transition: background-color var(--dur-fast) ease;
+}
+
+.place-order.is-success,
+.place-order.is-success:disabled {
+  background: var(--color-green);
+  opacity: 1;
+  cursor: default;
+}
+
+.place-order__check {
+  width: 18px;
+  height: 18px;
+  animation: flow-pop var(--dur-slow) var(--flow-ease-out) both;
+}
+
+/* ─── Payment method ───────────────────────────────────────────────────── */
+.pay-method {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.25rem 0 1rem;
+  padding: 0;
+  border: none;
+}
+
+.pay-method legend {
+  margin-bottom: 0.5rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--flow-muted);
+}
+
+.pay-method label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border: 1.5px solid rgba(26, 61, 26, 0.15);
+  border-radius: 0.9rem;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+
+.pay-method label[data-checked] {
+  border-color: var(--flow-ink);
+  background: #f7fef8;
+}
+
+.pay-method input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--flow-ink);
+}
+
+.pay-method strong {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 14px;
+  color: var(--flow-ink);
+}
+
+.pay-method small {
+  display: block;
+  font-size: 12px;
+  color: var(--flow-muted);
+}
+
+.wallet-sim-badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* ─── Wallet dialog ────────────────────────────────────────────────────── */
+.wallet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200; /* above the sticky site header */
+  background: rgba(17, 24, 39, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-fast) ease, visibility var(--dur-fast) ease;
+}
+
+.wallet-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.wallet-dialog {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1210;
+  width: min(440px, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  padding: 1.25rem 1.4rem 1rem;
+  border-radius: 1.4rem;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, calc(-50% + 16px)) scale(0.98);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-base) var(--flow-ease-out),
+    visibility 0s linear var(--dur-base);
+}
+
+.wallet-dialog.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-base) var(--flow-ease-out),
+    visibility 0s;
+}
+
+.wallet-dialog__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallet-dialog__eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--flow-muted);
+}
+
+.wallet-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+  margin: 0.9rem 0 1.1rem;
+  padding: 0;
+  list-style: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--flow-muted);
+}
+
+.wallet-steps li {
+  padding-top: 0.45rem;
+  border-top: 3px solid rgba(26, 61, 26, 0.12);
+  transition: border-color var(--dur-base) ease, color var(--dur-base) ease;
+}
+
+.wallet-steps li[data-state="done"] {
+  border-color: var(--color-green);
+}
+
+.wallet-steps li[data-state="current"] {
+  border-color: var(--flow-ink);
+  color: var(--flow-ink);
+}
+
+.wallet-dialog__body h2 {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-dm-serif), "DM Serif Display", serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--flow-ink);
+  animation: flow-rise var(--dur-base) var(--flow-ease-out);
+}
+
+.wallet-dialog__body h2:focus {
+  outline: none;
+}
+
+.wallet-options {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wallet-options button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1.5px solid rgba(26, 61, 26, 0.15);
+  border-radius: 0.9rem;
+  background: #ffffff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+}
+
+.wallet-options button:hover {
+  border-color: var(--flow-ink);
+}
+
+.wallet-options button:active {
+  transform: scale(0.99);
+}
+
+.wallet-options strong,
+.wallet-account strong {
+  color: var(--flow-ink);
+}
+
+.wallet-options small {
+  display: block;
+  font-size: 12px;
+  color: var(--flow-muted);
+}
+
+.wallet-options__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 0.7rem;
+  background: var(--flow-ink);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.wallet-account {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.9rem;
+  background: #f7fef8;
+  font-size: 14px;
+}
+
+.wallet-account code,
+.wallet-muted code,
+.order-paid-with code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.92em;
+}
+
+.wallet-muted {
+  font-size: 13px;
+  color: var(--flow-muted);
+}
+
+.wallet-amounts {
+  margin: 1rem 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wallet-amounts > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  color: var(--flow-muted);
+}
+
+.wallet-amounts dd {
+  margin: 0;
+}
+
+.wallet-amounts__total {
+  margin-top: 0.3rem;
+  padding-top: 0.55rem !important;
+  border-top: 1px solid rgba(26, 61, 26, 0.12);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--flow-ink) !important;
+}
+
+.wallet-primary {
+  width: 100%;
+  justify-content: center;
+  min-height: 46px;
+}
+
+.wallet-secondary {
+  display: block;
+  margin: 0.6rem auto 0;
+  border: none;
+  background: none;
+  color: var(--flow-ink);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.wallet-note {
+  margin: 0.75rem 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.8rem;
+  background: #f3f4f6;
+  font-size: 14px;
+  color: var(--flow-ink);
+}
+
+.wallet-note ul {
+  margin: 0.4rem 0 0 1rem;
+}
+
+.wallet-note--warn {
+  background: #fffbea;
+  border: 1px solid var(--color-yellow);
+}
+
+.wallet-note--error {
+  background: #fff1ef;
+  color: var(--flow-danger);
+}
+
+.wallet-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.25rem 0 0.9rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  background: #f7fef8;
+  font-size: 14px;
+  color: var(--flow-ink);
+}
+
+.wallet-progress__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--flow-ink);
+}
+
+.wallet-progress[data-done] .wallet-progress__icon {
+  background: var(--color-green);
+  color: #ffffff;
+  animation: flow-pop var(--dur-slow) var(--flow-ease-out) both;
+}
+
+.wallet-progress__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* The pretend wallet window: deliberately looks like a different app. */
+.sim-wallet {
+  margin-top: 0.9rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #111827;
+  color: #f9fafb;
+  animation: flow-rise var(--dur-base) var(--flow-ease-out);
+}
+
+.sim-wallet__app {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #9ca3af;
+}
+
+.sim-wallet__app span {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sim-wallet__title {
+  margin-top: 0.6rem;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.sim-wallet__site,
+.sim-wallet__from {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.sim-wallet__amount {
+  margin: 0.5rem 0 0.1rem;
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-wallet__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.sim-wallet__actions button {
+  min-height: 42px;
+  border: 1px solid #374151;
+  border-radius: 0.7rem;
+  background: transparent;
+  color: #f9fafb;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sim-wallet__actions .is-primary {
+  border-color: #818cf8;
+  background: #4f46e5;
+}
+
+.sim-wallet__actions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.sim-wallet :focus-visible {
+  outline: 3px solid #a5b4fc;
+  outline-offset: 2px;
+}
+
+.wallet-dialog :focus-visible {
+  outline: 3px solid var(--color-darkblue);
+  outline-offset: 2px;
+}
+
+.wallet-dialog__foot {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(26, 61, 26, 0.1);
+  font-size: 11px;
+  color: var(--flow-muted);
+}
+
+.order-paid-with {
+  margin-top: 0.9rem;
+  font-size: 13px;
+  color: var(--flow-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wallet-dialog,
+  .wallet-backdrop,
+  .wallet-steps li,
+  .place-order {
+    transition-duration: 0.01ms !important;
+  }
+
+  .wallet-dialog__body h2,
+  .sim-wallet,
+  .wallet-progress[data-done] .wallet-progress__icon,
+  .place-order__check {
+    animation: none;
+  }
+}
+
+/* ─── Touch screens: no sticky hover lifts ─────────────────────────────── */
+/* These hover effects live in their component files; on devices without a
+   real hover they'd stay "stuck" after a tap, so neutralise the movement. */
+@media (hover: none) {
+  .shop-card:hover,
+  .shop-card__fav:hover,
+  .product-fav:hover,
+  .account-menu__trigger:hover,
+  .account-menu__signin:hover,
+  .related-card:hover .related-card__img img,
+  .about-cta__btn:hover,
+  .site-footer__socials a:hover {
+    transform: none;
+  }
+
+  /* The "view" arrow is a hover reveal; on touch the whole card is the link. */
+  .shop-card__view {
+    display: none;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Loading states: skeletons + image fade-in
+   ═════════════════════════════════════════════════════════════════════════ */
+.skeleton,
+.img-slot {
+  background-color: #e3f1e5;
+  background-image: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.65) 50%, transparent 80%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: flow-shimmer 1.3s linear infinite;
+}
+
+.skeleton {
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.skeleton--pill {
+  border-radius: 9999px;
+}
+
+@keyframes flow-shimmer {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+
+/* Images fade in over the shimmer once decoded. */
+img[data-img-state] {
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+img[data-img-state="loading"] {
+  opacity: 0;
+}
+
+/* Stop the shimmer behind an image once it's there (or was already there
+   before JS ran, when it has no state at all). */
+.img-slot:has(img:not([data-img-state])),
+.img-slot:has(img[data-img-state="loaded"]) {
+  animation: none;
+  background-image: none;
+}
+
+/* Broken image: calm paw placeholder instead of a broken icon. */
+.img-slot:has(img[data-img-state="error"]) {
+  animation: none;
+  background: #e3f1e5 url("/assets/pets/paw-sticker.svg") center / 32% no-repeat;
+}
+
+img[data-img-state="error"] {
+  visibility: hidden;
+}
+
+.skeleton-hero {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 4rem 1.5rem 2.5rem;
+}
+
+.skeleton-card {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+}
+
+.skeleton-card__img {
+  aspect-ratio: 1;
+  border-radius: 1rem;
+}
+
+.skeleton-product__img {
+  aspect-ratio: 1;
+  border-radius: 1.5rem;
+}
+
+.skeleton-product__info {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.skeleton-row__img {
+  width: 92px;
+  height: 92px;
+  flex-shrink: 0;
+  border-radius: 0.8rem;
+}
+
+.skeleton-row__text {
+  display: grid;
+  flex: 1;
+  align-content: start;
+  gap: 0.55rem;
+}
+
+.cart-summary .skeleton + .skeleton {
+  margin-top: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .img-slot {
+    animation: none;
+  }
+
+  img[data-img-state] {
+    transition: none;
+  }
+}
+
+.cart-line__img.img-slot {
+  display: block;
+  line-height: 0;
+  border-radius: 0.8rem;
+  overflow: hidden;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Responsiveness
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* Phones: two products per row instead of one giant card per screen. */
+@media (min-width: 360px) and (max-width: 599px) {
+  .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding-inline: 1rem;
+  }
+
+  .shop-card__info {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.65rem 0.75rem 0;
+  }
+
+  .shop-card__name {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .shop-card__category {
+    font-size: 12px;
+  }
+
+  .shop-card__price {
+    font-size: 14px;
+  }
+
+  .shop-card__add {
+    margin: 0.6rem 0.6rem 0.75rem;
+    min-height: 40px;
+    font-size: 13px;
+  }
+
+  .shop-card__fav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .shop-card__badge {
+    top: 8px;
+    left: 8px;
+    font-size: 10px;
+  }
+}
+
+/* Keyboard shortcut hints mean nothing without a keyboard. */
+@media (hover: none) and (pointer: coarse) {
+  .shop-search__kbd {
+    display: none;
+  }
+
+  .shop-search input {
+    padding-right: 1.2rem;
+  }
+}
+
+/* Small links get a comfortable tap area without changing how they look. */
+.product-breadcrumb a {
+  display: inline-block;
+  padding-block: 0.5rem;
+  margin-block: -0.5rem;
+}
+
+.cart-summary__continue,
+.quote-review__back,
+.shop-cart__keep {
+  min-height: 44px;
+  padding-block: 0.7rem;
+}
+
+/* Remove buttons: small visual, 40px hit area. */
+.cart-line__remove,
+.shop-cart__remove {
+  position: relative;
+}
+
+.cart-line__remove::after,
+.shop-cart__remove::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+/* Tablets in the single-column checkout: keep it a readable width. */
+@media (min-width: 600px) and (max-width: 899px) {
+  .cart-layout {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .cart-main__title,
+  .checkout-steps,
+  .cart-left__title {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+}
+
+/* Short landscape phones: dialogs and drawers scroll instead of clipping. */
+@media (max-height: 500px) {
+  .wallet-dialog {
+    top: 0.75rem;
+    transform: translate(-50%, 0);
+    max-height: calc(100dvh - 1.5rem);
+  }
+
+  .wallet-dialog.is-open {
+    transform: translate(-50%, 0);
+  }
+
+  .shop-cart__list {
+    min-height: 120px;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Page transitions
+   ═════════════════════════════════════════════════════════════════════════ */
+.page-enter {
+  animation: page-in var(--dur-base) var(--ease-out) backwards;
+}
+
+@keyframes page-in {
+  from { opacity: 0; }
+}
+
+/* A shared-element transition is already animating this change. */
+html[data-vt] .page-enter {
+  animation: none;
+}
+
+/* Product photo morphs from the shop card into the product page. */
+::view-transition-group(product-image) {
+  animation-duration: var(--dur-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-image-pair(product-image) {
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* During a shared-element transition the product photo must be visible in
+   the new page's snapshot, even before its reveal/fade-in has run. */
+html[data-vt] .product-gallery,
+html[data-vt] .product-gallery img {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Microinteractions
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* Quantity rolls in the direction it changed. */
+.qty-number {
+  display: inline-block;
+  min-width: 1.5ch;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: bottom;
+  font-variant-numeric: tabular-nums;
+}
+
+.qty-number__value {
+  display: inline-block;
+}
+
+.qty-number__value[data-dir="up"] {
+  animation: qty-in-up var(--dur-base) var(--ease-out);
+}
+
+.qty-number__value[data-dir="down"] {
+  animation: qty-in-down var(--dur-base) var(--ease-out);
+}
+
+@keyframes qty-in-up {
+  from { transform: translateY(70%); opacity: 0; }
+}
+
+@keyframes qty-in-down {
+  from { transform: translateY(-70%); opacity: 0; }
+}
+
+/* Wishlist star pops (with a little ring) when you save something. */
+.shop-card__fav[data-pop] svg,
+.product-fav[data-pop] svg {
+  animation: star-pop var(--dur-slow) var(--ease-spring);
+}
+
+.shop-card__fav[data-pop]::after,
+.product-fav[data-pop]::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  border: 2px solid var(--color-yellow);
+  animation: star-ring var(--dur-slow) var(--ease-out) forwards;
+  pointer-events: none;
+}
+
+.product-fav {
+  position: relative;
+}
+
+@keyframes star-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45) rotate(-12deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes star-ring {
+  from { transform: scale(0.8); opacity: 1; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+
+/* One filter highlight that slides between pills. */
+.shop-filters {
+  position: relative;
+}
+
+.shop-filters__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.shop-filters__indicator[data-animate] {
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    width var(--dur-base) var(--ease-out),
+    height var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) ease;
+}
+
+.shop-filters[data-indicator] .shop-filter-pill {
+  position: relative;
+  z-index: 1;
+}
+
+.shop-filters[data-indicator] .shop-filter-pill.is-active {
+  background: transparent;
+}
+
+/* Free delivery unlocked: the bar glows and the message bounces in. */
+.shop-cart__ship[data-celebrate] p,
+.cart-summary__ship-hint[data-celebrate] {
+  animation: celebrate-in var(--dur-slow) var(--ease-spring);
+}
+
+.shop-cart__ship[data-celebrate] .shop-cart__ship-bar {
+  animation: bar-glow 1.2s var(--ease-out);
+}
+
+@keyframes celebrate-in {
+  0% { transform: scale(0.94); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@keyframes bar-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(41, 114, 95, 0); }
+  30% { box-shadow: 0 0 0 5px rgba(41, 114, 95, 0.25); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qty-number__value[data-dir],
+  .shop-card__fav[data-pop] svg,
+  .product-fav[data-pop] svg,
+  .shop-cart__ship[data-celebrate] p,
+  .cart-summary__ship-hint[data-celebrate],
+  .shop-cart__ship[data-celebrate] .shop-cart__ship-bar {
+    animation: none;
+  }
+
+  .shop-card__fav[data-pop]::after,
+  .product-fav[data-pop]::after {
+    display: none;
+  }
+
+  .shop-filters__indicator[data-animate] {
+    transition: background-color var(--dur-fast) ease;
+  }
+}
+
+/* Landing hero nav: 44px-tall tap area, same look (underline follows). */
+.cozy-header__nav a {
+  display: inline-block;
+  padding-block: 0.75rem;
+  margin-block: -0.75rem;
+}
+
+.cozy-header__nav a::after {
+  bottom: calc(0.75rem - 3px);
+}
+
+/* Square product tiles stay square whatever the photo's shape (a 2:3 photo
+   used to stretch its card). The image fills the tile instead of sizing it. */
+.shop-card__img-wrap,
+.related-card__img {
+  position: relative;
+  overflow: hidden;
+}
+
+.shop-card__img-wrap > img,
+.related-card__img > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─── Cart: removal, toast exit, rollback cue ──────────────────────────── */
+
+/* Toast: an Undo button that reads as a button, not a close icon. */
+.cart-toast {
+  align-items: center;
+}
+.cart-toast .cart-toast__action {
+  width: auto;
+  height: 32px;
+  padding: 0 0.9rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--flow-ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.cart-toast .cart-toast__action:active {
+  transform: scale(0.96);
+}
+.cart-toast .cart-toast__action:focus-visible,
+.cart-toast .cart-toast__close:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Toast: leave the way it came in, instead of vanishing. */
+.cart-toast[data-leaving] {
+  animation: cart-toast-out 220ms var(--ease-in-out) forwards;
+  pointer-events: none;
+}
+@keyframes cart-toast-out {
+  to { opacity: 0; transform: translateY(10px) scale(0.97); }
+}
+
+/* Rows that just changed on their own say why, right on the row. */
+.cart-line__note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-weight: 600;
+  color: var(--color-yellow-ink); /* orange text that passes AA on white */
+  animation: flow-rise var(--dur-base) var(--ease-out);
+}
+.cart-line__note[data-tone="error"] {
+  color: var(--flow-danger);
+}
+.cart-line__note::before {
+  content: "↺";
+  font-weight: 700;
+}
+[data-pending] .cart-line__note::before {
+  content: "↺";
+  width: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  animation: none;
+}
+/* …and the row flashes once so the eye lands on it. */
+.cart-line[data-note],
+.shop-cart__line[data-note] {
+  animation: row-corrected 900ms var(--ease-out);
+}
+@keyframes row-corrected {
+  0% { background-color: rgb(249 198 25 / 0.16); }
+  100% { background-color: transparent; }
+}
+.cart-line[data-note="error"],
+.shop-cart__line[data-note="error"] {
+  animation-name: row-corrected-error;
+}
+@keyframes row-corrected-error {
+  0% { background-color: rgb(180 35 24 / 0.12); }
+  100% { background-color: transparent; }
+}
+
+/* A row on its way out can't be clicked. */
+[data-exiting] {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-toast[data-leaving] {
+    animation: cart-toast-fade 150ms linear forwards;
+  }
+  .cart-line__note,
+  .cart-line[data-note],
+  .shop-cart__line[data-note] {
+    animation: none;
+  }
+}
+@keyframes cart-toast-fade {
+  to { opacity: 0; }
+}

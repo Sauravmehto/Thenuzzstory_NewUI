@@ -1,0 +1,440 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   home-polish.css: landing page navbar, readability, scroll effects and
+   microinteractions. Uses the motion tokens from base.css; every effect has a
+   reduced-motion fallback at the bottom.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Navbar: hides while reading down, returns on scroll up ───────────── */
+.navbar {
+  transition:
+    color 0.5s var(--ease-in-out),
+    transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) ease;
+}
+
+.navbar.is-away {
+  transform: translateY(-110%);
+}
+
+/* Soft backdrop once content scrolls underneath, so labels never sit on top
+   of section headings. A pseudo-element keeps the navbar's own children and
+   pop-outs unaffected. */
+.navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) ease, background-color var(--dur-base) ease;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+.navbar.is-scrolled::before {
+  opacity: 1;
+}
+
+.navbar.on-light::before {
+  background-color: #00408f;
+  box-shadow: none;
+}
+
+.navbar.is-scrolled.on-light {
+  color: #ffffff;
+}
+
+.navbar.on-dark::before {
+  background-color: rgba(17, 17, 17, 0.28);
+}
+
+/* ─── Brand marquee: pause on hover/focus, or with the button ──────────── */
+.marquee-right:hover .marquee-track,
+.marquee-right:focus-within .marquee-track,
+.marquee-right[data-paused] .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-pause {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(26, 26, 26, 0.72);
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
+}
+
+.marquee-pause:hover,
+.marquee-pause:focus-visible {
+  opacity: 1;
+}
+
+.marquee-pause:active {
+  transform: scale(0.92);
+}
+
+.marquee-pause:focus-visible {
+  outline: 3px solid var(--color-darkblue);
+  outline-offset: 2px;
+}
+
+/* ─── Service cards stack as you scroll (phones) ───────────────────────── */
+/* Each card sticks a little lower than the last, so they pile up like a
+   hand of cards instead of scrolling past as a long list. */
+@media (max-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .cards-wrapper .card {
+    position: sticky;
+    top: calc(84px + var(--stack-i, 0) * 14px);
+  }
+
+  .cards-wrapper .card:nth-child(1) { --stack-i: 0; }
+  .cards-wrapper .card:nth-child(2) { --stack-i: 1; }
+  .cards-wrapper .card:nth-child(3) { --stack-i: 2; }
+  .cards-wrapper .card:nth-child(4) { --stack-i: 3; }
+
+  .cards-wrapper {
+    padding-bottom: 72px;
+  }
+}
+
+/* ─── Scroll progress: a thin line along the top of the page ───────────── */
+/* Pure CSS (scroll-driven animation), no JS on scroll. Browsers without
+   support simply don't show it. */
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    height: 3px;
+    background: var(--color-yellow);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    pointer-events: none;
+    animation: scroll-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  @keyframes scroll-progress {
+    to { transform: scaleX(1); }
+  }
+}
+
+/* ─── Hero stage: deep-blue theme ──────────────────────────────────────── */
+/* Navy base with two slow "aurora" glows drifting behind the content. The
+   glows live on ::after (::before is the cursor spotlight) and move with
+   transforms only, so the drift never triggers layout or repaints the photos. */
+.cozy-hero__stage {
+  --stage-blue: #00408f;
+  --stage-blue-bright: #024ca7;
+  --stage-blue-mid: #0049a3;
+  --stage-blue-deep: #00387d;
+
+  background-color: var(--stage-blue);
+  background-image:
+    radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1.5px),
+    linear-gradient(160deg, var(--stage-blue) 0%, var(--stage-blue-mid) 45%, var(--stage-blue-deep) 100%);
+  background-size: 26px 26px, 100% 100%;
+}
+
+.cozy-hero__stage::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 22% 30%, var(--stage-blue-bright), transparent 70%),
+    radial-gradient(34% 40% at 78% 24%, var(--stage-blue-mid), transparent 70%),
+    radial-gradient(45% 38% at 55% 85%, var(--stage-blue-deep), transparent 72%);
+  opacity: 0.9;
+}
+
+/* Spotlight sits above the aurora; tinted to the theme instead of lime. */
+.cozy-hero__stage::before {
+  z-index: 1;
+  background: radial-gradient(
+    520px circle at var(--mx, 50%) var(--my, 40%),
+    rgb(2 76 167 / 0.95),
+    rgb(255 255 255 / 0.06) 40%,
+    rgb(255 255 255 / 0) 68%
+  );
+}
+
+.cozy-hero__stage .cozy-hero__heading {
+  color: #ffffff;
+  text-shadow: 0 6px 30px rgb(0 30 70 / 0.45);
+}
+
+.cozy-hero__stage .cozy-card__name {
+  color: rgb(255 255 255 / 0.75);
+}
+
+.cozy-hero__stage .cozy-card__price {
+  color: #ffffff;
+}
+
+.cozy-hero__stage .cozy-card__img-wrap {
+  box-shadow: 0 18px 40px -22px rgb(0 20 55 / 0.8);
+}
+
+/* Side pets sit on light-blue panels: navy text instead of the old green. */
+.cozy-overlay--side {
+  color: #00387d;
+}
+
+/* Rating star on the light-blue panel: logo gold with a navy outline. */
+.cozy-rating__star polygon {
+  stroke: var(--color-navy);
+  stroke-width: 1.5;
+}
+
+/* Stat badge: a CSS paw "avatar" in the theme blues (replaces the photo). */
+.cozy-avatar-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(32px, 3vw, 44px);
+  height: clamp(32px, 3vw, 44px);
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  background: linear-gradient(145deg, #024ca7 0%, #0049a3 45%, #00387d 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 14px -6px rgb(0 56 125 / 0.6);
+}
+
+.cozy-avatar-badge svg {
+  width: 52%;
+  height: 52%;
+  rotate: -12deg;
+}
+
+.cozy-avatar-plus {
+  background: #ffffff;
+  color: #00408f;
+  border-color: #00408f;
+}
+
+.cozy-stat--on-light .cozy-avatar-badge {
+  border-color: #effdf0;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cozy-avatar-badge svg {
+    transition: rotate 450ms var(--ease-spring);
+  }
+
+  .cozy-stat:hover .cozy-avatar-badge svg {
+    rotate: 8deg;
+  }
+
+  .cozy-hero__stage .cozy-letter:hover {
+    color: var(--color-lightgreen);
+  }
+
+  .cozy-hero__stage .cozy-card[data-tilt]:hover .cozy-card__img-wrap {
+    box-shadow: 0 26px 46px -18px rgb(0 20 55 / 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cozy-hero__stage::after {
+    animation: stage-aurora 22s var(--ease-in-out) infinite alternate;
+    will-change: transform;
+  }
+
+  @keyframes stage-aurora {
+    0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+    50% { transform: translate3d(4%, -3%, 0) rotate(6deg) scale(1.06); }
+    100% { transform: translate3d(-4%, 3%, 0) rotate(-5deg) scale(1.02); }
+  }
+}
+
+/* ─── Reduced motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .navbar {
+    transition: color var(--dur-fast) ease;
+  }
+
+  .navbar.is-away {
+    transform: none;
+  }
+
+  .scroll-progress {
+    display: none;
+  }
+}
+
+/* ─── Flip card (service card with a photo on the back) ────────────────── */
+/* The turn happens on .card-flip__inner, so it never fights the GSAP
+   transforms on .card. Both faces share one grid cell, so the card keeps a
+   real height in the stacked phone layout too. */
+.cards-wrapper .card--flip {
+  display: block;
+  padding: 0;
+  perspective: 1200px;
+}
+
+.card-flip__inner {
+  position: relative;
+  /* Above the invisible hover-area ::after on the middle cards (cards.css). */
+  z-index: 1;
+  display: grid;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-slow) var(--ease-in-out);
+}
+
+.card--flip[data-flipped] .card-flip__inner {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  min-height: 100%;
+  padding: 3.5rem 1.5rem 1.5rem;
+  border-radius: 10px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.card-face--back {
+  justify-content: flex-start;
+  gap: 0.9rem;
+  padding: 1rem 1rem 1.25rem;
+  transform: rotateY(180deg);
+}
+
+/* The back takes its card's colour (same as cards.css). */
+.card-green .card-face--back { background-color: var(--color-green); }
+.card-darkblue .card-face--back { background-color: var(--color-lightblue); }
+.card-orange .card-face--back { background-color: var(--color-yellow); }
+.card-maroon .card-face--back { background-color: var(--color-maroon); }
+.card-pink .card-face--back { background-color: var(--color-pink); }
+
+/* On the yellow card a yellow button would vanish: navy instead. */
+.card-orange .card-face__cta {
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.card-face__photo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.12);
+}
+
+.card-face__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-face--back .card-title {
+  margin-top: 0;
+  font-size: 1.9rem;
+}
+
+.card-face__cta {
+  align-self: flex-start;
+  /* Clear the flip button in the bottom-left corner. */
+  margin-left: 52px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  background: var(--color-yellow);
+  color: var(--color-navy);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Bottom-left: in the desktop fan the next card overlaps this card's right side. */
+.card-flip__toggle {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 11;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(255 255 255 / 0.6);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.25);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.card-flip__toggle svg {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.card--flip[data-flipped] .card-flip__toggle svg {
+  transform: rotate(180deg);
+}
+
+.card-flip__toggle:focus-visible,
+.card-face__cta:focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .card-flip__toggle:hover {
+    background: rgb(0 0 0 / 0.4);
+  }
+}
+
+/* Reduced motion: swap the faces with a short fade instead of a 3D turn. */
+@media (prefers-reduced-motion: reduce) {
+  .card-flip__inner,
+  .card--flip[data-flipped] .card-flip__inner {
+    transform: none;
+    transition: none;
+  }
+  .card-face {
+    transition: opacity var(--dur-fast) linear;
+  }
+  .card-face--back {
+    transform: none;
+    opacity: 0;
+  }
+  .card--flip[data-flipped] .card-face--front {
+    opacity: 0;
+  }
+  .card--flip[data-flipped] .card-face--back {
+    opacity: 1;
+  }
+  .card-flip__toggle svg,
+  .card--flip[data-flipped] .card-flip__toggle svg {
+    transform: none;
+    transition: none;
+  }
+}
