@@ -1,0 +1,734 @@
+{
+  "public/assets/products/carved-wooden-dog-bed/detail.jpg": {
+    "source": "source-assets/product_list/bed/bed_lower.png",
+    "sourceSha1": "399cbbe72e8be2027016e0a25d54491363facf4f",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/carved-wooden-dog-bed/front.jpg": {
+    "source": "source-assets/product_list/bed/bed_front.png",
+    "sourceSha1": "15c6a4763472683146dd23ce4698c56c06f5e689",
+    "fit": "extend",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/carved-wooden-dog-bed/side.jpg": {
+    "source": "source-assets/product_list/bed/bed_side.png",
+    "sourceSha1": "1a3ca4adeffeb5725b7aa5737aafb92497cdee5c",
+    "fit": "extend",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-black-sun-waves/front.jpg": {
+    "source": "source-assets/product_list/Tshirts/black gr.jpg",
+    "sourceSha1": "0efe450d151020ad21f1fd5adbf4a4e3b4f0d55f",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-blue-mischief/back.jpg": {
+    "source": "source-assets/product_list/Tshirts/blue gr f.jpg",
+    "sourceSha1": "d39d0f063d5ceaac9f58094b0a744aff27cb96a5",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-blue-mischief/front.jpg": {
+    "source": "source-assets/product_list/Tshirts/blue f gr.jpg",
+    "sourceSha1": "64aceadd1a62b0a48a7993b54890270444ff39e8",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-lilac-floral/back.jpg": {
+    "source": "source-assets/product_list/Tshirts/pink gr.jpg",
+    "sourceSha1": "b73d97c4ad07623571931a6d5ef2f453c2f1a83f",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-lilac-floral/front.jpg": {
+    "source": "source-assets/product_list/Tshirts/pink front gr.jpg",
+    "sourceSha1": "187097e7445b6f948664bd67d52fdf42a9d8e6f4",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-maroon-chase-the-horizon/front.jpg": {
+    "source": "source-assets/product_list/Tshirts/marhoon gr w.jpg",
+    "sourceSha1": "1a629d17a1eef81f99994858da6c78b0569aed57",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-red-built-for-chaos/back.jpg": {
+    "source": "source-assets/product_list/Tshirts/built for choas red.jpg",
+    "sourceSha1": "0530b39026eba424ea01431f6a63dfe0b2ff5f15",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/dog-tee-white-arch/back.jpg": {
+    "source": "source-assets/product_list/Tshirts/white gr.jpg",
+    "sourceSha1": "195ae3bac140cbac40fb94dbda71e36ffbb98b08",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/human-tee-black-sun-waves/lifestyle.jpg": {
+    "source": "source-assets/product_list/Tshirts/black .jpg",
+    "sourceSha1": "0bdcc1b9470a9288e1a9683f809214038457af3b",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/human-tee-maroon-chase-the-horizon/lifestyle.jpg": {
+    "source": "source-assets/product_list/Tshirts/marhoon.jpg",
+    "sourceSha1": "66cfe002e71783df85a2e5b53a276cd2f0ac199b",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/human-tee-white-arch/lifestyle.jpg": {
+    "source": "source-assets/product_list/Tshirts/white.jpg",
+    "sourceSha1": "68e686e8eecfde18c1355c8a80578a47794a25ec",
+    "fit": "attention",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-banana-apple/back.jpg": {
+    "source": "source-assets/product_list/krunch/krunchbanana&apple_back.jpg",
+    "sourceSha1": "b3a5253091ca2787817ca8a30cf3c835931f7c19",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-banana-apple/both.jpg": {
+    "source": "source-assets/product_list/krunch/krunchbanana&apple_both.jpg",
+    "sourceSha1": "a29fa67aa17702952901630e9d9f18bbdd99d8de",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-banana-apple/front.jpg": {
+    "source": "source-assets/product_list/krunch/krunchbanana&apple_front.jpg",
+    "sourceSha1": "926b2aa570c66b06911a7b58443639f7d12af4ca",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-chicken-cheese/back.jpg": {
+    "source": "source-assets/product_list/krunch/krunchchicken&cheese_back.jpg",
+    "sourceSha1": "82ffee9e12e28fff4a29206baae9ecf01587d90d",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-chicken-cheese/both.jpg": {
+    "source": "source-assets/product_list/krunch/krunchchicken&cheese_both.jpg",
+    "sourceSha1": "9f7706a54804ccc76632835e19aac3fd44f1e940",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-chicken-cheese/front.jpg": {
+    "source": "source-assets/product_list/krunch/krunchchicken&cheese_front.jpg",
+    "sourceSha1": "8f015ef921dc8371d023b8ef329d2a756fa7ad6d",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-chicken-goat-milk/back.jpg": {
+    "source": "source-assets/product_list/krunch/krunchchicken&goatmilk_back.jpg",
+    "sourceSha1": "6c0c7716e972400000d317b1aa96514051b23f10",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-chicken-goat-milk/both.jpg": {
+    "source": "source-assets/product_list/krunch/krunchchicken&goatmilk_both.jpg",
+    "sourceSha1": "14d1fa8ff47ffd2e19de2906bf6a4cfb7fd05070",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-chicken-goat-milk/front.jpg": {
+    "source": "source-assets/product_list/krunch/krunchchicken&goatmilk_front.jpg",
+    "sourceSha1": "75b89cb4ad0b3ae734fe96feb0c133911927b4a3",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-classic-chicken/back.jpg": {
+    "source": "source-assets/product_list/krunch/krunchclassicchicken_back.jpg",
+    "sourceSha1": "c8bec95bf3633ac0309527c9ba2cb3500d7c4e3d",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-classic-chicken/both.jpg": {
+    "source": "source-assets/product_list/krunch/krunchclassicchicken_both.jpg",
+    "sourceSha1": "50489d09549c7d96049b15e0056e6dfc4ef12b0a",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-classic-chicken/front.jpg": {
+    "source": "source-assets/product_list/krunch/krunchclassicchicken_front.jpg",
+    "sourceSha1": "aa745d4f490ab39b4ab508a3f8167962295c9357",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-classic-lamb/back.jpg": {
+    "source": "source-assets/product_list/krunch/krunchclassiclamb_back.jpg",
+    "sourceSha1": "705467b814dd0a492247b9df967fb0034874c449",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-classic-lamb/both.jpg": {
+    "source": "source-assets/product_list/krunch/krunchclassiclamb_both.jpg",
+    "sourceSha1": "785977384aef27542b94252ee3a836cfb3651b17",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-classic-lamb/front.jpg": {
+    "source": "source-assets/product_list/krunch/krunchclassiclamb_front.jpg",
+    "sourceSha1": "bf32b04b43f347c7ef7d5d25a6fd8f2e91848f21",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-pumpkin-carrot/back.jpg": {
+    "source": "source-assets/product_list/krunch/krunchpumpkin&carrot_back.jpg",
+    "sourceSha1": "d582c6abc78d62ac6bc2056539b23214b2112593",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-pumpkin-carrot/both.jpg": {
+    "source": "source-assets/product_list/krunch/krunchpumpkin&carrot_both.jpg",
+    "sourceSha1": "acbd6e1d24321961d49bc686faa1d8337f01c415",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/krunch-pumpkin-carrot/front.jpg": {
+    "source": "source-assets/product_list/krunch/krunchpumpkin&carrot_front.jpg",
+    "sourceSha1": "38f845e5f74aeba0f2fbb0cff2cd202d954bcddb",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/meal-booster-chicken-organs-turmeric/back.jpg": {
+    "source": "source-assets/product_list/meal booster/mealbooster_chickenorganswithturmeric_back.jpg",
+    "sourceSha1": "684560a33e226ae277d443742abec8ce93bdbb1c",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/meal-booster-chicken-organs-turmeric/front.jpg": {
+    "source": "source-assets/product_list/meal booster/mealbooster_chickenorganswithturmeric_front.jpg",
+    "sourceSha1": "780d6303d6aaaacd7af73f42e9daef60e6a64d77",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/meal-booster-lamb-organs/back.jpg": {
+    "source": "source-assets/product_list/meal booster/mealbooster_lamborgans_back.jpg",
+    "sourceSha1": "ab4594fc944d24bec93c13493c56dc6d9c0b0f76",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/meal-booster-lamb-organs/front.jpg": {
+    "source": "source-assets/product_list/meal booster/mealbooster_lamborgans_front.jpg",
+    "sourceSha1": "ee6b229a240b296c3c64769e07b00ab8649aa2f6",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/meal-booster-sardines-anchovies/back.jpg": {
+    "source": "source-assets/product_list/meal booster/mealbooster_sardines&anchovies_back.jpg",
+    "sourceSha1": "47bae7b83708b924a016f55fc17e2800b295b4c0",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/meal-booster-sardines-anchovies/front.jpg": {
+    "source": "source-assets/product_list/meal booster/mealbooster_sardines&anchovies_front.jpg",
+    "sourceSha1": "315cec6fffa3e309c34eab5ec3e52b5b41856159",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/peanut-butter/back.jpg": {
+    "source": "source-assets/product_list/peanutbutter/peanutbutter_back.jpg",
+    "sourceSha1": "ec9bd6177c97c3bebddf79bdf544d5c37e1a9983",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/peanut-butter/front.jpg": {
+    "source": "source-assets/product_list/peanutbutter/peanutbutter_front.jpg",
+    "sourceSha1": "369aecc7d66d48377729608a1f0baae14b02b3b3",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-anchovies/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/anchovies_back.jpg",
+    "sourceSha1": "6b37b5170f4c2f0efa00ce0c0528e9f63533aed3",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-anchovies/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/anchovies_both.jpg",
+    "sourceSha1": "a05d69f8b211cba995e1d29e384172aa2c4be2fd",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-anchovies/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/anchovies_front.jpg",
+    "sourceSha1": "32c2f353396e8a128aeb16e7048b8a1288c91afb",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-breast/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickenbreast_back.jpg",
+    "sourceSha1": "167d01bdc38484c1151eb2970e55be6fd45f9e25",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-breast/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickenbreast_both.jpg",
+    "sourceSha1": "b6b33ca9ea7f9bdf15fbd84ac1ad04707b30fbbd",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-breast/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickenbreast_front.jpg",
+    "sourceSha1": "bd721413a00e231d7558d5690ac3e97a9e269d60",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-coconut/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickencoconut_back.jpg",
+    "sourceSha1": "46b6f4877c65fbf33e606332dc5ccf4add867bed",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-coconut/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickencoconut_both.jpg",
+    "sourceSha1": "4d5d59b3409e353c505891ab2e279791d814fe87",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-coconut/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickencoconut_front.jpg",
+    "sourceSha1": "c5b4e26802058a927b21ef3723e99baa052c9dde",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-feet/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickenfeet_back.jpg",
+    "sourceSha1": "89d55a35d54254f34935e698459163c8479bb8ec",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-feet/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickenfeet_both.jpg",
+    "sourceSha1": "cbd6369e107c4d433300ced77da3a64d80b5cf8d",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-chicken-feet/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/chickenfeet_front.jpg",
+    "sourceSha1": "a1f191bc43d9665f715799a82f8ac57f91038e29",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-lamb-jerky/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/lambjerky_back.jpg",
+    "sourceSha1": "61693057de6b6b6a8e3c25b4aff4b11524c3e54c",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-lamb-jerky/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/lambjerky_both.jpg",
+    "sourceSha1": "08e8027b6ad58dd88846c303025691d5ac7c14ea",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-lamb-jerky/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/lambjerky_front.jpg",
+    "sourceSha1": "e14de26bd67ceef88f61ba307d7f2d24f9e69f9d",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-lamb-organs/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/lamborgans_back.jpg",
+    "sourceSha1": "f5120ccd1140b6a2c43a2ba74c4035c6968575b4",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-lamb-organs/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/lamborgans_both.jpg",
+    "sourceSha1": "c1c9dec4fdea82dc18dc81093c1dc68819c3603c",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-lamb-organs/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/lamborgans_front.jpg",
+    "sourceSha1": "44a27d0860f90cf3ec62f50beb9dd7b27a4e5d56",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-turkey-meaty-chunks/back.jpg": {
+    "source": "source-assets/product_list/dehydrated/turkeymeatychunks_back.jpg",
+    "sourceSha1": "23219d01a3aa257d395d862c155a309ecc776eb0",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-turkey-meaty-chunks/both.jpg": {
+    "source": "source-assets/product_list/dehydrated/turkeymeatychunks_both.jpg",
+    "sourceSha1": "80ec3dbab7801d0e81f1bc8500e605e62a07ca5f",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  },
+  "public/assets/products/prey-turkey-meaty-chunks/front.jpg": {
+    "source": "source-assets/product_list/dehydrated/turkeymeatychunks_front.jpg",
+    "sourceSha1": "995929654346fd343fcd35bf072751d7aea88623",
+    "fit": "pad",
+    "settings": {
+      "version": 1,
+      "size": 1600,
+      "quality": 82,
+      "padRatio": 0.08,
+      "trimThreshold": 28
+    }
+  }
+}
