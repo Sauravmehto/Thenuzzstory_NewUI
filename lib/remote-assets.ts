@@ -15,5 +15,3 @@ export const REMOTE_ASSETS = {
   adventureHarness: "/assets/products/adventure-harness.avif",
   pawBalmDuo: "/assets/products/paw-balm-duo.avif",
 } as const;
-
-export type RemoteAssetKey = keyof typeof REMOTE_ASSETS;

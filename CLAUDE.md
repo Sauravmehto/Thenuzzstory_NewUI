@@ -5,11 +5,39 @@ and a cart → checkout flow built around "instant but never wrong about money".
 
 ## Structure
 - `lib/types.ts`: shared domain + API types. Money is integer **cents** everywhere.
-- `lib/catalog.ts`: product catalog (client snapshot). `lib/server/catalog.ts` = server's live view.
+- `data/catalog.json`: the full catalog (draft / active / archived), edited via `/admin` or `npm run catalog`.
+  `data/catalog.public.json` (card data: names, prices, packs, images; in every page's bundle via the cart) and
+  `data/catalog.details.json` (description + printed label; read only server-side by `lib/server/catalog-details.ts` for
+  the product page) are GENERATED from it, published products only. Never hand-edit them.
+- `lib/catalog.ts`: the shop's catalog = `catalog.public.json` (client snapshot). `lib/server/catalog.ts` = server's live view.
+  Drafts are not in the public file, so cart/quote/checkout treat them as unknown: they can't be bought.
+- `lib/catalog-core/`: plain-Node modules (explicit `.ts` imports, no `@/` aliases, so `node scripts/catalog.ts` runs them):
+  `schema.ts` (model, validation, publish rules), `file-store.ts` (storage interface + file implementation: swap here to
+  move to hosted storage), `importer.ts` (manifest → drafts, idempotent), `admin-ops.ts` (create/edit/status/delete).
+- `data/import/product-list.manifest.json`: reviewed list of products made from `source-assets/product_list` (source photos,
+  never modified). Label text is verbatim; unknowns go in `flags`. `npm run catalog:images` builds the 1600px copies in
+  `public/assets/products/<id>/<view>.jpg`.
+- `/admin` (`app/admin`, `components/admin`, `app/api/admin`): local admin. Needs `ADMIN_PASSWORD` in `.env.local`; off in
+  production builds. Every admin API route calls `guardAdminApi` (session + same-origin).
+- `lib/store-config.ts`: currency + shipping, switched together. `lib/shop-filters.ts`: the /shop filter row.
+- Pack sizes: a product's `variants` are sold as SKUs `<id>--<pack>` (e.g. `prey-anchovies--70g`); the product id alone
+  can't be bought. `lib/catalog.ts` `getProduct(sku)` resolves a pack, `purchasableId()` picks the default pack.
+- `source-assets/`: original product photos and the pricing workbook. Not in `public/`, so never deployed.
+  `npm run catalog -- prices "source-assets/product price/<file>.xlsx" [--stock 50] [--apply] [--publish]`.
+- Homepage service cards (`lib/data.js` `CARDS_DATA`): a card with a `photo` flips to show it (`FlipCard` in
+  `components/ServiceCards.jsx`); the turn is on an inner layer because GSAP transforms `.card`.
+- Customer accounts: `lib/account.tsx` (provider: session, sign in/up/out, cart + wishlist sync, panel state),
+  `components/AccountDrawer.tsx` (sign in / create account / order history side panel), `app/api/account/*`.
+  Server: `lib/server/auth.ts` (scrypt passwords, HMAC-signed httpOnly session cookie, Origin check, throttling),
+  `lib/server/account-store.ts` (Netlify Blobs on Netlify, `.data/accounts` files locally; never commit `.data/`),
+  `lib/server/account-data.ts` (carts/wishlists re-validated against the catalog; order history appended by `/api/orders`).
+  Production needs `AUTH_SECRET` (32+ chars); without it sign-in reports unavailable and shopping still works.
 - `lib/pricing.ts`: `buildQuote`, `diffQuotes`, shipping rules (pure, unit-tested).
 - `lib/cart-state.ts`: pure reducer: `confirmed` vs `pending`, seq numbers for races.
 - `lib/cart.tsx`: provider; optimistic updates → `POST /api/cart` → confirm / rollback.
-- `app/api/checkout/route.ts`: re-prices server-side; 409 `quote_changed` with a diff; idempotency key.
+- `app/api/orders/route.ts`: WhatsApp checkout. Re-prices server-side, 409 `quote_changed` with a diff, idempotency key, saves the order (`lib/server/order-store.ts`: Netlify Blobs `orders` / `<DATA_DIR or .data>/orders`) BEFORE the WhatsApp link is returned. No online payments: methods live in `lib/payment-methods.ts`. Customer validation: `lib/validation.ts`; message: `lib/whatsapp-order.ts`.
+- Admin orders: `/admin/orders` (`components/admin/AdminOrders.tsx`, `app/api/admin/orders`): lists saved orders from the order store, changes order/payment status (PATCH only touches those two fields). Same admin login as the catalog admin; on Netlify it needs `ADMIN_ENABLE_IN_PRODUCTION=1`.
+- Demo cookie only works in dev/test builds (`demoEnabled()`), never on live prices.
 - `lib/server/demo.ts` + `components/DemoPanel.tsx`: cookie-driven latency / failure / price / stock demo.
 - Styles: plain CSS per section in `app/styles/`; flow states in `app/styles/flow.css`.
 
@@ -26,4 +54,7 @@ and a cart → checkout flow built around "instant but never wrong about money".
 
 ## Commands
 - `npm run dev` · `npm run build` · `npm run typecheck`
-- `npm test` (Vitest) · `npm run test:e2e` (Playwright; builds must exist: `npm run build` first)
+- `npm test` (Vitest) · `npm run test:e2e` (Playwright; run `npm run build:e2e` first: it builds into `.next-e2e`
+  with the frozen demo-product fixture `tests/fixtures/catalog.public.e2e.json`, independent of what's published)
+- `npm run catalog -- status | import [--apply] | sync-public [--check]` · `npm run catalog:images [-- --check]`
+- Never invent prices, stock, weights or specs for imported products; label MRP is a hint only, never the selling price.

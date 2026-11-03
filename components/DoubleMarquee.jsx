@@ -232,12 +232,17 @@ export default function DoubleMarquee() {
                 >
                   <div className="marquee-logo">
                     <div className="marquee-logo__before"></div>
-                    <img
-                      src={item.brand.src}
-                      loading="lazy"
-                      alt={item.brand.name}
-                      className="cover-image"
-                    />
+                    {/* The second half of each track is a copy for the seamless loop:
+                        hide it from screen readers so each brand is read once. */}
+                    <div className="marquee-logo__card">
+                      <img
+                        src={item.brand.src}
+                        loading="lazy"
+                        decoding="async"
+                        alt={i < trackItems.length / 2 ? item.brand.name : ""}
+                        className="cover-image"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

@@ -1,7 +1,9 @@
+import { STORE_MONEY } from "./store-config";
 import type { CartLine, Cents, LineChange, Product, Quote, QuoteLine } from "./types";
 
-export const SHIPPING_CENTS: Cents = 499;
-export const FREE_SHIPPING_THRESHOLD_CENTS: Cents = 5000;
+// Set in lib/store-config.ts together with the currency.
+export const SHIPPING_CENTS: Cents = STORE_MONEY.shippingCents;
+export const FREE_SHIPPING_THRESHOLD_CENTS: Cents = STORE_MONEY.freeShippingThresholdCents;
 
 export const shippingFor = (subtotalCents: Cents): Cents =>
   subtotalCents === 0 || subtotalCents >= FREE_SHIPPING_THRESHOLD_CENTS ? 0 : SHIPPING_CENTS;

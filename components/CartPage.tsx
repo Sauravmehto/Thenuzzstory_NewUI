@@ -8,14 +8,22 @@ import { getProduct } from "@/lib/catalog";
 import { saveLastOrder } from "@/lib/last-order";
 import { formatPrice } from "@/lib/money";
 import { buildQuote, FREE_SHIPPING_THRESHOLD_CENTS } from "@/lib/pricing";
-import { CUSTOMER_FIELDS, validateCustomer, validateField, type CustomerField } from "@/lib/validation";
+import { DEFAULT_PAYMENT_METHOD, PAYMENT_OPTIONS } from "@/lib/payment-methods";
+import {
+  CUSTOMER_FIELDS,
+  INDIAN_STATES,
+  cleanCustomer,
+  validateCustomer,
+  validateField,
+  type CustomerField,
+} from "@/lib/validation";
 import type {
   CartLine,
   CheckoutCustomer,
-  CheckoutRequest,
-  CheckoutResponse,
   LineChange,
-  Payment,
+  OrderRequest,
+  OrderResponse,
+  PaymentMethod,
   Quote,
 } from "@/lib/types";
 import SiteHeader from "@/components/SiteHeader";
@@ -24,7 +32,6 @@ import CartLineItem from "@/components/CartLineItem";
 import CheckoutSteps from "@/components/CheckoutSteps";
 import { CheckoutSkeleton } from "@/components/Skeletons";
 import AnimatedPrice from "@/components/AnimatedPrice";
-import WalletPayDialog from "@/components/WalletPayDialog";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useBump } from "@/lib/hooks/useBump";
 import { useExitingItems } from "@/lib/hooks/useExitingItems";
@@ -37,33 +44,72 @@ interface FieldConfig {
   label: string;
   span: 1 | 2;
   autoComplete: string;
-  inputMode?: "email" | "text";
+  kind: "text" | "email" | "tel" | "textarea" | "select";
+  inputMode?: "email" | "text" | "tel" | "numeric";
+  maxLength?: number;
+  /** HTML pattern: the same shape the JavaScript and server checks accept. */
+  pattern?: string;
   hint?: string;
 }
 
 // No example values as placeholders: grey "Jane Doe" text reads like a
 // filled-in field and people skip it. Labels + a hint where it helps.
+// Every field is required (HTML `required` + the checks in lib/validation.ts).
 const FIELDS: FieldConfig[] = [
-  { name: "name", label: "Full name", span: 2, autoComplete: "name" },
+  { name: "name", label: "Full name", span: 2, autoComplete: "name", kind: "text", maxLength: 80 },
+  {
+    name: "phone",
+    label: "Mobile number",
+    span: 1,
+    autoComplete: "tel-national",
+    kind: "tel",
+    inputMode: "tel",
+    maxLength: 16,
+    // "\-" not "-": browsers compile `pattern` with the `v` flag, where a bare "-" in [...] is invalid.
+    pattern: "(?:\\+?91[\\s\\-]?|0)?[6-9][0-9]{4}[\\s\\-]?[0-9]{5}",
+    hint: "10 digits; we'll call or WhatsApp you on this",
+  },
   {
     name: "email",
-    label: "Email",
-    span: 2,
+    label: "Email address",
+    span: 1,
     autoComplete: "email",
+    kind: "email",
     inputMode: "email",
-    hint: "for your receipt and tracking, nothing else",
+    maxLength: 254,
   },
-  { name: "address", label: "Address", span: 2, autoComplete: "street-address" },
-  { name: "city", label: "City", span: 1, autoComplete: "address-level2" },
-  { name: "zip", label: "Postal code", span: 1, autoComplete: "postal-code" },
+  {
+    name: "address",
+    label: "Complete delivery address",
+    span: 2,
+    autoComplete: "street-address",
+    kind: "textarea",
+    maxLength: 300,
+    hint: "house or flat number, street, area, landmark",
+  },
+  { name: "city", label: "City", span: 1, autoComplete: "address-level2", kind: "text", maxLength: 60 },
+  {
+    name: "pin",
+    label: "PIN code",
+    span: 1,
+    autoComplete: "postal-code",
+    kind: "text",
+    inputMode: "numeric",
+    maxLength: 7,
+    pattern: "[1-9][0-9]{5}",
+  },
+  { name: "state", label: "State", span: 2, autoComplete: "address-level1", kind: "select" },
 ];
 
 type Status = "idle" | "placing" | "review" | "success";
-type PayMethod = "card" | "wallet";
 
-/** Stable signature of a quote, so a retry of the same order reuses its key. */
-const signature = (q: Quote) =>
-  q.lines.map((l) => `${l.id}:${l.qty}:${l.unitCents}`).join("|") + `=${q.totalCents}`;
+/**
+ * Stable signature of an order attempt: the cart, the total AND the details. A
+ * retry of the very same order reuses its key (so it can never create a second
+ * order); changing anything, even the address, starts a new attempt.
+ */
+const signature = (q: Quote, c: CheckoutCustomer) =>
+  q.lines.map((l) => `${l.id}:${l.qty}:${l.unitCents}`).join("|") + `=${q.totalCents}#${JSON.stringify(cleanCustomer(c))}`;
 
 const sameLines = (a: readonly CartLine[], b: readonly CartLine[]) =>
   a.length === b.length && a.every((l, i) => l.id === b[i]?.id && l.qty === b[i]?.qty);
@@ -79,7 +125,7 @@ function describeChange(change: LineChange): string {
   }
 }
 
-const emptyCustomer: CheckoutCustomer = { name: "", email: "", address: "", city: "", zip: "" };
+const emptyCustomer: CheckoutCustomer = { name: "", phone: "", email: "", address: "", city: "", state: "", pin: "" };
 
 export default function CartPage() {
   const router = useRouter();
@@ -92,8 +138,7 @@ export default function CartPage() {
   const [announcement, setAnnouncement] = useState("");
   const [serverQuote, setServerQuote] = useState<Quote | null>(null);
   const [changes, setChanges] = useState<LineChange[]>([]);
-  const [payMethod, setPayMethod] = useState<PayMethod>("card");
-  const [walletOpen, setWalletOpen] = useState(false);
+  const [payMethod, setPayMethod] = useState<PaymentMethod>(DEFAULT_PAYMENT_METHOD);
   // Bumped on every failed attempt so the button's "shake" animation replays.
   const [shakeKey, setShakeKey] = useState(0);
   const placeOrderRef = useRef<HTMLButtonElement>(null);
@@ -117,6 +162,7 @@ export default function CartPage() {
   const summaryButtonRef = useRef<HTMLDivElement>(null);
   const inFlight = useRef(false);
   const idempotency = useRef<{ sig: string; key: string } | null>(null);
+  const confirmed = useRef(false);
   const [summaryButtonVisible, setSummaryButtonVisible] = useState(true);
 
   // The quote the customer is looking at. If the server has priced this exact
@@ -174,7 +220,7 @@ export default function CartPage() {
 
   function focusField(field: CustomerField) {
     const el = formRef.current?.elements.namedItem(field);
-    if (el instanceof HTMLInputElement) el.focus();
+    if (el instanceof HTMLElement) el.focus();
   }
 
   /** Client-side check first: no round trip to find a typo. Returns true when the form is good. */
@@ -190,8 +236,12 @@ export default function CartPage() {
     return false;
   }
 
-  async function submitOrder(expected: Quote, payment: Payment = { method: "card" }) {
-    if (inFlight.current) return; // blocks double-clicks within the same frame
+  /**
+   * Save the order on the server, then open WhatsApp. The cart is only cleared
+   * (and WhatsApp only opened) after the server confirms the order was saved.
+   */
+  async function submitOrder(expected: Quote) {
+    if (inFlight.current || confirmed.current) return; // blocks double-clicks within the same frame
     if (!checkForm()) return;
 
     inFlight.current = true;
@@ -200,20 +250,20 @@ export default function CartPage() {
     setAnnouncement("");
 
     // Same order intent → same key, so a retry can never create a second order.
-    const sig = signature(expected);
+    const sig = signature(expected, values);
     if (idempotency.current?.sig !== sig) {
       idempotency.current = { sig, key: crypto.randomUUID() };
     }
 
-    const body: CheckoutRequest = {
-      customer: values,
+    const body: OrderRequest = {
+      customer: cleanCustomer(values),
       items: expected.lines.map(({ id, qty }) => ({ id, qty })),
       expected: { lines: expected.lines, totalCents: expected.totalCents },
-      payment,
+      paymentMethod: payMethod,
     };
 
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,17 +271,40 @@ export default function CartPage() {
         },
         body: JSON.stringify(body),
       });
-      const result = (await res.json()) as CheckoutResponse;
+      const result = (await res.json().catch(() => null)) as OrderResponse | null;
+      if (!result) {
+        setErrors({ form: `Something went wrong on our side (error ${res.status}). Your order was not placed and your cart is safe. Please try again.` });
+        setShakeKey((k) => k + 1);
+        setStatus("idle");
+        return;
+      }
 
       if (result.ok) {
+        confirmed.current = true;
+        // Try to open WhatsApp in a new tab. If the browser blocks it, the
+        // confirmation page has a button that does the same thing.
+        let opened = false;
+        try {
+          const tab = window.open(result.whatsappUrl, "_blank");
+          if (tab) {
+            tab.opener = null;
+            opened = true;
+          }
+        } catch {
+          /* blocked: handled by the button on the confirmation page */
+        }
         saveLastOrder({
           orderId: result.orderId,
-          placedAt: new Date().toISOString(),
+          placedAt: result.placedAt,
           quote: result.quote,
-          customer: values,
-          payment: result.payment,
+          customer: cleanCustomer(values),
+          paymentMethod: result.paymentMethod,
+          status: result.status,
+          paymentStatus: result.paymentStatus,
+          whatsappUrl: result.whatsappUrl,
+          whatsappOpened: opened,
         });
-        // A short "order placed ✓" beat on the button before we move on,
+        // A short "order saved ✓" beat on the button before we move on,
         // so success registers where the user is looking.
         setStatus("success");
         window.setTimeout(
@@ -266,7 +339,7 @@ export default function CartPage() {
           setStatus("idle");
       }
     } catch {
-      setErrors({ form: "Network hiccup: your order wasn't placed. Please try again." });
+      setErrors({ form: "We couldn't reach the store, so your order was not placed. Your cart is safe: check your connection and try again." });
       setShakeKey((k) => k + 1);
       setStatus("idle");
     } finally {
@@ -276,11 +349,6 @@ export default function CartPage() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (payMethod === "wallet") {
-      // Same form check, then the wallet takes over (connect → review → sign → confirm).
-      if (checkForm()) setWalletOpen(true);
-      return;
-    }
     void submitOrder(quote);
   };
 
@@ -355,34 +423,61 @@ export default function CartPage() {
                 {announcement}
               </p>
               <div className="cart-shipping__grid">
-                {FIELDS.map(({ name, label, span, autoComplete, inputMode, hint }) => {
+                {FIELDS.map(({ name, label, span, autoComplete, kind, inputMode, maxLength, pattern, hint }) => {
                   const error = errors[name];
                   const valid = touched[name] && !error && values[name].length > 0;
                   const describedBy = [hint && `ck-${name}-hint`, error && `ck-${name}-error`]
                     .filter(Boolean)
                     .join(" ");
+                  const common = {
+                    id: `ck-${name}`,
+                    name,
+                    required: true,
+                    "aria-required": true as const,
+                    autoComplete,
+                    value: values[name],
+                    onBlur: () => onFieldBlur(name),
+                    "aria-invalid": error ? (true as const) : undefined,
+                    "aria-describedby": describedBy || undefined,
+                  };
                   return (
                     <div
                       key={name}
                       className={`contact-field cart-field--span-${span}`}
                       data-valid={valid || undefined}
                     >
-                      <label htmlFor={`ck-${name}`}>{label}</label>
-                      <input
-                        id={`ck-${name}`}
-                        name={name}
-                        type={name === "email" ? "email" : "text"}
-                        inputMode={inputMode}
-                        autoComplete={autoComplete}
-                        autoCapitalize={name === "email" ? "none" : undefined}
-                        spellCheck={name === "email" ? false : undefined}
-                        enterKeyHint={name === "zip" ? "done" : "next"}
-                        value={values[name]}
-                        onChange={(e) => onFieldChange(name, e.target.value)}
-                        onBlur={() => onFieldBlur(name)}
-                        aria-invalid={error ? true : undefined}
-                        aria-describedby={describedBy || undefined}
-                      />
+                      <label htmlFor={`ck-${name}`}>
+                        {label} <span className="cart-field__req" aria-hidden="true">*</span>
+                      </label>
+                      {kind === "textarea" ? (
+                        <textarea
+                          {...common}
+                          rows={3}
+                          maxLength={maxLength}
+                          onChange={(e) => onFieldChange(name, e.target.value)}
+                        />
+                      ) : kind === "select" ? (
+                        <select {...common} onChange={(e) => onFieldChange(name, e.target.value)}>
+                          <option value="">Choose your state</option>
+                          {INDIAN_STATES.map((st) => (
+                            <option key={st} value={st}>
+                              {st}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          {...common}
+                          type={kind}
+                          inputMode={inputMode}
+                          maxLength={maxLength}
+                          pattern={pattern}
+                          autoCapitalize={kind === "email" ? "none" : undefined}
+                          spellCheck={kind === "email" ? false : undefined}
+                          enterKeyHint={name === "pin" ? "done" : "next"}
+                          onChange={(e) => onFieldChange(name, e.target.value)}
+                        />
+                      )}
                       {hint && !error && (
                         <span id={`ck-${name}-hint`} className="cart-field__hint">
                           {hint}
@@ -435,35 +530,22 @@ export default function CartPage() {
             </div>
 
             <fieldset className="pay-method" disabled={busy}>
-              <legend>pay with</legend>
-              <label data-checked={payMethod === "card" || undefined}>
-                <input
-                  type="radio"
-                  name="pay-method"
-                  value="card"
-                  checked={payMethod === "card"}
-                  onChange={() => setPayMethod("card")}
-                />
-                <span>
-                  <strong>card</strong>
-                  <small>demo: nothing is charged</small>
-                </span>
-              </label>
-              <label data-checked={payMethod === "wallet" || undefined}>
-                <input
-                  type="radio"
-                  name="pay-method"
-                  value="wallet"
-                  checked={payMethod === "wallet"}
-                  onChange={() => setPayMethod("wallet")}
-                />
-                <span>
-                  <strong>
-                    crypto wallet <span className="wallet-sim-badge">simulated</span>
-                  </strong>
-                  <small>connect, sign, confirm</small>
-                </span>
-              </label>
+              <legend>how to order</legend>
+              {PAYMENT_OPTIONS.map((option) => (
+                <label key={option.id} data-checked={payMethod === option.id || undefined}>
+                  <input
+                    type="radio"
+                    name="pay-method"
+                    value={option.id}
+                    checked={payMethod === option.id}
+                    onChange={() => setPayMethod(option.id)}
+                  />
+                  <span>
+                    <strong>{option.label}</strong>
+                    <small>{option.description}</small>
+                  </span>
+                </label>
+              ))}
             </fieldset>
 
             <div ref={summaryButtonRef}>
@@ -507,15 +589,15 @@ export default function CartPage() {
                 >
                   {succeeded ? (
                     <>
-                      <IconCheck className="place-order__check" /> order placed
+                      <IconCheck className="place-order__check" /> order saved
                     </>
                   ) : placing ? (
                     <>
-                      <span className="btn-spinner" aria-hidden="true" /> placing order…
+                      <span className="btn-spinner" aria-hidden="true" /> saving your order…
                     </>
                   ) : (
                     <>
-                      {payMethod === "wallet" ? "pay with wallet" : errors.form ? "try again" : "place order"} ·{" "}
+                      {errors.form ? "try again" : "place order"} ·{" "}
                       {formatPrice(quote.totalCents)}
                       <IconArrowRight className="cozy-btn-orange__icon" />
                     </>
@@ -529,9 +611,12 @@ export default function CartPage() {
               </p>
             )}
             <p className="visually-hidden" role="status">
-              {succeeded ? "Order placed. Taking you to your receipt." : ""}
+              {succeeded ? "Your order has been saved. Opening WhatsApp and taking you to your confirmation." : ""}
             </p>
-            <p className="cart-summary__note">demo store: no real payment is taken.</p>
+            <p className="cart-summary__note">
+              No payment is taken on this website. After you place your order we open WhatsApp so you can send it to
+              our team; they&apos;ll confirm payment and delivery with you directly.
+            </p>
             <Link href="/shop" className="cart-summary__continue">
               ← continue shopping
             </Link>
@@ -559,23 +644,9 @@ export default function CartPage() {
           className="cozy-btn-orange checkout-sticky__btn"
           disabled={busy || !hydrated}
         >
-          {succeeded ? "placed ✓" : placing ? "placing…" : payMethod === "wallet" ? "pay with wallet" : "place order"}
+          {succeeded ? "saved ✓" : placing ? "saving…" : "place order"}
         </button>
       </div>
-
-      <WalletPayDialog
-        open={walletOpen}
-        items={items}
-        shownQuote={quote}
-        onClose={() => setWalletOpen(false)}
-        onQuoteChanged={(serverPriced) => {
-          setServerQuote(serverPriced);
-          replaceLines(serverPriced.lines.map(({ id, qty }) => ({ id, qty })));
-        }}
-        onPaid={({ account, txHash, quote: paidQuote }) =>
-          void submitOrder(paidQuote, { method: "wallet", account, txHash })
-        }
-      />
 
       <SiteFooter />
     </div>

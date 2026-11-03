@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import Link from "next/link";
 import { getProduct } from "@/lib/catalog";
-import { deliveryWindow } from "@/lib/delivery";
-import { readLastOrder, type PlacedOrder } from "@/lib/last-order";
+import { markWhatsappOpened, readLastOrder, type PlacedOrder } from "@/lib/last-order";
 import { formatPrice } from "@/lib/money";
-import { NETWORK_FEE_CENTS, shortAddress } from "@/lib/wallet-machine";
+import { ORDER_STATUS_LABEL, PAYMENT_STATUS_LABEL } from "@/lib/order-types";
+import { PAYMENT_OPTIONS } from "@/lib/payment-methods";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CheckoutSteps from "@/components/CheckoutSteps";
@@ -16,9 +16,9 @@ import { IconArrowRight, IconCheck, IconTruck } from "@/components/icons";
 type Loaded = { state: "loading" } | { state: "missing" } | { state: "ready"; order: PlacedOrder };
 
 const NEXT_STEPS = [
-  { title: "we're packing it", body: "a real human (and a supervising cat) packs your order today." },
-  { title: "it ships", body: "you'll get a tracking link by email as soon as it leaves us." },
-  { title: "tail wags", body: "it arrives in 2–4 working days. free returns for 30 days." },
+  { title: "send your order on WhatsApp", body: "send the pre-filled message. Your order is only confirmed once our team has it." },
+  { title: "we confirm with you", body: "our team replies on WhatsApp to confirm your order and arrange payment." },
+  { title: "we pack and ship", body: "once payment is arranged, your order is packed and sent to your delivery address." },
 ];
 
 export default function OrderConfirmation() {
@@ -59,7 +59,10 @@ export default function OrderConfirmation() {
             <h1 ref={headingRef} tabIndex={-1}>
               no recent order here
             </h1>
-            <p>Receipts only stay in this tab. If you placed an order, check your email.</p>
+            <p>
+              This page only remembers your latest order while this tab is open. If you placed an order, our team will
+              reply to you on WhatsApp.
+            </p>
             <Link href="/shop" className="cozy-btn-orange">
               browse the shop <IconArrowRight className="cozy-btn-orange__icon" />
             </Link>
@@ -89,7 +92,9 @@ function Receipt({
 }) {
   const { quote, customer } = order;
   const firstName = customer.name.trim().split(/\s+/)[0] ?? "";
-  const arrives = deliveryWindow(new Date(order.placedAt));
+  const method = PAYMENT_OPTIONS.find((o) => o.id === order.paymentMethod);
+  // Local copy of "opened" so the note updates the moment the button is used.
+  const [opened, setOpened] = useState(order.whatsappOpened);
 
   return (
     <>
@@ -100,10 +105,11 @@ function Receipt({
           <IconCheck />
         </span>
         <h1 ref={headingRef} tabIndex={-1}>
-          Thank you{firstName ? `, ${firstName}` : ""}! 🐾
+          Your order is recorded{firstName ? `, ${firstName}` : ""}! 🐾
         </h1>
         <p className="order-confirm__lead">
-          Your order is confirmed. A (pretend) receipt is on its way to <strong>{customer.email}</strong>.
+          Your order has been recorded. <strong>Please send the pre-filled WhatsApp message to confirm your order.</strong>{" "}
+          Our team will contact you regarding payment and delivery.
         </p>
         <div className="order-confirm__id">
           <span>order</span>
@@ -116,6 +122,30 @@ function Receipt({
           </span>
         </div>
       </header>
+
+      <section className="order-whatsapp" aria-labelledby="whatsapp-title">
+        <h2 id="whatsapp-title">send your order on WhatsApp</h2>
+        <a
+          className="order-whatsapp__btn"
+          href={order.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            markWhatsappOpened();
+            setOpened(true);
+          }}
+        >
+          {opened ? "open WhatsApp again" : "open WhatsApp"} <IconArrowRight className="cozy-btn-orange__icon" />
+        </a>
+        <p className="order-whatsapp__note" role="status">
+          {opened
+            ? "We tried to open WhatsApp in a new tab. Opening it doesn't send anything: please check that you pressed send. If it didn't open, use the button above."
+            : "Your browser didn't open WhatsApp automatically. Use the button above to open it with your order filled in."}
+        </p>
+        <p className="order-whatsapp__note">
+          Your order is not confirmed until our team receives your message and replies. Nothing has been charged.
+        </p>
+      </section>
 
       <div className="order-confirm__grid">
         <section className="order-card" aria-labelledby="receipt-title">
@@ -143,40 +173,43 @@ function Receipt({
               <dd>{formatPrice(quote.subtotalCents)}</dd>
             </div>
             <div>
-              <dt>Shipping</dt>
+              <dt>Delivery</dt>
               <dd>{quote.shippingCents === 0 ? "Free" : formatPrice(quote.shippingCents)}</dd>
             </div>
             <div className="order-totals__total">
-              <dt>Total paid</dt>
+              <dt>Total to pay</dt>
               <dd>{formatPrice(quote.totalCents)}</dd>
             </div>
           </dl>
-          <p className="order-paid-with">
-            {order.payment?.method === "wallet" ? (
-              <>
-                paid with wallet <code>{shortAddress(order.payment.account)}</code> · tx{" "}
-                <code>{shortAddress(order.payment.txHash)}</code>{" "}
-                <span className="wallet-sim-badge">simulated</span>
-                <br />
-                plus a {formatPrice(NETWORK_FEE_CENTS)} network fee, paid from your wallet
-              </>
-            ) : (
-              <>paid by card (demo: nothing was charged)</>
-            )}
-          </p>
+          <dl className="order-status">
+            <div>
+              <dt>Order status</dt>
+              <dd data-tone="pending">{ORDER_STATUS_LABEL[order.status]}</dd>
+            </div>
+            <div>
+              <dt>Payment status</dt>
+              <dd data-tone="pending">{PAYMENT_STATUS_LABEL[order.paymentStatus]}</dd>
+            </div>
+            <div>
+              <dt>Payment method</dt>
+              <dd>{method?.receiptLabel ?? order.paymentMethod}: pay as arranged</dd>
+            </div>
+          </dl>
         </section>
 
         <div className="order-confirm__side">
           <section className="order-card" aria-labelledby="delivery-title">
             <h2 id="delivery-title">
-              <IconTruck /> arriving {arrives}
+              <IconTruck /> delivering to
             </h2>
             <address className="order-address">
               {customer.name}
               <br />
               {customer.address}
               <br />
-              {customer.city} {customer.zip}
+              {customer.city}, {customer.state} {customer.pin}
+              <br />
+              +91 {customer.phone.slice(0, 5)} {customer.phone.slice(5)}
             </address>
           </section>
 
@@ -198,7 +231,6 @@ function Receipt({
         <Link href="/shop" className="cozy-btn-orange">
           keep shopping <IconArrowRight className="cozy-btn-orange__icon" />
         </Link>
-        <p className="cart-summary__note">demo store: no real payment was taken and no email is sent.</p>
       </div>
     </>
   );

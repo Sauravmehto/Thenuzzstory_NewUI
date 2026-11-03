@@ -134,8 +134,8 @@ test.describe("motion and microinteractions", () => {
     const indicator = page.locator(".shop-filters__indicator");
     await expect(indicator).toBeVisible();
     const before = await indicator.boundingBox();
-    await page.getByRole("button", { name: "toys & play" }).click();
-    const pill = await page.getByRole("button", { name: "toys & play" }).boundingBox();
+    await page.getByRole("button", { name: "krunch", exact: true }).click();
+    const pill = await page.getByRole("button", { name: "krunch", exact: true }).boundingBox();
     await expect.poll(async () => Math.round((await indicator.boundingBox())!.x)).toBe(Math.round(pill!.x));
     expect(before!.x).not.toBe(pill!.x);
   });

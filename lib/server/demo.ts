@@ -20,7 +20,18 @@ export interface DemoState {
 
 export const DEFAULT_DEMO: DemoState = { latencyMs: 0, failNextCart: false };
 
+/**
+ * Demo controls can change the SERVER's prices and stock (priceBump,
+ * stockDrop), and they arrive in a cookie the browser controls. On a live
+ * store that would let anyone order at a price they picked, so they only work
+ * in development and in the test build (demo-USD profile). Everywhere else the
+ * cookie is ignored.
+ */
+export const demoEnabled = () =>
+  process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_STORE_PROFILE === "demo-usd";
+
 export function readDemo(req: NextRequest): DemoState {
+  if (!demoEnabled()) return DEFAULT_DEMO;
   const raw = req.cookies.get(DEMO_COOKIE)?.value;
   if (!raw) return DEFAULT_DEMO;
   try {

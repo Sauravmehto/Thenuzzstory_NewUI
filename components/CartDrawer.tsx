@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import { getProduct, PRODUCTS } from "@/lib/catalog";
+import { getProduct, PRODUCTS, purchasableId } from "@/lib/catalog";
 import { useDialog } from "@/lib/hooks/useDialog";
 import { useExitingItems } from "@/lib/hooks/useExitingItems";
 import { useBump } from "@/lib/hooks/useBump";
@@ -44,7 +44,7 @@ export default function CartDrawer() {
   // Fills the empty drawer with something useful instead of whitespace.
   const inCart = new Set(items.map((i) => i.id));
   const anchor = lines[lines.length - 1]?.product;
-  const suggestions = PRODUCTS.filter((p) => !inCart.has(p.id) && p.stock > 0)
+  const suggestions = PRODUCTS.filter((p) => !inCart.has(p.id) && purchasableId(p) !== null)
     .sort((a, b) => Number(b.category === anchor?.category) - Number(a.category === anchor?.category))
     .slice(0, 2);
 
@@ -133,7 +133,7 @@ export default function CartDrawer() {
                         type="button"
                         className="cozy-icon-btn cart-suggest__add"
                         aria-label={`Add ${p.name} to cart`}
-                        onClick={() => addItem(p.id)}
+                        onClick={() => addItem(purchasableId(p)!)}
                       >
                         <IconPlus />
                       </button>

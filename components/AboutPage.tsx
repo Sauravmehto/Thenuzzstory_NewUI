@@ -8,6 +8,7 @@ import SiteFooter from "@/components/SiteFooter";
 import SmartImage from "@/components/SmartImage";
 import { REMOTE_ASSETS } from "@/lib/remote-assets";
 import { IconArrowRight, IconArrowUpRight } from "@/components/icons";
+import { getProduct } from "@/lib/catalog";
 
 /* ─── Content ──────────────────────────────────────────────────────────── */
 
@@ -22,7 +23,7 @@ interface Verdict {
 }
 
 // Every product meets Biscuit before it meets you. Most don't make it.
-const BISCUIT_TEST: Verdict[] = [
+const BISCUIT_VERDICTS: Verdict[] = [
   { item: "the cheap rope ball", result: "lasted 4 minutes", chew: 1, approved: false },
   { item: "rope tug bundle", result: "3 weeks of daily tug, still going", chew: 5, approved: true, href: "/shop/rope-tug-bundle" },
   { item: "“natural” beef jerky", result: "one sniff, walked away", chew: 0, approved: false },
@@ -30,6 +31,11 @@ const BISCUIT_TEST: Verdict[] = [
   { item: "memory foam bed v1", result: "stuffing everywhere by day 2", chew: 1, approved: false },
   { item: "cloud nine bed", result: "won't get out of it", chew: 4, approved: true, href: "/shop/cloud-nine-bed" },
 ];
+
+// Only link to products the shop actually sells right now (archived ones would 404).
+const BISCUIT_TEST: Verdict[] = BISCUIT_VERDICTS.map((v) =>
+  v.href && !getProduct(v.href.replace(/^\/shop\//, "")) ? { ...v, href: undefined } : v,
+);
 
 interface Moment {
   year: string;

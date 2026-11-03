@@ -77,7 +77,7 @@ function sanitize(lines: unknown): CartLine[] {
     const { id, qty } = raw as Record<string, unknown>;
     if (typeof id !== "string" || typeof qty !== "number") continue;
     const product = getProduct(id);
-    if (!product) continue;
+    if (!product || product.variants?.length || product.comingSoon) continue;
     const clamped = Math.min(Math.floor(qty), product.stock);
     if (clamped > 0) out.push({ id, qty: clamped });
   }
@@ -161,7 +161,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const updateQty = useCallback(
     async (id: string, rawQty: number, at?: number) => {
       const product = getProduct(id);
-      if (!product) return;
+      if (!product || product.variants?.length || product.comingSoon) return;
       const qty = Math.max(0, Math.min(99, Math.floor(rawQty)));
       const previous = selectQty(stateRef.current, id);
       if (qty === previous) return;

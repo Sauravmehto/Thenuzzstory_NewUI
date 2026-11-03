@@ -152,96 +152,7 @@ export default function Footer() {
       creditsWrapper.addEventListener("mouseleave", onLeave);
     }
 
-    const footerStickers = gsap.utils.toArray(".footer-sticker");
-    const reduceMotion = prefersReducedMotion();
     const stickerCleanups = [];
-    const stickerRotations = [12, -10, 8, -12, 10, -8];
-    gsap.set(footerStickers, {
-      scale: 0,
-      opacity: 0,
-      transformOrigin: "center bottom",
-    });
-    footerStickers.forEach((sticker, i) =>
-      gsap.set(sticker, {
-        rotation: stickerRotations[i % stickerRotations.length],
-      }),
-    );
-
-    gsap.to(footerStickers, {
-      scale: 1,
-      opacity: 1,
-      // Reduced motion: stickers simply appear, no pop or bounce.
-      ...(reduceMotion && { duration: 0, stagger: 0, ease: "none" }),
-      rotation: (i) => stickerRotations[i % stickerRotations.length] * 0.7,
-      duration: 0.7,
-      ease: "back.out(1.7)",
-      stagger: 0.12,
-      scrollTrigger: {
-        trigger: ".footer-stickers",
-        start: "top 80%",
-        toggleActions: "play none none reverse", // Play on enter, reverse on leave up
-      },
-    });
-
-    footerStickers.forEach((sticker, i) => {
-      if (reduceMotion) return; // no proximity "push" physics
-      const baseRotation = stickerRotations[i % stickerRotations.length] * 0.7;
-      const PROXIMITY_RADIUS = 180,
-        STRENGTH = 4,
-        MAX_PUSH = 55,
-        MIN_SPEED = 3;
-      let prevX = 0,
-        prevY = 0;
-      const clamp = (v, max) => Math.max(-max, Math.min(max, v));
-
-      const onMove = (e) => {
-        const dx = e.clientX - prevX,
-          dy = e.clientY - prevY;
-        prevX = e.clientX;
-        prevY = e.clientY;
-        const rect = sticker.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2,
-          cy = rect.top + rect.height / 2;
-        const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-        const onSticker =
-          e.clientX >= rect.left &&
-          e.clientX <= rect.right &&
-          e.clientY >= rect.top &&
-          e.clientY <= rect.bottom;
-        const speed = Math.hypot(dx, dy);
-
-        const isOverCreditsBox = e.target.closest(".credits-box") !== null;
-
-        if (
-          !onSticker &&
-          !isOverCreditsBox &&
-          dist < PROXIMITY_RADIUS &&
-          speed > MIN_SPEED
-        ) {
-          const falloff = 1 - dist / PROXIMITY_RADIUS;
-          const pushX = clamp(dx * STRENGTH * falloff, MAX_PUSH);
-          const pushY = clamp(dy * STRENGTH * falloff, MAX_PUSH);
-          gsap.killTweensOf(sticker);
-          gsap.to(sticker, {
-            x: pushX,
-            y: pushY,
-            rotation: baseRotation + pushX * 0.25,
-            duration: 0.18,
-            ease: "power3.out",
-          });
-          gsap.to(sticker, {
-            x: 0,
-            y: 0,
-            rotation: baseRotation,
-            duration: 1.1,
-            ease: "elastic.out(1, 0.35)",
-            delay: 0.18,
-          });
-        }
-      };
-      document.addEventListener("mousemove", onMove);
-      stickerCleanups.push(() => document.removeEventListener("mousemove", onMove));
-    });
 
     const wiggleTargets = [
       { selector: ".footer-column:first-child h3", key: "jobHeading" },
@@ -268,10 +179,10 @@ export default function Footer() {
     <div className="footer-inner">
       <div className="footer-top">
         <div className="footer-column">
-          <span className="footer-badge">wanna join the pack?</span>
-          <h3>not hiring right now :(</h3>
+          <span className="footer-badge">hungry for something good?</span>
+          <h3>treats your pet will love</h3>
           <a href="/shop" className="footer-map-link">
-            <span>browse the shop</span>
+            <span>explore our favourite treats</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="100%"
@@ -369,68 +280,6 @@ export default function Footer() {
             height={383}
           />
           <span>THE NUZZ STORY</span>
-        </div>
-
-        <div className="footer-stickers">
-          <div className="footer-sticker sticker-smiley">
-            <img
-              loading="lazy"
-              src="/assets/Footer-Sticker SVG/footer-sticker-smiley.svg"
-              width="100%"
-              alt=""
-              data-scroll-animation-target=""
-              aria-hidden="true"
-            />
-          </div>
-          <div className="footer-sticker sticker-heart">
-            <img
-              loading="lazy"
-              src="/assets/Footer-Sticker SVG/footer-sticker-heart.svg"
-              width="100%"
-              alt=""
-              data-scroll-animation-target=""
-              aria-hidden="true"
-            />
-          </div>
-          <div className="footer-sticker sticker-hands">
-            <img
-              loading="lazy"
-              src="/assets/Footer-Sticker SVG/footer-sticker-hands.svg"
-              width="100%"
-              alt=""
-              data-scroll-animation-target=""
-              aria-hidden="true"
-            />
-          </div>
-          <div className="footer-sticker sticker-100">
-            <img
-              loading="lazy"
-              src="/assets/Footer-Sticker SVG/footer-sticker-100.svg"
-              width="100%"
-              alt=""
-              data-scroll-animation-target=""
-              aria-hidden="true"
-            />
-          </div>
-          <div className="footer-sticker sticker-camera">
-            <img
-              loading="lazy"
-              src="/assets/Footer-Sticker SVG/footer-sticker-camera.svg"
-              width="100%"
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
-          <div className="footer-sticker sticker-boom">
-            <img
-              loading="lazy"
-              src="/assets/Footer-Sticker SVG/footer-sticker-boom.svg"
-              width="100%"
-              alt=""
-              data-scroll-animation-target=""
-              aria-hidden="true"
-            />
-          </div>
         </div>
       </div>
     </div>

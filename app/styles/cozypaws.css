@@ -1765,3 +1765,39 @@ a.shop-card__name:hover {
     gap: 2rem;
   }
 }
+
+/* Account button: an icon (guest) or initials (signed in), styled like the
+   header's other round icon buttons (it also has .cozy-icon-btn). */
+.account-menu__trigger.cozy-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The old avatar style removed the border; the headers set its colour. */
+  border-width: 1px;
+  border-style: solid;
+}
+
+.account-menu__trigger-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.account-menu .account-menu__trigger.cozy-icon-btn[data-signed-in] {
+  border-color: transparent;
+  background: var(--color-yellow);
+  color: var(--color-navy);
+}
+
+@media (hover: hover) {
+  .account-menu .account-menu__trigger.cozy-icon-btn[data-signed-in]:hover {
+    background: var(--color-yellow-dark);
+    color: var(--color-navy);
+  }
+}
+
+.account-menu__initials {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}

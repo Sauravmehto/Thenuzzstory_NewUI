@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { getProduct } from "@/lib/catalog";
+import { getProduct, purchasableId } from "@/lib/catalog";
 import { formatPrice } from "@/lib/money";
 import { useDialog } from "@/lib/hooks/useDialog";
 import { useWishlist } from "@/lib/wishlist";
@@ -19,7 +19,10 @@ export default function WishlistDrawer() {
   const items = ids.map(getProduct).filter(Boolean);
 
   const moveToCart = (id) => {
-    addItem(id);
+    const item = getProduct(id);
+    const target = item && purchasableId(item);
+    if (!target) return;
+    addItem(target);
     remove(id);
     closeWishlist();
     openCart();
@@ -85,13 +88,14 @@ export default function WishlistDrawer() {
                     {item.name}
                   </Link>
                   <p className="shop-cart__line-price">
-                    {formatPrice(item.priceCents)}
+                    {item.comingSoon ? "price coming soon" : formatPrice(item.priceCents)}
                   </p>
                   <button
                     className="wl-move-btn"
                     onClick={() => moveToCart(item.id)}
+                    disabled={!purchasableId(item)}
                   >
-                    <IconPlus /> add to cart
+                    {item.comingSoon ? "coming soon" : <><IconPlus /> add to cart</>}
                   </button>
                 </div>
                 <button

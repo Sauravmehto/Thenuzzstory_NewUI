@@ -16,7 +16,10 @@ export default defineConfig({
       : {},
   },
   webServer: {
+    // Serves the fixture build from `npm run build:e2e` (.next-e2e, demo products).
     command: `npm run start -- -p ${PORT}`,
+    // Test orders and accounts go to a throwaway folder, not your real .data.
+    env: { CATALOG_FIXTURE: "e2e", DATA_DIR: ".data-e2e", ADMIN_PASSWORD: "e2e-admin-password", ADMIN_ENABLE_IN_PRODUCTION: "1", AUTH_SECRET: "e2e-only-secret-not-used-anywhere-else-0123456789" },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,

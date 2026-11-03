@@ -1,0 +1,1112 @@
+{
+  "$comment": "GENERATED from data/catalog.json. Do not edit by hand: use the admin or `npm run catalog -- sync-public`.",
+  "revision": 64,
+  "products": [
+    {
+      "id": "prey-anchovies",
+      "name": "PREY Anchovies",
+      "priceCents": 31000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-anchovies/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-anchovies/front.jpg",
+          "alt": "PREY Anchovies dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-anchovies/both.jpg",
+          "alt": "PREY Anchovies pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-anchovies/back.jpg",
+          "alt": "PREY Anchovies pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-anchovies--70g",
+          "label": "70 g",
+          "priceCents": 31000,
+          "stock": 50,
+          "compareAtCents": 34000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-anchovies--150g",
+          "label": "150 g",
+          "priceCents": 57000,
+          "stock": 50,
+          "compareAtCents": 63000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-anchovies--300g",
+          "label": "300 g",
+          "priceCents": 104000,
+          "stock": 50,
+          "compareAtCents": 115000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 34000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "prey-chicken-breast",
+      "name": "PREY Chicken Breast",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-chicken-breast/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-chicken-breast/front.jpg",
+          "alt": "PREY Chicken Breast dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-chicken-breast/both.jpg",
+          "alt": "PREY Chicken Breast pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-chicken-breast/back.jpg",
+          "alt": "PREY Chicken Breast pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-chicken-breast--70g",
+          "label": "70 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 30000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-chicken-breast--150g",
+          "label": "150 g",
+          "priceCents": 50000,
+          "stock": 50,
+          "compareAtCents": 55000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-chicken-breast--300g",
+          "label": "300 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 100000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 30000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "prey-chicken-coconut",
+      "name": "PREY Chicken Coconut",
+      "priceCents": 29000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-chicken-coconut/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-chicken-coconut/front.jpg",
+          "alt": "PREY Chicken Coconut dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-chicken-coconut/both.jpg",
+          "alt": "PREY Chicken Coconut pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-chicken-coconut/back.jpg",
+          "alt": "PREY Chicken Coconut pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-chicken-coconut--70g",
+          "label": "70 g",
+          "priceCents": 29000,
+          "stock": 50,
+          "compareAtCents": 32000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-chicken-coconut--150g",
+          "label": "150 g",
+          "priceCents": 52000,
+          "stock": 50,
+          "compareAtCents": 58000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-chicken-coconut--300g",
+          "label": "300 g",
+          "priceCents": 94000,
+          "stock": 50,
+          "compareAtCents": 105000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 32000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "prey-chicken-feet",
+      "name": "PREY Chicken Feet",
+      "priceCents": 23000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-chicken-feet/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-chicken-feet/front.jpg",
+          "alt": "PREY Chicken Feet dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-chicken-feet/both.jpg",
+          "alt": "PREY Chicken Feet pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-chicken-feet/back.jpg",
+          "alt": "PREY Chicken Feet pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-chicken-feet--70g",
+          "label": "70 g",
+          "priceCents": 23000,
+          "stock": 50,
+          "compareAtCents": 26000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-chicken-feet--150g",
+          "label": "150 g",
+          "priceCents": 42000,
+          "stock": 50,
+          "compareAtCents": 47000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-chicken-feet--300g",
+          "label": "300 g",
+          "priceCents": 76000,
+          "stock": 50,
+          "compareAtCents": 85000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 26000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "prey-lamb-jerky",
+      "name": "PREY Lamb Jerky",
+      "priceCents": 33000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-lamb-jerky/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-lamb-jerky/front.jpg",
+          "alt": "PREY Lamb Jerky dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-lamb-jerky/both.jpg",
+          "alt": "PREY Lamb Jerky pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-lamb-jerky/back.jpg",
+          "alt": "PREY Lamb Jerky pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-lamb-jerky--70g",
+          "label": "70 g",
+          "priceCents": 33000,
+          "stock": 50,
+          "compareAtCents": 37000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-lamb-jerky--150g",
+          "label": "150 g",
+          "priceCents": 62000,
+          "stock": 50,
+          "compareAtCents": 69000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-lamb-jerky--300g",
+          "label": "300 g",
+          "priceCents": 112000,
+          "stock": 50,
+          "compareAtCents": 125000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 37000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "prey-lamb-organs",
+      "name": "PREY Lamb Organs",
+      "priceCents": 30000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-lamb-organs/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-lamb-organs/front.jpg",
+          "alt": "PREY Lamb Organs dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-lamb-organs/both.jpg",
+          "alt": "PREY Lamb Organs pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-lamb-organs/back.jpg",
+          "alt": "PREY Lamb Organs pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-lamb-organs--70g",
+          "label": "70 g",
+          "priceCents": 30000,
+          "stock": 50,
+          "compareAtCents": 33000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-lamb-organs--150g",
+          "label": "150 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 60000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-lamb-organs--300g",
+          "label": "300 g",
+          "priceCents": 99000,
+          "stock": 50,
+          "compareAtCents": 110000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 33000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "prey-turkey-meaty-chunks",
+      "name": "PREY Turkey Meaty Chunks",
+      "priceCents": 29000,
+      "category": "food & treats",
+      "img": "/assets/products/prey-turkey-meaty-chunks/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/prey-turkey-meaty-chunks/front.jpg",
+          "alt": "PREY Turkey Meaty Chunks dehydrated dog treats pouch, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/prey-turkey-meaty-chunks/both.jpg",
+          "alt": "PREY Turkey Meaty Chunks pouch front and back with treats",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/prey-turkey-meaty-chunks/back.jpg",
+          "alt": "PREY Turkey Meaty Chunks pouch, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "prey-turkey-meaty-chunks--70g",
+          "label": "70 g",
+          "priceCents": 29000,
+          "stock": 50,
+          "compareAtCents": 32000,
+          "grams": 70
+        },
+        {
+          "sku": "prey-turkey-meaty-chunks--150g",
+          "label": "150 g",
+          "priceCents": 53000,
+          "stock": 50,
+          "compareAtCents": 59000,
+          "grams": 150
+        },
+        {
+          "sku": "prey-turkey-meaty-chunks--300g",
+          "label": "300 g",
+          "priceCents": 97000,
+          "stock": 50,
+          "compareAtCents": 108000,
+          "grams": 300
+        }
+      ],
+      "compareAtCents": 32000,
+      "subcategory": "dehydrated treats",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "krunch-banana-apple",
+      "name": "KRUNCH Banana & Apple",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/krunch-banana-apple/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/krunch-banana-apple/front.jpg",
+          "alt": "KRUNCH Banana & Apple dog cookies jar, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/krunch-banana-apple/both.jpg",
+          "alt": "KRUNCH Banana & Apple jars, front and back, with cookies",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/krunch-banana-apple/back.jpg",
+          "alt": "KRUNCH Banana & Apple jar, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "krunch-banana-apple--100g",
+          "label": "100 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 29900,
+          "grams": 100
+        },
+        {
+          "sku": "krunch-banana-apple--250g",
+          "label": "250 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 250
+        },
+        {
+          "sku": "krunch-banana-apple--500g",
+          "label": "500 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 99900,
+          "grams": 500
+        }
+      ],
+      "compareAtCents": 29900,
+      "subcategory": "crunchy dog treats",
+      "brand": "The Nuzz Story",
+      "label": {
+        "keyIngredients": "With oats, apple, banana"
+      }
+    },
+    {
+      "id": "krunch-chicken-cheese",
+      "name": "KRUNCH Chicken & Cheese",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/krunch-chicken-cheese/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/krunch-chicken-cheese/front.jpg",
+          "alt": "KRUNCH Chicken & Cheese dog cookies jar, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/krunch-chicken-cheese/both.jpg",
+          "alt": "KRUNCH Chicken & Cheese jars, front and back, with cookies",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/krunch-chicken-cheese/back.jpg",
+          "alt": "KRUNCH Chicken & Cheese jar, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "krunch-chicken-cheese--100g",
+          "label": "100 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 29900,
+          "grams": 100
+        },
+        {
+          "sku": "krunch-chicken-cheese--250g",
+          "label": "250 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 250
+        },
+        {
+          "sku": "krunch-chicken-cheese--500g",
+          "label": "500 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 99900,
+          "grams": 500
+        }
+      ],
+      "compareAtCents": 29900,
+      "subcategory": "crunchy dog treats",
+      "brand": "The Nuzz Story",
+      "label": {
+        "keyIngredients": "With oats, chicken, cheese, eggs"
+      }
+    },
+    {
+      "id": "krunch-chicken-goat-milk",
+      "name": "KRUNCH Chicken Goat Milk",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/krunch-chicken-goat-milk/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/krunch-chicken-goat-milk/front.jpg",
+          "alt": "KRUNCH Chicken Goat Milk dog cookies jar, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/krunch-chicken-goat-milk/both.jpg",
+          "alt": "KRUNCH Chicken Goat Milk jars, front and back, with cookies",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/krunch-chicken-goat-milk/back.jpg",
+          "alt": "KRUNCH Chicken Goat Milk jar, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "krunch-chicken-goat-milk--100g",
+          "label": "100 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 29900,
+          "grams": 100
+        },
+        {
+          "sku": "krunch-chicken-goat-milk--250g",
+          "label": "250 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 250
+        },
+        {
+          "sku": "krunch-chicken-goat-milk--500g",
+          "label": "500 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 99900,
+          "grams": 500
+        }
+      ],
+      "compareAtCents": 29900,
+      "subcategory": "crunchy dog treats",
+      "brand": "The Nuzz Story",
+      "label": {
+        "keyIngredients": "With oats, chicken, goat milk, pumpkim, egg"
+      }
+    },
+    {
+      "id": "krunch-classic-chicken",
+      "name": "KRUNCH Classic Chicken",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/krunch-classic-chicken/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/krunch-classic-chicken/front.jpg",
+          "alt": "KRUNCH Classic Chicken dog cookies jar, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/krunch-classic-chicken/both.jpg",
+          "alt": "KRUNCH Classic Chicken jars, front and back, with cookies",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/krunch-classic-chicken/back.jpg",
+          "alt": "KRUNCH Classic Chicken jar, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "krunch-classic-chicken--100g",
+          "label": "100 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 29900,
+          "grams": 100
+        },
+        {
+          "sku": "krunch-classic-chicken--250g",
+          "label": "250 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 250
+        },
+        {
+          "sku": "krunch-classic-chicken--500g",
+          "label": "500 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 99900,
+          "grams": 500
+        }
+      ],
+      "compareAtCents": 29900,
+      "subcategory": "crunchy dog treats",
+      "brand": "The Nuzz Story",
+      "label": {
+        "keyIngredients": "With oats, chicken, eggs"
+      }
+    },
+    {
+      "id": "krunch-classic-lamb",
+      "name": "KRUNCH Classic Lamb",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/krunch-classic-lamb/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/krunch-classic-lamb/front.jpg",
+          "alt": "KRUNCH Classic Lamb dog cookies jar, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/krunch-classic-lamb/both.jpg",
+          "alt": "KRUNCH Classic Lamb jars, front and back, with cookies",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/krunch-classic-lamb/back.jpg",
+          "alt": "KRUNCH Classic Lamb jar, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "krunch-classic-lamb--100g",
+          "label": "100 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 29900,
+          "grams": 100
+        },
+        {
+          "sku": "krunch-classic-lamb--250g",
+          "label": "250 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 250
+        },
+        {
+          "sku": "krunch-classic-lamb--500g",
+          "label": "500 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 99900,
+          "grams": 500
+        }
+      ],
+      "compareAtCents": 29900,
+      "subcategory": "crunchy dog treats",
+      "brand": "The Nuzz Story",
+      "label": {
+        "keyIngredients": "With oats, lamb, egg, turmeric"
+      }
+    },
+    {
+      "id": "krunch-pumpkin-carrot",
+      "name": "KRUNCH Pumpkin & Carrot",
+      "priceCents": 27000,
+      "category": "food & treats",
+      "img": "/assets/products/krunch-pumpkin-carrot/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/krunch-pumpkin-carrot/front.jpg",
+          "alt": "KRUNCH Pumpkin & Carrot dog cookies jar, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/krunch-pumpkin-carrot/both.jpg",
+          "alt": "KRUNCH Pumpkin & Carrot jars, front and back, with cookies",
+          "view": "both"
+        },
+        {
+          "src": "/assets/products/krunch-pumpkin-carrot/back.jpg",
+          "alt": "KRUNCH Pumpkin & Carrot jar, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "krunch-pumpkin-carrot--100g",
+          "label": "100 g",
+          "priceCents": 27000,
+          "stock": 50,
+          "compareAtCents": 29900,
+          "grams": 100
+        },
+        {
+          "sku": "krunch-pumpkin-carrot--250g",
+          "label": "250 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 250
+        },
+        {
+          "sku": "krunch-pumpkin-carrot--500g",
+          "label": "500 g",
+          "priceCents": 90000,
+          "stock": 50,
+          "compareAtCents": 99900,
+          "grams": 500
+        }
+      ],
+      "compareAtCents": 29900,
+      "subcategory": "crunchy dog treats",
+      "brand": "The Nuzz Story",
+      "label": {
+        "keyIngredients": "With oats, carrot, pumpkin"
+      }
+    },
+    {
+      "id": "meal-booster-chicken-organs-turmeric",
+      "name": "Meal Booster Chicken Organs With Turmeric",
+      "priceCents": 18000,
+      "category": "food & treats",
+      "img": "/assets/products/meal-booster-chicken-organs-turmeric/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/meal-booster-chicken-organs-turmeric/front.jpg",
+          "alt": "Meal Booster Chicken Organs With Turmeric jars, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/meal-booster-chicken-organs-turmeric/back.jpg",
+          "alt": "Meal Booster Chicken Organs With Turmeric jars, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "meal-booster-chicken-organs-turmeric--50g",
+          "label": "50 g",
+          "priceCents": 18000,
+          "stock": 50,
+          "compareAtCents": 19900,
+          "grams": 50
+        },
+        {
+          "sku": "meal-booster-chicken-organs-turmeric--100g",
+          "label": "100 g",
+          "priceCents": 31000,
+          "stock": 50,
+          "compareAtCents": 34900,
+          "grams": 100
+        },
+        {
+          "sku": "meal-booster-chicken-organs-turmeric--200g",
+          "label": "200 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 200
+        }
+      ],
+      "compareAtCents": 19900,
+      "subcategory": "meal toppers",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "meal-booster-lamb-organs",
+      "name": "Meal Booster Lamb Organs",
+      "priceCents": 18000,
+      "category": "food & treats",
+      "img": "/assets/products/meal-booster-lamb-organs/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/meal-booster-lamb-organs/front.jpg",
+          "alt": "Meal Booster Lamb Organs jars, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/meal-booster-lamb-organs/back.jpg",
+          "alt": "Meal Booster Lamb Organs jars, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "meal-booster-lamb-organs--50g",
+          "label": "50 g",
+          "priceCents": 18000,
+          "stock": 50,
+          "compareAtCents": 19900,
+          "grams": 50
+        },
+        {
+          "sku": "meal-booster-lamb-organs--100g",
+          "label": "100 g",
+          "priceCents": 31000,
+          "stock": 50,
+          "compareAtCents": 34900,
+          "grams": 100
+        },
+        {
+          "sku": "meal-booster-lamb-organs--200g",
+          "label": "200 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 200
+        }
+      ],
+      "compareAtCents": 19900,
+      "subcategory": "meal toppers",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "meal-booster-sardines-anchovies",
+      "name": "Meal Booster Sardines & Anchovies",
+      "priceCents": 18000,
+      "category": "food & treats",
+      "img": "/assets/products/meal-booster-sardines-anchovies/front.jpg",
+      "stock": 150,
+      "images": [
+        {
+          "src": "/assets/products/meal-booster-sardines-anchovies/front.jpg",
+          "alt": "Meal Booster Sardines & Anchovies jars, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/meal-booster-sardines-anchovies/back.jpg",
+          "alt": "Meal Booster Sardines & Anchovies jars, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "variants": [
+        {
+          "sku": "meal-booster-sardines-anchovies--50g",
+          "label": "50 g",
+          "priceCents": 18000,
+          "stock": 50,
+          "compareAtCents": 19900,
+          "grams": 50
+        },
+        {
+          "sku": "meal-booster-sardines-anchovies--100g",
+          "label": "100 g",
+          "priceCents": 31000,
+          "stock": 50,
+          "compareAtCents": 34900,
+          "grams": 100
+        },
+        {
+          "sku": "meal-booster-sardines-anchovies--200g",
+          "label": "200 g",
+          "priceCents": 54000,
+          "stock": 50,
+          "compareAtCents": 59900,
+          "grams": 200
+        }
+      ],
+      "compareAtCents": 19900,
+      "subcategory": "meal toppers",
+      "brand": "The Nuzz Story"
+    },
+    {
+      "id": "peanut-butter",
+      "name": "The Nuzz Story Peanut Butter",
+      "priceCents": 34900,
+      "category": "food & treats",
+      "img": "/assets/products/peanut-butter/front.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/peanut-butter/front.jpg",
+          "alt": "The Nuzz Story Peanut Butter for dogs, two jars, front",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/peanut-butter/back.jpg",
+          "alt": "The Nuzz Story Peanut Butter jars, back label",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "spreads",
+      "brand": "The Nuzz Story",
+      "compareAtCents": 44900
+    },
+    {
+      "id": "carved-wooden-dog-bed",
+      "name": "Carved Wooden Dog Bed",
+      "priceCents": 219900,
+      "category": "comfy beds",
+      "img": "/assets/products/carved-wooden-dog-bed/side.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/carved-wooden-dog-bed/side.jpg",
+          "alt": "Carved wooden pet bed with pink cushion, three-quarter view",
+          "view": "side"
+        },
+        {
+          "src": "/assets/products/carved-wooden-dog-bed/front.jpg",
+          "alt": "Carved wooden pet bed with pink cushion, front view",
+          "view": "front"
+        },
+        {
+          "src": "/assets/products/carved-wooden-dog-bed/detail.jpg",
+          "alt": "Close-up of the floral carving and turned leg of the wooden pet bed",
+          "view": "detail"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "compareAtCents": 249900
+    },
+    {
+      "id": "dog-tee-blue-mischief",
+      "name": "Blue Dog T-Shirt, \"Mischief\"",
+      "priceCents": 69900,
+      "category": "wear & style",
+      "img": "/assets/products/dog-tee-blue-mischief/back.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/dog-tee-blue-mischief/back.jpg",
+          "alt": "Golden retriever in a blue t-shirt with a \"MISCHIEF chaos mode\" print on the back",
+          "view": "back"
+        },
+        {
+          "src": "/assets/products/dog-tee-blue-mischief/front.jpg",
+          "alt": "Golden retriever in a blue t-shirt with \"the nuzz story\" script on the front",
+          "view": "front"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "dog t-shirts",
+      "compareAtCents": 79900
+    },
+    {
+      "id": "dog-tee-lilac-floral",
+      "name": "Lilac Dog T-Shirt, Floral",
+      "priceCents": 69900,
+      "category": "wear & style",
+      "img": "/assets/products/dog-tee-lilac-floral/back.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/dog-tee-lilac-floral/back.jpg",
+          "alt": "Golden retriever in a lilac t-shirt with a floral print on the back",
+          "view": "back"
+        },
+        {
+          "src": "/assets/products/dog-tee-lilac-floral/front.jpg",
+          "alt": "Golden retriever in a lilac t-shirt with \"the nuzz story\" script on the front",
+          "view": "front"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "dog t-shirts",
+      "compareAtCents": 79900
+    },
+    {
+      "id": "dog-tee-red-built-for-chaos",
+      "name": "Red Dog T-Shirt, \"Built for Chaos\"",
+      "priceCents": 69900,
+      "category": "wear & style",
+      "img": "/assets/products/dog-tee-red-built-for-chaos/back.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/dog-tee-red-built-for-chaos/back.jpg",
+          "alt": "Golden retriever in a red t-shirt with a \"built for chaos\" print on the back",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "dog t-shirts",
+      "compareAtCents": 79900
+    },
+    {
+      "id": "dog-tee-black-sun-waves",
+      "name": "Black Dog T-Shirt, Sun & Waves",
+      "priceCents": 69900,
+      "category": "wear & style",
+      "img": "/assets/products/dog-tee-black-sun-waves/front.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/dog-tee-black-sun-waves/front.jpg",
+          "alt": "Golden retriever in a black t-shirt with a small sun and waves print",
+          "view": "front"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "dog t-shirts",
+      "compareAtCents": 79900
+    },
+    {
+      "id": "dog-tee-maroon-chase-the-horizon",
+      "name": "Maroon Dog T-Shirt, \"Chase the Horizon\"",
+      "priceCents": 69900,
+      "category": "wear & style",
+      "img": "/assets/products/dog-tee-maroon-chase-the-horizon/front.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/dog-tee-maroon-chase-the-horizon/front.jpg",
+          "alt": "Golden retriever in a maroon t-shirt with a \"Chase the Horizon\" print",
+          "view": "front"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "dog t-shirts",
+      "compareAtCents": 79900
+    },
+    {
+      "id": "dog-tee-white-arch",
+      "name": "White Dog T-Shirt, Arch & Leaf",
+      "priceCents": 69900,
+      "category": "wear & style",
+      "img": "/assets/products/dog-tee-white-arch/back.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/dog-tee-white-arch/back.jpg",
+          "alt": "Golden retriever in a white t-shirt with an arch and leaf line-art print on the back",
+          "view": "back"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "dog t-shirts",
+      "compareAtCents": 79900
+    },
+    {
+      "id": "human-tee-black-sun-waves",
+      "name": "Black T-Shirt, Sun & Waves",
+      "priceCents": 89900,
+      "category": "wear & style",
+      "img": "/assets/products/human-tee-black-sun-waves/lifestyle.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/human-tee-black-sun-waves/lifestyle.jpg",
+          "alt": "Person wearing a black t-shirt with a small sun and waves chest print",
+          "view": "lifestyle"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "needs review",
+      "compareAtCents": 99900
+    },
+    {
+      "id": "human-tee-maroon-chase-the-horizon",
+      "name": "Maroon T-Shirt, \"Chase the Horizon\"",
+      "priceCents": 89900,
+      "category": "wear & style",
+      "img": "/assets/products/human-tee-maroon-chase-the-horizon/lifestyle.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/human-tee-maroon-chase-the-horizon/lifestyle.jpg",
+          "alt": "Person seen from behind wearing a maroon t-shirt with a \"Chase the Horizon\" back print",
+          "view": "lifestyle"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "needs review",
+      "compareAtCents": 99900
+    },
+    {
+      "id": "human-tee-white-arch",
+      "name": "White T-Shirt, Arch & Leaf",
+      "priceCents": 89900,
+      "category": "wear & style",
+      "img": "/assets/products/human-tee-white-arch/lifestyle.jpg",
+      "stock": 50,
+      "images": [
+        {
+          "src": "/assets/products/human-tee-white-arch/lifestyle.jpg",
+          "alt": "Person seen from behind wearing a white t-shirt with an arch and leaf line-art back print",
+          "view": "lifestyle"
+        }
+      ],
+      "createdAt": "2026-10-10T11:11:31.593Z",
+      "subcategory": "needs review",
+      "compareAtCents": 99900
+    }
+  ]
+}

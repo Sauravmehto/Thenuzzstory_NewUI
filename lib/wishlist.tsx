@@ -10,6 +10,8 @@ interface WishlistContextValue {
   toggle: (id: string) => void;
   remove: (id: string) => void;
   has: (id: string) => boolean;
+  /** Swap in a whole list (the signed-in account's saved wishlist). */
+  replace: (ids: string[]) => void;
   count: number;
   isOpen: boolean;
   openWishlist: () => void;
@@ -58,12 +60,16 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   }, []);
   const remove = useCallback((id: string) => setIds((prev) => prev.filter((x) => x !== id)), []);
   const has = useCallback((id: string) => ids.includes(id), [ids]);
+  const replace = useCallback(
+    (next: string[]) => setIds(next.filter((id) => typeof id === "string" && Boolean(getProduct(id)))),
+    [],
+  );
   const openWishlist = useCallback(() => setIsOpen(true), []);
   const closeWishlist = useCallback(() => setIsOpen(false), []);
 
   return (
     <WishlistContext.Provider
-      value={{ ids, toggle, remove, has, count: ids.length, isOpen, openWishlist, closeWishlist }}
+      value={{ ids, toggle, remove, has, replace, count: ids.length, isOpen, openWishlist, closeWishlist }}
     >
       {children}
     </WishlistContext.Provider>

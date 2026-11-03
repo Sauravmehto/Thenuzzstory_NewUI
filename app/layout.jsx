@@ -3,6 +3,8 @@ import { preload } from "react-dom";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { CartProvider } from "@/lib/cart";
 import { WishlistProvider } from "@/lib/wishlist";
+import { AccountProvider } from "@/lib/account";
+import AccountDrawer from "@/components/AccountDrawer";
 import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
 import CartToast from "@/components/CartToast";
@@ -40,12 +42,15 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <CartProvider>
           <WishlistProvider>
+            <AccountProvider>
             {children}
             <CartDrawer />
             <WishlistDrawer />
+            <AccountDrawer />
             <CartToast />
             <DemoPanelGate />
             <ViewTransitionListener />
+            </AccountProvider>
           </WishlistProvider>
         </CartProvider>
       </body>

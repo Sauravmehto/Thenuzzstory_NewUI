@@ -45,14 +45,14 @@ Orders carry an `Idempotency-Key`, so a double-click or a retry after a network 
 
 The catalog is local, so live search filters on the client. `useDeferredValue` keeps typing responsive while the grid re-renders. The URL updates with `router.replace` on a 250ms debounce: links are shareable and back-button history stays clean. With a server-side catalog I'd debounce the fetch and cancel stale requests with `AbortController`; here that would be complexity for nothing.
 
-### 4. Wallet checkout as a state machine (simulated)
+### 4. WhatsApp checkout with a saved order
 
-"Pay with wallet" walks through connect → review → sign → pending (confirmations) → confirmed, plus the paths that matter just as much: **signature rejected** (nothing sent, retry with the same price), **insufficient funds** (caught before asking for a signature) and **price moved** (shown in review before signing).
+There is no online payment. "Place order" validates every field (mobile, email, 6-digit PIN…), then `POST /api/orders` **re-prices the cart on the server**, saves the order (status `Pending Confirmation`, payment `Payment Pending`) and only then opens WhatsApp with a pre-filled message built from the *saved* order.
 
-- The price is locked with `POST /api/quote` **before** the signature, because a wallet user signs an exact amount; a card flow can re-confirm after, a wallet flow can't.
-- The flow is one discriminated union + pure reducer (`lib/wallet-machine.ts`), so impossible states (e.g. "pending" without a signature) can't be represented. Unit-tested.
-- The dialog can't be dismissed while a transaction is confirming.
-- **Everything is simulated** (`lib/sim-wallet.ts`) and labelled as such in the UI. A real build would swap that file for wagmi/viem.
+- The client sends what it *showed*; the server detects drift and answers 409 `quote_changed` with a diff, never charging a different amount silently.
+- Order IDs and idempotency keys are claimed with atomic "only if new" writes, so a double click returns the same order.
+- If saving fails, nothing is opened, the cart is kept, and the UI says the order was not placed. The cart is cleared only after the save succeeds.
+- Storage: Netlify Blobs store `orders` on Netlify, `.data/orders/*.json` locally (`DATA_DIR` overrides).
 
 ## Craft details
 
@@ -93,7 +93,7 @@ GitHub Actions runs typecheck, unit and e2e tests on every PR.
 - Put the idempotency store and demo state somewhere shared (Redis) if this ran on real serverless traffic.
 - Measure INP on search and the cart stepper in the field rather than by feel.
 - Add Storybook stories for the cart line states (idle, pending, max stock, rolled back).
-- Replace the simulated wallet with wagmi/viem on a testnet, and verify the transaction on the server (amount, recipient, confirmations) before fulfilling.
+- Add a payment gateway behind `lib/payment-methods.ts` and an admin view for orders (today they're read from Netlify Blobs / `.data/orders`).
 
 ## Stack
 
@@ -112,7 +112,7 @@ npm run build && npm run test:e2e
 ```
 app/
   api/cart/          validate one cart change against live stock
-  api/checkout/      re-price, detect stale quotes, idempotent orders
+  orders/        re-price, detect stale quotes, save order, WhatsApp message (idempotent)
   cart/ shop/ about/ contact/
   styles/            per-section CSS; flow.css = cart/checkout states
 components/          CartDrawer, CartLineItem, CartPage, CartToast, ShopPage, DemoPanel, homepage motion sections…

@@ -1,0 +1,590 @@
+{
+  "$comment": "Curated description of source-assets/product_list (source photos, never modified). Label text is transcribed verbatim from the packaging photos; anything not visible is listed under `flags` instead of being guessed. Prices and stock are intentionally absent: every product imports as a draft and is priced in the admin. `labelMrp` / `labelNetWeight` are what the pack prints, for reference only.",
+  "version": 1,
+  "sourceRoot": "source-assets/product_list",
+  "outputRoot": "public/assets/products",
+  "brand": "The Nuzz Story",
+  "lines": {
+    "prey": {
+      "name": "PREY",
+      "tagline": "Dehydrated Dog Treats",
+      "story": "PREY is a masterclass in ancestral nutrition. We stripped away the noise—no grains, no soy, and absolutely zero artificial nasties—leaving only the raw essence of farm-fresh, 100% human-grade ingredients. It is a single-minded commitment to universal goodness, gently dehydrated to lock in the untamed vitality your companion was born to crave.",
+      "features": ["Grain & soy-free recipe", "100% human-grade", "Zero artificial nasties", "Farm-fresh sourcing", "Universal goodness"],
+      "storage": "Once opened, store the pack in a cool & dry place. Away from the direct sunlight.",
+      "advisory": ["Do not feed to pets below 12 weeks.", "Please check ingredients for possible allergens."],
+      "note": "Not meant for human consumption.",
+      "bestBefore": "18 months from the date of manufacturing",
+      "packedAndMarketedBy": "The Nuzz Story C-17 GF Right Side, Nagal Dewat, Vasant Kunj, New Delhi- 110070.",
+      "contact": "officials@nuzzverse.com",
+      "dietMark": "non-veg (red mark on pack)"
+    },
+    "krunch": {
+      "name": "KRUNCH",
+      "tagline": "Healthy Dogs Cookies",
+      "story": "KRUNCH redefines the daily reward for dogs of every breed. We bake farm-fresh, human-grade ingredients into a pristine, gluten-free and soy-free recipe with absolutely zero artificial additives. Every KRUNCH cookie delivers honest, uncompromised nutrition that is remarkably gentle on sensitive systems. That satisfying bite isn't just a premium texture—it's the wholesome sound of a happier, healthier life.",
+      "features": ["Gluten free & soy free", "High-quality", "Human-grade ingredients", "No artificial colors, sweeteners, flavors & preservatives", "Suitable for dogs of all breeds", "All ingredients responsibly sourced fresh off the farm."],
+      "feeding": [
+        { "weight": "2kg to 10kg", "portionPerDay": "2 to 5 pcs" },
+        { "weight": "11kg to 26kg", "portionPerDay": "5 to 10 pcs" },
+        { "weight": "27kg to 45kg", "portionPerDay": "10 to 15 pcs" },
+        { "weight": "> 45kg", "portionPerDay": "15 to 20 pcs" }
+      ],
+      "frontBadges": ["Gluten & soy free", "No artificial preservatives", "Human grade ingredients", "Farm fresh"],
+      "labelNetWeight": "300gm",
+      "dietMark": "non-veg (red mark on pack)",
+      "flags": [
+        "Full ingredient list, storage, MRP and manufacturer are on a side panel that is not visible in any of the provided photos. Only the front-label key ingredients and net weight (300gm, front label) are recorded."
+      ]
+    },
+    "mealBooster": {
+      "name": "Meal Booster",
+      "tagline": "For Dogs & Cats (All breeds & ages)",
+      "features": ["Grain & soy-free recipe", "100% human-grade", "Zero artificial nasties", "Farm-fresh sourcing", "Universal goodness"],
+      "benefits": ["Increases appetite", "Adds variety to meals", "Provide nutritional boost", "Enhances flavors of all foods", "100% human grade and natural ingredients"],
+      "feedingText": "Sprinkle over the meal",
+      "storage": "Once opened, store the pack in a cool & dry place. Away from the direct sunlight.",
+      "advisory": ["Do not feed to pets below 12 weeks.", "Please check ingredients for possible allergens."],
+      "note": "Not meant for human consumption.",
+      "bestBefore": "18 months from the date of manufacturing",
+      "packedAndMarketedBy": "The Nuzz Story C-17 GF Right Side, Nagal Dewat, Vasant Kunj, New Delhi- 110070.",
+      "manufacturedBy": "Pawmily Pvt Ltd : Plot no. 4, 60 Meter Road, Sector 69, Badshapur, Gurgaon-122101, Haryana",
+      "contact": "officials@nuzzverse.com"
+    }
+  },
+  "products": [
+    {
+      "id": "prey-anchovies",
+      "name": "PREY Anchovies",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/anchovies_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Anchovies dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/anchovies_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Anchovies pouch front and back with treats" },
+        { "file": "dehydrated/anchovies_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Anchovies pouch, back label" }
+      ],
+      "label": {
+        "why": "Elevate your dog's daily ritual with the power of Anchovies. Bursting with essential fatty acids, these treats are a masterclass in skin and coat health. Beyond the shine, they provide the structural support needed for supple joints, keeping your companion active, agile, and ready for every adventure.",
+        "ingredients": "100% Anchovy",
+        "nutrition": { "Crude Protein": "60.32 %", "Crude Fat": "7.63 %", "Crude Fiber": "3.69 %", "Moisture": "8.53 %", "Ash": "15.83 %", "Energy": "340.71 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "1 to 2 pcs" },
+          { "weight": "11kg to 26kg", "portionPerDay": "2 to 4 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "4 to 6 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "6 to 8 pcs" }
+        ],
+        "benefits": ["Rich in iron, calcium, vitamins A, B12, K, E, and B6", "EPA & DHA skin remedy", "Advanced joint support", "Heart & brain wellness", "Immunity & vitality boost", "Highly digestible protein"],
+        "labelMrp": "₹349/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": []
+    },
+    {
+      "id": "prey-chicken-breast",
+      "name": "PREY Chicken Breast",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/chickenbreast_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Chicken Breast dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/chickenbreast_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Chicken Breast pouch front and back with treats" },
+        { "file": "dehydrated/chickenbreast_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Chicken Breast pouch, back label" }
+      ],
+      "label": {
+        "why": "Our premium Chicken Breast is a masterclass in lean nutrition. Crafted for the active companion, this high-quality protein serves as the essential building block for muscle repair and effortless energy. It nourishes from within to deliver a resilient immune system and a coat that glows with health.",
+        "ingredients": "Chicken breast",
+        "nutrition": { "Crude Protein": "72.23 %", "Crude Fat": "14.26 %", "Crude Fiber": "13.12 %", "Moisture": "7.15 %", "Ash": "4.91 %", "Energy": "423.06 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "3 to 4 pcs" },
+          { "weight": "11kg to 26kg", "portionPerDay": "4 to 5 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "5 to 6 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "6 to 7 pcs" }
+        ],
+        "benefits": ["High-quality lean protein", "Gentle on digestion", "Nutrient rich", "Pure vitality", "Muscle growth & repair", "Joint & energy support"],
+        "labelMrp": "₹329/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": ["Nutrition values transcribed as printed (they sum to more than 100%); please check against the source sheet."]
+    },
+    {
+      "id": "prey-chicken-coconut",
+      "name": "PREY Chicken Coconut",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/chickencoconut_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Chicken Coconut dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/chickencoconut_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Chicken Coconut pouch front and back with treats" },
+        { "file": "dehydrated/chickencoconut_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Chicken Coconut pouch, back label" }
+      ],
+      "label": {
+        "why": "Experience a blend crafted for the extraordinary. Lean premium Chicken meets the tropical richness of Coconut to create a dual-action superfood. This pairing doesn't just taste exquisite—it works from within to unlock a radiant coat glow, soothe joint movement, and ensure a light, effortless digestion. It is the ultimate recipe for the dog that lives with grace and energy.",
+        "ingredients": "Chicken breast, Coconut oil & Turmeric",
+        "nutrition": { "Crude Protein": "75.76 %", "Crude Fat": "14.20 %", "Crude Fiber": "0.36 %", "Moisture": "5.37 %", "Ash": "4.63 %", "Energy": "430.84 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "3 to 4 pcs" },
+          { "weight": "11kg to 26kg", "portionPerDay": "4 to 5 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "5 to 6 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "6 to 7 pcs" }
+        ],
+        "benefits": ["Muscle growth & repair", "Support skin and coat health", "Boost immune system", "Improve digestion & energy", "Reduces internal inflammation", "Joint pain relief"],
+        "labelMrp": "₹349/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": []
+    },
+    {
+      "id": "prey-chicken-feet",
+      "name": "PREY Chicken Feet",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/chickenfeet_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Chicken Feet dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/chickenfeet_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Chicken Feet pouch front and back with treats" },
+        { "file": "dehydrated/chickenfeet_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Chicken Feet pouch, back label" }
+      ],
+      "label": {
+        "why": "Elevate your dog's daily ritual with a snack designed for structural strength. These treats are nature's richest source of joint-supporting minerals, providing the resilience needed for lifelong agility. As they chew, the natural crunch cleans deep along the gum line, combining elite dental care with the power of high-density glucosamine for total joint protection.",
+        "ingredients": "100% Chicken Feet",
+        "nutrition": { "Crude Protein": "20.40 %", "Crude Fat": "29.15 %", "Crude Fiber": "0.62 %", "Moisture": "3.93 %", "Ash": "13.19 %", "Energy": "477.27 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "1 pc" },
+          { "weight": "11kg to 26kg", "portionPerDay": "1 to 2 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "2 to 3 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "3 to 4 pcs" }
+        ],
+        "benefits": ["Joint & mobility support (Rich in natural glucosamine and chondroitin)", "Natural dental defense", "Pure single-source protein", "Rich in natural collagen", "Support healthy digestion", "Rich nutrition"],
+        "labelMrp": "₹229/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": []
+    },
+    {
+      "id": "prey-lamb-jerky",
+      "name": "PREY Lamb Jerky",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/lambjerky_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Lamb Jerky dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/lambjerky_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Lamb Jerky pouch front and back with treats" },
+        { "file": "dehydrated/lambjerky_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Lamb Jerky pouch, back label" }
+      ],
+      "label": {
+        "why": "Discover the power of premium Lamb, naturally rich in CLAs to soothe your dog from the inside out. This noble protein actively targets internal inflammation, helping to calm sensitive skin and digestive discomfort. It's more than a treat—it's a restorative reward for a happier, more comfortable life.",
+        "ingredients": "Lamb boneless meat",
+        "nutrition": { "Crude Protein": "70.40 %", "Crude Fat": "6.35 %", "Crude Fiber": "0.60 %", "Moisture": "6.25 %", "Ash": "16.94 %", "Energy": "338.75 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "1 to 2 pcs" },
+          { "weight": "11kg to 26kg", "portionPerDay": "2 to 4 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "4 to 6 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "6 to 8 pcs" }
+        ],
+        "benefits": ["Improves heart health", "Supports skin, coat & dental health", "Infused with glucosamine", "Brain-boosting formula", "Rapid natural healing", "The ultimate chicken alternative"],
+        "labelMrp": "₹799/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": []
+    },
+    {
+      "id": "prey-lamb-organs",
+      "name": "PREY Lamb Organs",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/lamborgans_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Lamb Organs dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/lamborgans_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Lamb Organs pouch front and back with treats" },
+        { "file": "dehydrated/lamborgans_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Lamb Organs pouch, back label" }
+      ],
+      "label": {
+        "why": "Every bite tells a story of pure energy and resilience. While lean Lamb Lung provides a light, airy crunch for weight-conscious vitality, nutrient-dense Liver works its magic—sharpening vision and soothing joints from within. Fortified with Iron and Vitamin A & B12, it's a daily dose of protection for a stronger heart and a sharper mind.",
+        "ingredients": "Lamb lungs & liver",
+        "nutrition": { "Crude Protein": "16.68 %", "Crude Fat": "3.80 %", "Crude Fiber": "0.48 %", "Moisture": "3.41 %", "Ash": "6.37 %", "Energy": "379.88 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "3 to 6 pcs" },
+          { "weight": "11kg to 26kg", "portionPerDay": "6 to 10 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "10 to 15 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "15 to 20 pcs" }
+        ],
+        "benefits": ["Low-fat & low-calorie", "Highly digestible", "High-quality protein & nutrients", "Rapid natural healing", "Natural dental cleaning", "Boosts immune system"],
+        "labelMrp": "₹449/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": []
+    },
+    {
+      "id": "prey-turkey-meaty-chunks",
+      "name": "PREY Turkey Meaty Chunks",
+      "line": "prey",
+      "category": "food & treats",
+      "subcategory": "dehydrated treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "dehydrated/turkeymeatychunks_front.jpg", "view": "front", "fit": "pad", "alt": "PREY Turkey Meaty Chunks dehydrated dog treats pouch, front" },
+        { "file": "dehydrated/turkeymeatychunks_both.jpg", "view": "both", "fit": "pad", "alt": "PREY Turkey Meaty Chunks pouch front and back with treats" },
+        { "file": "dehydrated/turkeymeatychunks_back.jpg", "view": "back", "fit": "pad", "alt": "PREY Turkey Meaty Chunks pouch, back label" }
+      ],
+      "label": {
+        "why": "A powerhouse of lean protein and essential minerals. Perfectly balanced for weight management, this low-fat reward is rich in Vitamin B2 and Phosphorus to fuel your dog's daily energy and skeletal strength.",
+        "ingredients": "Turkey meat & bone",
+        "nutrition": { "Crude Protein": "73.90 %", "Crude Fat": "7.15 %", "Crude Fiber": "0.34 %", "Moisture": "12.41 %", "Ash": "6.50 %", "Energy": "359.95 kcal" },
+        "feeding": [
+          { "weight": "2kg to 10kg", "portionPerDay": "1 pc" },
+          { "weight": "11kg to 26kg", "portionPerDay": "1 to 2 pcs" },
+          { "weight": "27kg to 45kg", "portionPerDay": "2 to 3 pcs" },
+          { "weight": "> 45kg", "portionPerDay": "3 to 4 pcs" }
+        ],
+        "benefits": ["Low-fat, high-protein", "Supports skin, coat & dental health", "Infused with glucosamine", "Brain-boosting formula", "Complete body defense", "Calming immunity support"],
+        "labelMrp": "₹799/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": []
+    },
+    {
+      "id": "krunch-banana-apple",
+      "name": "KRUNCH Banana & Apple",
+      "line": "krunch",
+      "category": "food & treats",
+      "subcategory": "crunchy dog treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "krunch/krunchbanana&apple_front.jpg", "view": "front", "fit": "pad", "alt": "KRUNCH Banana & Apple dog cookies jar, front" },
+        { "file": "krunch/krunchbanana&apple_both.jpg", "view": "both", "fit": "pad", "alt": "KRUNCH Banana & Apple jars, front and back, with cookies" },
+        { "file": "krunch/krunchbanana&apple_back.jpg", "view": "back", "fit": "pad", "alt": "KRUNCH Banana & Apple jar, back label" }
+      ],
+      "label": {
+        "frontKeyIngredients": "With oats, apple, banana",
+        "nutrition": { "Crude Protein": "16.90 %", "Crude Fat": "8.85 %", "Crude Fiber": "0.43 %", "Moisture": "4.81 %", "Ash": "1.77 %", "Energy": "417.93 kcal" },
+        "benefits": ["Rich in fibers", "Supports a healthy radiant coat & skin", "Supports vision", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"]
+      },
+      "flags": []
+    },
+    {
+      "id": "krunch-chicken-cheese",
+      "name": "KRUNCH Chicken & Cheese",
+      "line": "krunch",
+      "category": "food & treats",
+      "subcategory": "crunchy dog treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "krunch/krunchchicken&cheese_front.jpg", "view": "front", "fit": "pad", "alt": "KRUNCH Chicken & Cheese dog cookies jar, front" },
+        { "file": "krunch/krunchchicken&cheese_both.jpg", "view": "both", "fit": "pad", "alt": "KRUNCH Chicken & Cheese jars, front and back, with cookies" },
+        { "file": "krunch/krunchchicken&cheese_back.jpg", "view": "back", "fit": "pad", "alt": "KRUNCH Chicken & Cheese jar, back label" }
+      ],
+      "label": {
+        "frontKeyIngredients": "With oats, chicken, cheese, eggs",
+        "nutrition": { "Crude Protein": "16.51 %", "Crude Fat": "13.98 %", "Crude Fiber": "0.47 %", "Moisture": "6.61 %", "Ash": "2.07 %", "Energy": "435.18 kcal" },
+        "benefits": ["Improved digestion & energy", "Supports a healthy radiant coat & skin", "Promotes dental health", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"]
+      },
+      "flags": []
+    },
+    {
+      "id": "krunch-chicken-goat-milk",
+      "name": "KRUNCH Chicken Goat Milk",
+      "line": "krunch",
+      "category": "food & treats",
+      "subcategory": "crunchy dog treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "krunch/krunchchicken&goatmilk_front.jpg", "view": "front", "fit": "pad", "alt": "KRUNCH Chicken Goat Milk dog cookies jar, front" },
+        { "file": "krunch/krunchchicken&goatmilk_both.jpg", "view": "both", "fit": "pad", "alt": "KRUNCH Chicken Goat Milk jars, front and back, with cookies" },
+        { "file": "krunch/krunchchicken&goatmilk_back.jpg", "view": "back", "fit": "pad", "alt": "KRUNCH Chicken Goat Milk jar, back label" }
+      ],
+      "label": {
+        "frontKeyIngredients": "With oats, chicken, goat milk, pumpkim, egg",
+        "nutrition": { "Crude Protein": "17.43 %", "Crude Fat": "14.60 %", "Crude Fiber": "0.70 %", "Moisture": "2.57 %", "Ash": "1.86 %", "Energy": "455.28 kcal" },
+        "benefits": ["Muscle growth & repair", "Supports a healthy radiant coat & skin", "Promotes dental health", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"]
+      },
+      "flags": [
+        "Front label reads \"CHICKEN GOAT MILK\" (no \"&\"), unlike the other flavours. Name kept as printed.",
+        "Front label prints \"PUMPKIM\" (likely a typo for pumpkin). Kept as printed; correct in the admin if you prefer."
+      ]
+    },
+    {
+      "id": "krunch-classic-chicken",
+      "name": "KRUNCH Classic Chicken",
+      "line": "krunch",
+      "category": "food & treats",
+      "subcategory": "crunchy dog treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "krunch/krunchclassicchicken_front.jpg", "view": "front", "fit": "pad", "alt": "KRUNCH Classic Chicken dog cookies jar, front" },
+        { "file": "krunch/krunchclassicchicken_both.jpg", "view": "both", "fit": "pad", "alt": "KRUNCH Classic Chicken jars, front and back, with cookies" },
+        { "file": "krunch/krunchclassicchicken_back.jpg", "view": "back", "fit": "pad", "alt": "KRUNCH Classic Chicken jar, back label" }
+      ],
+      "label": {
+        "frontKeyIngredients": "With oats, chicken, eggs",
+        "nutrition": { "Crude Protein": "17.51 %", "Crude Fat": "8.11 %", "Crude Fiber": "12.55 %", "Moisture": "6.18 %", "Ash": "1.54 %", "Energy": "409.67 kcal" },
+        "benefits": ["Muscle growth & repair", "Supports a healthy radiant coat & skin", "Promotes dental health", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"]
+      },
+      "flags": []
+    },
+    {
+      "id": "krunch-classic-lamb",
+      "name": "KRUNCH Classic Lamb",
+      "line": "krunch",
+      "category": "food & treats",
+      "subcategory": "crunchy dog treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "krunch/krunchclassiclamb_front.jpg", "view": "front", "fit": "pad", "alt": "KRUNCH Classic Lamb dog cookies jar, front" },
+        { "file": "krunch/krunchclassiclamb_both.jpg", "view": "both", "fit": "pad", "alt": "KRUNCH Classic Lamb jars, front and back, with cookies" },
+        { "file": "krunch/krunchclassiclamb_back.jpg", "view": "back", "fit": "pad", "alt": "KRUNCH Classic Lamb jar, back label" }
+      ],
+      "label": {
+        "frontKeyIngredients": "With oats, lamb, egg, turmeric",
+        "nutrition": { "Crude Protein": "20.36 %", "Crude Fat": "7.32 %", "Crude Fiber": "9.14 %", "Moisture": "7.92 %", "Ash": "2.37 %", "Energy": "395.44 kcal" },
+        "benefits": ["Improves heart health", "Supports a healthy radiant coat & skin", "Promotes dental health", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"]
+      },
+      "flags": []
+    },
+    {
+      "id": "krunch-pumpkin-carrot",
+      "name": "KRUNCH Pumpkin & Carrot",
+      "line": "krunch",
+      "category": "food & treats",
+      "subcategory": "crunchy dog treats",
+      "species": ["dog"],
+      "images": [
+        { "file": "krunch/krunchpumpkin&carrot_front.jpg", "view": "front", "fit": "pad", "alt": "KRUNCH Pumpkin & Carrot dog cookies jar, front" },
+        { "file": "krunch/krunchpumpkin&carrot_both.jpg", "view": "both", "fit": "pad", "alt": "KRUNCH Pumpkin & Carrot jars, front and back, with cookies" },
+        { "file": "krunch/krunchpumpkin&carrot_back.jpg", "view": "back", "fit": "pad", "alt": "KRUNCH Pumpkin & Carrot jar, back label" }
+      ],
+      "label": {
+        "frontKeyIngredients": "With oats, carrot, pumpkin",
+        "nutrition": { "Crude Protein": "17.12 %", "Crude Fat": "8.50 %", "Crude Fiber": "0.65 %", "Moisture": "3.66 %", "Ash": "1.67 %", "Energy": "421.18 kcal" },
+        "benefits": ["Rich in fibers", "Supports a healthy radiant coat & skin", "Supports vision", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"]
+      },
+      "flags": []
+    },
+    {
+      "id": "meal-booster-chicken-organs-turmeric",
+      "name": "Meal Booster Chicken Organs With Turmeric",
+      "line": "mealBooster",
+      "category": "food & treats",
+      "subcategory": "meal toppers",
+      "species": ["dog", "cat"],
+      "images": [
+        { "file": "meal booster/mealbooster_chickenorganswithturmeric_front.jpg", "view": "front", "fit": "pad", "alt": "Meal Booster Chicken Organs With Turmeric jars, front" },
+        { "file": "meal booster/mealbooster_chickenorganswithturmeric_back.jpg", "view": "back", "fit": "pad", "alt": "Meal Booster Chicken Organs With Turmeric jars, back label" }
+      ],
+      "label": {
+        "ingredients": "Chicken Liver, Heart, Lungs, Kidney, Turmeric",
+        "nutrition": { "Crude Protein": "59.90 %", "Crude Fat": "17.40 %", "Crude Fiber": "0.69 %", "Moisture": "7.94 %", "Ash": "4.67 %", "Energy": "436.56 kcal" },
+        "labelMrp": "₹249/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": ["MRP is printed sideways and slightly blurred; read as ₹249/- (consistent with the printed ₹3.5/- per gm × 70 g). Please confirm."]
+    },
+    {
+      "id": "meal-booster-lamb-organs",
+      "name": "Meal Booster Lamb Organs",
+      "line": "mealBooster",
+      "category": "food & treats",
+      "subcategory": "meal toppers",
+      "species": ["dog", "cat"],
+      "images": [
+        { "file": "meal booster/mealbooster_lamborgans_front.jpg", "view": "front", "fit": "pad", "alt": "Meal Booster Lamb Organs jars, front" },
+        { "file": "meal booster/mealbooster_lamborgans_back.jpg", "view": "back", "fit": "pad", "alt": "Meal Booster Lamb Organs jars, back label" }
+      ],
+      "label": {
+        "ingredients": "Lamb Lungs, Liver",
+        "nutrition": { "Crude Protein": "53.80 %", "Crude Fat": "16.40 %", "Crude Fiber": "0.68 %", "Moisture": "5.18 %", "Ash": "24.57 %", "Energy": "362.8 kcal" },
+        "labelMrp": "₹329/-",
+        "labelNetWeight": "70 Grams"
+      },
+      "flags": ["MRP and weight are printed sideways at low resolution; read as ₹329/- and 70 Grams (consistent with ₹4.7/- per gm). Please confirm."]
+    },
+    {
+      "id": "meal-booster-sardines-anchovies",
+      "name": "Meal Booster Sardines & Anchovies",
+      "line": "mealBooster",
+      "category": "food & treats",
+      "subcategory": "meal toppers",
+      "species": ["dog", "cat"],
+      "images": [
+        { "file": "meal booster/mealbooster_sardines&anchovies_front.jpg", "view": "front", "fit": "pad", "alt": "Meal Booster Sardines & Anchovies jars, front" },
+        { "file": "meal booster/mealbooster_sardines&anchovies_back.jpg", "view": "back", "fit": "pad", "alt": "Meal Booster Sardines & Anchovies jars, back label" }
+      ],
+      "label": {
+        "ingredients": "Sardines, Anchovies",
+        "nutrition": { "Crude Protein": "71.10 %", "Crude Fat": "6.85 %", "Crude Fiber": "0.62 %", "Moisture": "4.05 %", "Ash": "17.97 %", "Energy": "346.05 kcal" },
+        "labelMrp": "₹299/-",
+        "labelNetWeight": "50 Grams"
+      },
+      "flags": ["MRP and weight are printed sideways and blurred; read as ₹299/- and 50 Grams (consistent with ₹5.9/- per gm). Note this is 50 g, not 70 g like the others. Please confirm."]
+    },
+    {
+      "id": "peanut-butter",
+      "name": "The Nuzz Story Peanut Butter",
+      "line": null,
+      "category": "food & treats",
+      "subcategory": "spreads",
+      "species": ["dog"],
+      "images": [
+        { "file": "peanutbutter/peanutbutter_front.jpg", "view": "front", "fit": "pad", "alt": "The Nuzz Story Peanut Butter for dogs, two jars, front" },
+        { "file": "peanutbutter/peanutbutter_back.jpg", "view": "back", "fit": "pad", "alt": "The Nuzz Story Peanut Butter jars, back label" }
+      ],
+      "label": {
+        "ingredients": "100% Peanuts",
+        "nutrition": { "Crude Protein": "25.70 %", "Crude Fat": "50.28 %", "Crude Fiber": "0.32 %", "Moisture": "0.73 %", "Ash": "2.19 %", "Energy": "639.72 kcal" },
+        "feedingText": "0.5 tsp: XS-S Dogs · 1 tsp: Medium Dogs · 1.5 tsp: L-XL Dogs",
+        "features": ["Gluten free & soy free", "High-quality, human-grade ingredients", "No artificial colors, chemical, Sweeteners, flavors & preservatives", "All ingredients responsibly sourced, fresh off the farm"],
+        "benefits": ["Supports a healthy, radiant coat & skin", "Promotes dental health", "Strengthens bones & joint health", "Boosts cognitive function & mental alertness", "Builds immunity", "Packed with essential nutrients & antioxidants"],
+        "storage": "Once opened, store the pack in a cool & dry place. Away from the direct sunlight.",
+        "advisory": ["Do not feed to pets below 12 weeks.", "Please check ingredients for possible allergens."],
+        "note": "Not meant for human consumption.",
+        "bestBefore": "18 months from the date of manufacturing",
+        "packedAndMarketedBy": "The Nuzz Story C-17 GF Right Side, Nagal Dewat, Vasant Kunj, New Delhi- 110070.",
+        "manufacturedBy": "Pawmily Pvt Ltd: Plot no. 4, 60 Meter Road, Sector 69, Badshapur, Gurgaon-122101, Haryana",
+        "contact": "officials@nuzzverse.com",
+        "dietMark": "veg (green mark on pack)",
+        "labelMrp": "₹299/-",
+        "labelNetWeight": "200 Grams"
+      },
+      "flags": ["Product name on the jar is just \"Peanut Butter\"; the store name is a prefix I added for clarity. Rename freely."]
+    },
+    {
+      "id": "carved-wooden-dog-bed",
+      "name": "Carved Wooden Dog Bed (temporary name)",
+      "line": null,
+      "category": "comfy beds",
+      "subcategory": null,
+      "species": [],
+      "images": [
+        { "file": "bed/bed_side.png", "view": "side", "fit": "extend", "alt": "Carved wooden pet bed with pink cushion, three-quarter view" },
+        { "file": "bed/bed_front.png", "view": "front", "fit": "extend", "alt": "Carved wooden pet bed with pink cushion, front view" },
+        { "file": "bed/bed_lower.png", "view": "detail", "fit": "attention", "alt": "Close-up of the floral carving and turned leg of the wooden pet bed" }
+      ],
+      "label": {},
+      "flags": ["Temporary name: final product name to be provided.", "No size, material or dimensions are visible in the photos; nothing recorded."]
+    },
+    {
+      "id": "dog-tee-blue-mischief",
+      "name": "Blue Dog T-Shirt, \"Mischief\" (temporary name)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "dog t-shirts",
+      "species": ["dog"],
+      "images": [
+        { "file": "Tshirts/blue gr f.jpg", "view": "back", "fit": "attention", "alt": "Golden retriever in a blue t-shirt with a \"MISCHIEF chaos mode\" print on the back" },
+        { "file": "Tshirts/blue f gr.jpg", "view": "front", "fit": "attention", "alt": "Golden retriever in a blue t-shirt with \"the nuzz story\" script on the front" }
+      ],
+      "label": {},
+      "flags": ["Front/back pairing based on matching colour and shoot setup; please confirm it is one product.", "Sizes not assumed."]
+    },
+    {
+      "id": "dog-tee-lilac-floral",
+      "name": "Lilac Dog T-Shirt, Floral (temporary name)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "dog t-shirts",
+      "species": ["dog"],
+      "images": [
+        { "file": "Tshirts/pink gr.jpg", "view": "back", "fit": "attention", "alt": "Golden retriever in a lilac t-shirt with a floral print on the back" },
+        { "file": "Tshirts/pink front gr.jpg", "view": "front", "fit": "attention", "alt": "Golden retriever in a lilac t-shirt with \"the nuzz story\" script on the front" }
+      ],
+      "label": {},
+      "flags": ["Front/back pairing based on matching colour and shoot setup; please confirm it is one product.", "Colour described as lilac/pink from the photo; confirm the official colour name.", "Sizes not assumed."]
+    },
+    {
+      "id": "dog-tee-red-built-for-chaos",
+      "name": "Red Dog T-Shirt, \"Built for Chaos\" (temporary name)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "dog t-shirts",
+      "species": ["dog"],
+      "images": [
+        { "file": "Tshirts/built for choas red.jpg", "view": "back", "fit": "attention", "alt": "Golden retriever in a red t-shirt with a \"built for chaos\" print on the back" }
+      ],
+      "label": {},
+      "flags": ["Only one photo (back view).", "Sizes not assumed."]
+    },
+    {
+      "id": "dog-tee-black-sun-waves",
+      "name": "Black Dog T-Shirt, Sun & Waves (temporary name)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "dog t-shirts",
+      "species": ["dog"],
+      "images": [
+        { "file": "Tshirts/black gr.jpg", "view": "front", "fit": "attention", "alt": "Golden retriever in a black t-shirt with a small sun and waves print" }
+      ],
+      "label": {},
+      "flags": ["Only one dog photo. A person wearing the same design is kept as a separate review draft (human-tee-black-sun-waves).", "Sizes not assumed."]
+    },
+    {
+      "id": "dog-tee-maroon-chase-the-horizon",
+      "name": "Maroon Dog T-Shirt, \"Chase the Horizon\" (temporary name)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "dog t-shirts",
+      "species": ["dog"],
+      "images": [
+        { "file": "Tshirts/marhoon gr w.jpg", "view": "front", "fit": "attention", "alt": "Golden retriever in a maroon t-shirt with a \"Chase the Horizon\" print" }
+      ],
+      "label": {},
+      "flags": ["Only one dog photo. A person wearing the same design is kept as a separate review draft (human-tee-maroon-chase-the-horizon).", "Sizes not assumed."]
+    },
+    {
+      "id": "dog-tee-white-arch",
+      "name": "White Dog T-Shirt, Arch & Leaf (temporary name)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "dog t-shirts",
+      "species": ["dog"],
+      "images": [
+        { "file": "Tshirts/white gr.jpg", "view": "back", "fit": "attention", "alt": "Golden retriever in a white t-shirt with an arch and leaf line-art print on the back" }
+      ],
+      "label": {},
+      "flags": ["Only one dog photo. A person wearing the same design is kept as a separate review draft (human-tee-white-arch).", "Sizes not assumed."]
+    },
+    {
+      "id": "human-tee-black-sun-waves",
+      "name": "Black T-Shirt, Sun & Waves, person (REVIEW)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "needs review",
+      "species": [],
+      "images": [
+        { "file": "Tshirts/black .jpg", "view": "lifestyle", "fit": "attention", "alt": "Person wearing a black t-shirt with a small sun and waves chest print" }
+      ],
+      "label": {},
+      "flags": ["Unclear whether this is a human t-shirt for sale, a matching set, or a lifestyle photo for the dog tee. Merge, keep or delete in the admin.", "Source filename ends with a space (\"black .jpg\")."]
+    },
+    {
+      "id": "human-tee-maroon-chase-the-horizon",
+      "name": "Maroon T-Shirt, \"Chase the Horizon\", person (REVIEW)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "needs review",
+      "species": [],
+      "images": [
+        { "file": "Tshirts/marhoon.jpg", "view": "lifestyle", "fit": "attention", "alt": "Person seen from behind wearing a maroon t-shirt with a \"Chase the Horizon\" back print" }
+      ],
+      "label": {},
+      "flags": ["Unclear whether this is a human t-shirt for sale, a matching set, or a lifestyle photo for the dog tee. Merge, keep or delete in the admin."]
+    },
+    {
+      "id": "human-tee-white-arch",
+      "name": "White T-Shirt, Arch & Leaf, person (REVIEW)",
+      "line": null,
+      "category": "wear & style",
+      "subcategory": "needs review",
+      "species": [],
+      "images": [
+        { "file": "Tshirts/white.jpg", "view": "lifestyle", "fit": "attention", "alt": "Person seen from behind wearing a white t-shirt with an arch and leaf line-art back print" }
+      ],
+      "label": {},
+      "flags": ["Unclear whether this is a human t-shirt for sale, a matching set, or a lifestyle photo for the dog tee. Merge, keep or delete in the admin."]
+    }
+  ]
+}

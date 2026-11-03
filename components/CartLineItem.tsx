@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
+import { productHref } from "@/lib/catalog";
 import { useDelayedFlag } from "@/lib/hooks/useDelayedFlag";
 import { formatPrice } from "@/lib/money";
 import type { Product } from "@/lib/types";
@@ -134,13 +135,13 @@ export default function CartLineItem({ product, qty, variant, unitCents, onNavig
       inert={exiting || undefined}
       aria-hidden={exiting || undefined}
     >
-      <Link href={`/shop/${product.id}`} className="cart-line__img img-slot" onClick={onNavigate} tabIndex={-1} aria-hidden="true">
+      <Link href={productHref(product)} className="cart-line__img img-slot" onClick={onNavigate} tabIndex={-1} aria-hidden="true">
         <SmartImage src={product.img} alt="" width={96} height={96} sizes="96px" />
       </Link>
       <div className="cart-line__body">
         <div className="cart-line__top">
           <div>
-            <Link href={`/shop/${product.id}`} className="cart-line__name">
+            <Link href={productHref(product)} className="cart-line__name">
               {product.name}
             </Link>
             <p className="cart-line__category">{product.category}</p>

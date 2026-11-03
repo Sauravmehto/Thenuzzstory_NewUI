@@ -294,13 +294,15 @@ html:not([data-past-hero]) body:has(.cozy-hero) .navbar {
 .cozy-card--product {
   top: 50px;
   left: 3rem;
-  width: clamp(160px, 14vw, 260px);
+  width: 144px;
+  margin-top: -2rem;
 }
 
 .cozy-card--video {
   top: 50px;
   right: 3rem;
-  width: clamp(120px, 10vw, 177px);
+  width: 144px;
+  margin-top: -2rem;
 }
 
 .cozy-card__img-wrap {
@@ -1200,5 +1202,71 @@ html:not([data-past-hero]) body:has(.cozy-hero) .navbar {
   .cozy-header .nav-burger--cozy {
     width: 36px;
     height: 36px;
+  }
+}
+
+/* ─── Instagram reel preview ──────────────────────────────────────────────── */
+.reel-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(5 20 50 / 0.72);
+}
+
+.reel-modal__panel {
+  width: min(380px, 100%);
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+}
+
+.reel-modal__frame {
+  display: block;
+  width: 100%;
+  height: min(560px, 72vh);
+  border: 0;
+}
+
+.reel-modal__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.85rem;
+  color: #0d1f3c;
+}
+
+.reel-modal__bar a {
+  font-weight: 700;
+  color: #00387d;
+}
+
+.reel-modal__bar button {
+  padding: 0.35rem 0.9rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #00387d;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ─── Left card: animated GIF (still photo for reduced motion) ─────────────── */
+/* ".cozy-card__img-wrap img" sets display:block, so these need the same specificity. */
+.cozy-card__img-wrap .cozy-card__still {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cozy-card__img-wrap .cozy-card__gif {
+    display: none;
+  }
+  .cozy-card__img-wrap .cozy-card__still {
+    display: block;
   }
 }

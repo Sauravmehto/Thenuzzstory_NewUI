@@ -41,3 +41,11 @@
 /* Landing page: navbar, scroll effects, microinteractions */
 @import "./styles/shop-premium.css";
 /* /shop only: blue + yellow refresh, scoped to .shop-page */
+@import "./styles/catalog.css";
+/* Product catalog: offer pill, sort, gallery thumbs, label details, previews */
+@import "./styles/admin.css";
+/* /admin: local product admin */
+@import "./styles/account.css";
+/* Sign in / create account + order history panel */
+@import "./styles/cart-blue.css";
+/* /cart + /order/confirmed: bluish-and-white theme */

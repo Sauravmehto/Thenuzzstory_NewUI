@@ -1,0 +1,227 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   account.css — Sign in / create account and order history panel.
+   The panel reuses the cart drawer (.shop-cart*) and the form fields reuse
+   .contact-field, so only the differences live here.
+───────────────────────────────────────────────────────────────────────────── */
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  overflow-y: auto;
+}
+
+.account-form__intro {
+  margin: 0;
+  color: var(--flow-muted, #4b5563);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.account-form__field input[aria-invalid="true"] {
+  border-color: var(--flow-danger, #b42318);
+  background: #fff8f7;
+}
+
+.account-form__password {
+  position: relative;
+}
+
+.account-form__password input {
+  padding-right: 4.25rem;
+}
+
+.account-form__reveal {
+  position: absolute;
+  top: 50%;
+  right: 0.4rem;
+  min-height: 36px;
+  padding: 0 0.7rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--color-navy, #00387d);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.account-form__hint,
+.account-form__error {
+  margin: 0;
+  font-size: 12px;
+}
+
+.account-form__hint {
+  color: var(--flow-muted, #4b5563);
+}
+
+.account-form__error {
+  color: var(--flow-danger, #b42318);
+  font-weight: 500;
+}
+
+.account-form__message {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.7rem;
+  font-size: 0.9rem;
+}
+
+.account-form__message--error {
+  background: #fef3f2;
+  color: var(--flow-danger, #b42318);
+}
+
+.account-form__message--ok {
+  background: #ecfdf3;
+  color: #067647;
+}
+
+.account-form__submit {
+  width: 100%;
+  justify-content: center;
+}
+
+.account-form__submit:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.account-form__switch {
+  margin: 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--flow-muted, #4b5563);
+}
+
+.account-form__switch button {
+  min-height: 44px;
+  padding: 0 0.25rem;
+  border: none;
+  background: none;
+  color: var(--color-navy, #00387d);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.account-form__reveal:focus-visible,
+.account-form__switch button:focus-visible,
+.account-drawer__status:focus-visible {
+  outline: 2px solid var(--color-navy, #00387d);
+  outline-offset: 2px;
+}
+
+.account-drawer .shop-cart__title:focus {
+  outline: none;
+}
+
+.account-drawer__status {
+  padding: 1.5rem;
+  color: var(--flow-muted, #4b5563);
+}
+
+/* Account menu: "create an account" under the sign-in button. */
+.account-menu__create {
+  justify-content: center;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--color-navy, #00387d);
+}
+
+/* ─── Order history ──────────────────────────────────────────────────── */
+.account-orders {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 1.5rem;
+}
+
+.account-order {
+  padding: 1rem;
+  border: 1px solid rgb(26 61 26 / 0.12);
+  border-radius: 1rem;
+  background: #ffffff;
+  list-style: none;
+}
+
+.account-order__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--flow-muted, #4b5563);
+}
+
+.account-order__id {
+  margin: 0;
+  font-weight: 700;
+  color: var(--flow-ink, #1a3d1a);
+}
+
+.account-order__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+}
+
+.account-order__status span {
+  padding: 0.1rem 0.6rem;
+  border-radius: 9999px;
+  background: #fef3c7;
+  color: #78350f;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.account-order__lines {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.account-order__lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.account-order__lines a {
+  color: var(--flow-ink, #1a3d1a);
+}
+
+.account-order__qty {
+  flex: none;
+  color: var(--flow-muted, #4b5563);
+  font-variant-numeric: tabular-nums;
+}
+
+.account-order__total {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgb(26 61 26 / 0.15);
+  font-size: 0.88rem;
+  color: var(--flow-muted, #4b5563);
+}
+
+.account-order__total strong {
+  color: var(--flow-ink, #1a3d1a);
+}
+
+@media (hover: hover) {
+  .account-form__reveal:hover,
+  .account-form__switch button:hover {
+    color: var(--color-darkblue, #4b69f0);
+  }
+}

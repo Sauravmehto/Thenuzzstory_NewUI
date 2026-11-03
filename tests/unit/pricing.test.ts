@@ -1,9 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { getProduct } from "@/lib/catalog";
+import fixture from "@/tests/fixtures/catalog.public.e2e.json";
 import { addBusinessDays } from "@/lib/delivery";
 import { formatPrice } from "@/lib/money";
 import { buildQuote, diffQuotes, SHIPPING_CENTS } from "@/lib/pricing";
 import type { Product } from "@/lib/types";
+
+// The pricing rules are tested against the frozen demo products (prices and
+// stock as they were in lib/catalog.ts), independent of what's published.
+const demoProducts = new Map((fixture.products as Product[]).map((p) => [p.id, p]));
+const getProduct = (id: string): Product | undefined => demoProducts.get(id);
 
 describe("buildQuote", () => {
   it("sums in integer cents (no float drift)", () => {
@@ -61,5 +66,22 @@ describe("addBusinessDays", () => {
     const friday = new Date(2026, 8, 25); // Fri 25 Sep 2026
     expect(addBusinessDays(friday, 1).getDay()).toBe(1); // Monday
     expect(addBusinessDays(friday, 2).getDate()).toBe(29); // Tuesday 29th
+  });
+});
+
+describe("currency formatting", () => {
+  it("formats the configured currencies", async () => {
+    const { createPriceFormatter } = await import("@/lib/money");
+    expect(createPriceFormatter("USD")(34996)).toBe("$349.96");
+    expect(createPriceFormatter("INR")(34900)).toBe("₹349"); // whole rupees without .00
+    expect(createPriceFormatter("INR")(443)).toBe("₹4.43");
+    expect(createPriceFormatter("INR")(12345600)).toBe("₹1,23,456"); // Indian digit grouping
+  });
+});
+
+describe("live store money settings", () => {
+  it("is rupees: ₹79 delivery below ₹499, free from ₹499", async () => {
+    const { LIVE_MONEY } = await import("@/lib/store-config");
+    expect(LIVE_MONEY).toEqual({ currency: "INR", shippingCents: 7900, freeShippingThresholdCents: 49900 });
   });
 });

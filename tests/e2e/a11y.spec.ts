@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { cartDialog } from "./helpers";
+import { cartDialog, fillShipping, stubWhatsapp } from "./helpers";
 
 test("cart drawer is a real modal dialog", async ({ page }) => {
   await page.goto("/shop");
@@ -21,17 +21,14 @@ test("cart drawer is a real modal dialog", async ({ page }) => {
   await expect(trigger).toBeFocused();
 });
 
-test("no serious axe violations on the order confirmation", async ({ page }) => {
+test("no serious axe violations on the order confirmation", async ({ page, context }) => {
+  await stubWhatsapp(context);
   await page.goto("/shop/cozy-dog-house");
   await page.getByRole("button", { name: /add to cart/ }).click();
   await page.getByRole("link", { name: "go to checkout" }).click();
-  await page.getByLabel("Full name").fill("Jane Doe");
-  await page.getByLabel("Email").fill("jane@example.com");
-  await page.getByLabel("Address").fill("12 Maple Street");
-  await page.getByLabel("City").fill("London");
-  await page.getByLabel("Postal code").fill("N1 7GU");
+  await fillShipping(page);
   await page.getByRole("button", { name: /place order/ }).click();
-  await expect(page.getByRole("heading", { name: /Thank you/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Your order is recorded/ })).toBeVisible();
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious.map((v) => `${v.id}: ${v.nodes.length} node(s)`)).toEqual([]);

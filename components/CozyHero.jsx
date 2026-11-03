@@ -8,6 +8,7 @@ import AccountMenu from "@/components/AccountMenu";
 import MobileNav from "@/components/MobileNav";
 import { REMOTE_ASSETS } from "@/lib/remote-assets";
 import SmartImage from "@/components/SmartImage";
+import ReelPlayButton from "@/components/ReelPlayButton";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useMagnetic } from "@/lib/hooks/useMagnetic";
@@ -17,11 +18,46 @@ const ASSETS = {
   logo: REMOTE_ASSETS.logo,
   avatar: REMOTE_ASSETS.avatar,
   productCard: "/assets/pets/house1.avif",
+  // Animated clip for the left card. Until the file exists the still above is shown instead.
+  productGif: "/assets/pets/hero-card.gif",
   videoCard: "/assets/pets/dog2.avif",
   bottomLeft: REMOTE_ASSETS.heroBottomLeft,
   bottomCenter: REMOTE_ASSETS.heroBottomCenter,
   bottomRight: REMOTE_ASSETS.heroBottomRight,
 };
+
+/** The left card's picture: an animated GIF, with the still photo for reduced motion or a missing file. */
+function CardClip({ alt, priority = false, loading }) {
+  const gifRef = useRef(null);
+  const useStill = () => {
+    const img = gifRef.current;
+    if (img && !img.src.endsWith(ASSETS.productCard)) img.src = ASSETS.productCard;
+  };
+
+  // The browser may have failed to load the GIF before React attached onError.
+  useEffect(() => {
+    const img = gifRef.current;
+    if (img?.complete && img.naturalWidth === 0) useStill();
+  }, []);
+
+  return (
+    <>
+      <img
+        ref={gifRef}
+        src={ASSETS.productGif}
+        className="cozy-card__gif"
+        alt={alt}
+        width={900}
+        height={1350}
+        decoding="async"
+        loading={priority ? undefined : loading}
+        fetchPriority={priority ? "high" : undefined}
+        onError={useStill}
+      />
+      <img src={ASSETS.productCard} className="cozy-card__still" alt="" aria-hidden="true" width={900} height={1350} decoding="async" />
+    </>
+  );
+}
 
 const POINTER_CURSOR = {
   cursor: "url('/assets/Cursor SVG/cursor-pointer.svg') 12 12, pointer",
@@ -399,7 +435,7 @@ export default function CozyHero() {
 
         <div className="cozy-card cozy-card--product cozy-slide-in-left cozy-delay-600" data-tilt>
           <div className="cozy-card__img-wrap">
-            <SmartImage src={ASSETS.productCard} alt="Cozy Dog House" width={900} height={1350} loading="eager" sizes="210px" />
+            <CardClip alt="Cozy Dog House" loading="eager" />
             <a
               href="/shop"
               className="cozy-card__arrow-btn"
@@ -417,14 +453,10 @@ export default function CozyHero() {
           <div className="cozy-card__img-wrap cozy-card__img-wrap--video">
             <SmartImage src={ASSETS.videoCard} alt="Product review videos" width={834} height={1161} loading="eager" sizes="150px" />
             <div className="cozy-card__video-overlay">
-              <button
-                className="cozy-play-btn"
-                aria-label="Play video"
-                style={POINTER_CURSOR}
-              >
-                <IconPlay />
-              </button>
-              <p>Watch Product Reviews on TikTok and YouTube</p>
+              <ReelPlayButton className="cozy-play-btn" style={POINTER_CURSOR}>
+<IconPlay />
+</ReelPlayButton>
+              <p>Watch our product reels on Instagram</p>
             </div>
           </div>
         </div>
@@ -483,7 +515,7 @@ export default function CozyHero() {
         <div className="cozy-mobile__cards">
           <div className="cozy-mcard cozy-card-in">
             <div className="cozy-card__img-wrap cozy-mcard__img--square">
-              <SmartImage src={ASSETS.productCard} alt="Cozy Dog House" width={900} height={1350} fetchPriority="high" sizes="(max-width: 768px) 45vw, 210px" />
+              <CardClip alt="Cozy Dog House" priority />
               <a
                 href="/shop"
                 className="cozy-card__arrow-btn"
@@ -500,14 +532,10 @@ export default function CozyHero() {
             <div className="cozy-card__img-wrap cozy-mcard__img--tall">
               <SmartImage src={ASSETS.videoCard} alt="Product review videos" width={834} height={1161} fetchPriority="high" sizes="(max-width: 768px) 45vw, 150px" />
               <div className="cozy-card__video-overlay">
-                <button
-                  className="cozy-play-btn"
-                  aria-label="Play video"
-                  style={POINTER_CURSOR}
-                >
-                  <IconPlay />
-                </button>
-                <p>Watch Product Reviews on TikTok and YouTube</p>
+                <ReelPlayButton className="cozy-play-btn" style={POINTER_CURSOR}>
+<IconPlay />
+</ReelPlayButton>
+                <p>Watch our product reels on Instagram</p>
               </div>
             </div>
           </div>
