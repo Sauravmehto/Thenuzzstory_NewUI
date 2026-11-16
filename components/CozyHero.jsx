@@ -445,8 +445,8 @@ export default function CozyHero() {
               <IconArrowUpRight />
             </a>
           </div>
-          <p className="cozy-card__name">Cozy Dog House</p>
-          <p className="cozy-card__price">$49.99</p>
+          <p className="cozy-card__name">Cozy Dog Bed</p>
+          <p className="cozy-card__price">Rs.3200/-</p>
         </div>
 
         <div className="cozy-card cozy-card--video cozy-slide-in-right cozy-delay-700" data-tilt>
