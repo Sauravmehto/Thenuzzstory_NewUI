@@ -11,7 +11,7 @@ export interface Demo {
 export async function setDemo(context: BrowserContext, baseURL: string, demo: Demo) {
   await context.addCookies([
     {
-      name: "cp-demo",
+      name: "nuzz-demo",
       value: encodeURIComponent(JSON.stringify({ latencyMs: 0, failNextCart: false, ...demo })),
       url: baseURL,
     },

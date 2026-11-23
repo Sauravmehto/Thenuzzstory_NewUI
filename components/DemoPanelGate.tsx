@@ -14,11 +14,11 @@ export default function DemoPanelGate() {
   useEffect(() => {
     try {
       const fromUrl = new URLSearchParams(window.location.search).get("demo");
-      if (fromUrl === "1") sessionStorage.setItem("cp-demo-ui", "1");
-      if (fromUrl === "0") sessionStorage.removeItem("cp-demo-ui");
+      if (fromUrl === "1") sessionStorage.setItem("nuzz-demo-ui", "1");
+      if (fromUrl === "0") sessionStorage.removeItem("nuzz-demo-ui");
       // The server only honours demo controls in development and the test build (lib/server/demo.ts).
       const allowed = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_STORE_PROFILE === "demo-usd";
-      setEnabled(allowed && (process.env.NODE_ENV !== "production" || sessionStorage.getItem("cp-demo-ui") === "1"));
+      setEnabled(allowed && (process.env.NODE_ENV !== "production" || sessionStorage.getItem("nuzz-demo-ui") === "1"));
     } catch {
       setEnabled(process.env.NODE_ENV !== "production");
     }

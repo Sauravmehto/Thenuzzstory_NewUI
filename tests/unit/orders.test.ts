@@ -128,7 +128,7 @@ describe("WhatsApp message", () => {
 
   it("is encoded for the official click-to-chat link and survives a round trip", () => {
     const url = whatsappUrl(buildWhatsappMessage(order));
-    expect(url.startsWith("https://wa.me/918130699818?text=")).toBe(true);
+    expect(url.startsWith("https://wa.me/919667707716?text=")).toBe(true);
     expect(url).not.toMatch(/[\s"<>]/);
     const text = new URL(url).searchParams.get("text")!;
     expect(text).toBe(buildWhatsappMessage(order));
@@ -147,7 +147,7 @@ describe("POST /api/orders", () => {
     expect(body.paymentStatus).toBe("payment_pending");
     expect(body.paymentMethod).toBe("whatsapp");
     expect(body.quote.totalCents).toBe(shown(2).totalCents);
-    expect(body.whatsappUrl.startsWith("https://wa.me/918130699818?text=")).toBe(true);
+    expect(body.whatsappUrl.startsWith("https://wa.me/919667707716?text=")).toBe(true);
     expect(body.whatsappMessage).toContain(body.orderId);
 
     const saved = JSON.parse(await readFile(path.join(dir, "orders", `${body.orderId}.json`), "utf8")) as SavedOrder;
@@ -180,14 +180,14 @@ describe("POST /api/orders", () => {
     const cookie = encodeURIComponent(JSON.stringify({ latencyMs: 0, failNextCart: false, priceBump: { id: sku.sku, percent: -90 } }));
 
     // In development / the test build the controls work (that is what the demo panel is for)...
-    const demo = await post({}, { cookie: `cp-demo=${cookie}` });
+    const demo = await post({}, { cookie: `nuzz-demo=${cookie}` });
     expect(demo.body).toMatchObject({ ok: false, code: "quote_changed" });
 
     // ...on a live store (production, no demo profile) the same cookie does nothing.
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("NEXT_PUBLIC_STORE_PROFILE", "");
     try {
-      const live = await post({}, { cookie: `cp-demo=${cookie}` });
+      const live = await post({}, { cookie: `nuzz-demo=${cookie}` });
       expect(live.status).toBe(200);
       expect(live.body.ok && live.body.quote.totalCents).toBe(shown(2).totalCents);
       expect(live.body.ok && live.body.quote.lines[0]!.unitCents).toBe(sku.priceCents);

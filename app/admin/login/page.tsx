@@ -17,12 +17,20 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     if (process.env.NODE_ENV === "production") notFound();
     return (
       <main className="admin-login">
+        <img className="admin-login__logo" src="/assets/brand/nuzzstorylogo-removebg.png" alt="The Nuzz Story" width={180} height={60} />
         <h1>Admin is off</h1>
-        <p>{availability.reason}</p>
-        <p>
-          Copy <code>.env.example</code> to <code>.env.local</code>, set <code>ADMIN_PASSWORD</code>, then restart{" "}
-          <code>npm run dev</code>.
-        </p>
+        <p className="admin-login__sub">{availability.reason}</p>
+        <ol className="admin-login__steps">
+          <li>
+            Create a file called <code>.env.local</code> in the project folder (you can copy <code>.env.example</code>).
+          </li>
+          <li>
+            Add the line <code>ADMIN_PASSWORD=your-password</code> (at least 8 characters).
+          </li>
+          <li>
+            Stop and restart <code>npm run dev</code>, then reload this page.
+          </li>
+        </ol>
       </main>
     );
   }

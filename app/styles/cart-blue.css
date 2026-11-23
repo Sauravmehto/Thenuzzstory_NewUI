@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    cart-blue.css — bluish-and-white theme for /cart (checkout) and
    /order/confirmed. Scoped to .cart-page; the shop and homepage are untouched.
-   The layout, spacing and behaviour come from cozypaws.css / flow.css: this
+   The layout, spacing and behaviour come from store-chrome.css / flow.css: this
    file only re-points colours (white cards, soft blue backgrounds, blue
    primary buttons, soft borders).
 ───────────────────────────────────────────────────────────────────────────── */

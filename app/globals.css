@@ -22,10 +22,10 @@
 @import "./styles/animated-hero.css";
 /* Coded animated hero scene (aurora + paws) */
 @import "./styles/cozy-hero.css";
-/* CozyPaws pet-store hero (top of page)    */
+/* The Nuzz Story pet-store hero (top of page)    */
 @import "./styles/shop.css";
-/* CozyPaws /shop page (grid + cart drawer) */
-@import "./styles/cozypaws.css";
+/* The Nuzz Story /shop page (grid + cart drawer) */
+@import "./styles/store-chrome.css";
 /* Shared header/footer + product/about/contact/cart pages */
 @import "./styles/cursor.css";
 /* Custom cursor bubble + scribble overlay  */

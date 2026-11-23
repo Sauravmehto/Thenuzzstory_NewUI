@@ -15,7 +15,16 @@ const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
  * Screen readers get only the final value (the counting digits are
  * aria-hidden), and reduced-motion users see the new value instantly.
  */
-export default function AnimatedPrice({ cents, className }: { cents: Cents; className?: string }) {
+export default function AnimatedPrice({
+  cents,
+  className,
+  format = formatPrice,
+}: {
+  cents: Cents;
+  className?: string;
+  /** Defaults to the store currency (grooming passes its rupee formatter). */
+  format?: (cents: Cents) => string;
+}) {
   const [shown, setShown] = useState(cents);
   const fromRef = useRef(cents);
   const frameRef = useRef<number | undefined>(undefined);
@@ -44,8 +53,8 @@ export default function AnimatedPrice({ cents, className }: { cents: Cents; clas
 
   return (
     <span className={`animated-price ${className ?? ""}`} data-changing={shown !== cents || undefined}>
-      <span aria-hidden="true">{formatPrice(shown)}</span>
-      <span className="visually-hidden">{formatPrice(cents)}</span>
+      <span aria-hidden="true">{format(shown)}</span>
+      <span className="visually-hidden">{format(cents)}</span>
     </span>
   );
 }

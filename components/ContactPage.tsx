@@ -236,7 +236,7 @@ We reply to messages within one business day.
                         aria-describedby={errors.orderNumber ? "cf-order-hint cf-orderNumber-error" : "cf-order-hint"}
                       />
                       <span className="contact-hint" id="cf-order-hint">
-                        It&apos;s on your receipt and starts with CP-
+                        It&apos;s on your receipt and starts with NS-
                       </span>
                       {err("orderNumber")}
                     </div>

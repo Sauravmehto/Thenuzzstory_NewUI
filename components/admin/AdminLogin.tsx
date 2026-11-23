@@ -36,7 +36,9 @@ export default function AdminLogin({ next }: { next: string }) {
 
   return (
     <main className="admin-login">
-      <h1>The Nuzz Story admin</h1>
+      <img className="admin-login__logo" src="/assets/brand/nuzzstorylogo-removebg.png" alt="The Nuzz Story" width={180} height={60} />
+      <h1>Admin sign in</h1>
+      <p className="admin-login__sub">Manage products, orders and grooming appointments.</p>
       <form onSubmit={submit} noValidate>
         <label htmlFor="admin-password">Password</label>
         <input

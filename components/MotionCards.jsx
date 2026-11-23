@@ -260,17 +260,17 @@ export default function MotionCards() {
         <div ref={containerRef} className="motion-card__floating-labels">
           <div className="motion-card__floating-label motion-card__floating-label--pink">
             <p className="motion-card__floating-text">
-              pets just wanna have fun!
+              every day is a treat day!
             </p>
           </div>
           <div className="motion-card__floating-label motion-card__floating-label--orange">
             <p className="motion-card__floating-text">
-              spoiled is not a dirty word
+              spoil them. they&apos;ve earned it.
             </p>
           </div>
           <div className="motion-card__floating-label motion-card__floating-label--red">
             <p className="motion-card__floating-text">
-              boring toys = old fashioned
+              no boring toys. ever.
             </p>
           </div>
         </div>

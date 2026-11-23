@@ -1,4 +1,4 @@
-/* ─── CozyPaws shared chrome + About / Contact / Product / Cart pages ────────
+/* ─── The Nuzz Story shared chrome + About / Contact / Product / Cart pages ────────
    Playful & bold direction. Palette:
      bg #EFFDF0 · dark green #1a3d1a · hover #2a5a2a · orange #E86A10
    Accents pull from the marquee tokens (--color-green/darkblue/maroon/
@@ -54,7 +54,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  background: #00408f;
+  background: var(--color-royal);
   color: #ffffff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
@@ -112,7 +112,7 @@
 
 .site-header .cozy-icon-btn:not(.cozy-icon-btn--orange):hover {
   background: #ffffff;
-  color: #00408f;
+  color: var(--color-royal);
 }
 
 .site-header__actions {
@@ -134,7 +134,7 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.5rem 1.5rem 1rem;
-  background: #00408f;
+  background: var(--color-royal);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 12px 24px rgba(0, 32, 80, 0.18);
   transform: translateY(-8px);

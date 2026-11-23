@@ -24,6 +24,7 @@
   --color-yellow: #f9c619;
   --color-yellow-dark: #e5ad00;  /* hover / pressed */
   --color-yellow-ink: #8a6400;   /* gold for text on light backgrounds (5.4:1 on white) */
+  --color-royal: #193181;       /* site header + mobile menu */
   --color-navy: #00387d;         /* text on yellow (7:1), the logo's own pairing */
   --color-orange: var(--color-yellow);
   --color-maroon: #a0325a;

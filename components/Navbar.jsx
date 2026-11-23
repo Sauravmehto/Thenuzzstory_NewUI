@@ -475,11 +475,11 @@ export default function Navbar() {
           }}
         >
           <img
-            src="/assets/brand/nuzzstorylogo.png"
+            src="/assets/brand/nuzzstorylogo-removebg.png"
             alt="The Nuzz Story"
             className="cozy-logo"
-            width={2172}
-            height={724}
+            width={866}
+            height={288}
           />
         </div>
         <div

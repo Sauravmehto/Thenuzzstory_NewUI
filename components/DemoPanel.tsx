@@ -9,7 +9,7 @@ import { PRODUCTS } from "@/lib/catalog";
  * cart + checkout routes read (see lib/server/demo.ts).
  * Loaded with next/dynamic only when enabled, so normal visitors download none of it.
  */
-const COOKIE = "cp-demo";
+const COOKIE = "nuzz-demo";
 
 interface DemoState {
   latencyMs: number;

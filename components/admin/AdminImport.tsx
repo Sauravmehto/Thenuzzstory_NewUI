@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { adminRequest } from "@/lib/admin-client";
+import { Callout, EmptyState, PageHeader, StatCards } from "@/components/admin/AdminUI";
 import type { ImportReport, PlanItem } from "@/lib/catalog-core/importer";
 
 type Summary = Omit<PlanItem, "product">;
@@ -12,7 +13,7 @@ interface PlanResponse {
   items: Summary[];
 }
 
-const STATUS_TEXT: Record<PlanItem["status"], string> = { new: "New", exists: "Already in catalog", invalid: "Can't import" };
+const STATUS_TEXT: Record<PlanItem["status"], string> = { new: "New", exists: "Already added", invalid: "Can't import" };
 
 /**
  * Bulk import from data/import/product-list.manifest.json:
@@ -55,14 +56,48 @@ export default function AdminImport() {
 
   return (
     <section aria-labelledby="import-title">
-      <div className="admin-toolbar">
-        <h1 id="import-title">Import from product photos</h1>
-      </div>
-      <p className="admin-hint">
-        Reads <code>data/import/product-list.manifest.json</code> (the reviewed list of products made from{" "}
-        <code>source-assets/product_list</code>). Everything is imported as an <strong>unpublished draft</strong> without a price. Products already in
-        the catalog are skipped, never overwritten, so this is safe to run again. Run <code>npm run catalog:images</code> first if you added photos.
-      </p>
+      <PageHeader
+        id="import-title"
+        title="Import products from photos"
+        description="Add many products at once from the product photo list. Nothing goes live until you add a price and publish it."
+      />
+
+      <ol className="admin-steps">
+        <li>
+          <span className="admin-steps__n">1</span>
+          <span>
+            <strong>Photos are listed</strong>
+            <span className="admin-muted">New product photos are added to the product list.</span>
+          </span>
+        </li>
+        <li>
+          <span className="admin-steps__n">2</span>
+          <span>
+            <strong>Pick what to add</strong>
+            <span className="admin-muted">Tick the new products below.</span>
+          </span>
+        </li>
+        <li>
+          <span className="admin-steps__n">3</span>
+          <span>
+            <strong>Import as drafts</strong>
+            <span className="admin-muted">They arrive without a price and stay hidden from the shop.</span>
+          </span>
+        </li>
+      </ol>
+
+      <Callout
+        detailsLabel="Details for developers"
+        details={
+          <p>
+            Reads <code>data/import/product-list.manifest.json</code> (the reviewed list made from <code>source-assets/product_list</code>). Products
+            already in the catalog are skipped, never overwritten, so this is safe to run again. Run <code>npm run catalog:images</code> first if you
+            added photos.
+          </p>
+        }
+      >
+        Safe to repeat: products already in your catalog are never changed.
+      </Callout>
 
       {error && (
         <p className="admin-message admin-message--error" role="alert">
@@ -94,17 +129,25 @@ export default function AdminImport() {
       )}
 
       {!plan ? (
-        !error && <p className="admin-muted">Reading the manifest…</p>
+        !error && <EmptyState icon="⏳" title="Reading the product list…" />
       ) : (
         <>
-          <p className="admin-count">
-            Manifest v{plan.manifestVersion}: {plan.counts.new} new · {plan.counts.exists} already in catalog · {plan.counts.invalid} can&apos;t import
-          </p>
-          <div className="admin-actions">
-            <button type="button" className="admin-btn admin-btn--primary" disabled={busy || selected.size === 0} onClick={runImport}>
-              {busy ? "Importing…" : `Import ${selected.size} selected as drafts`}
-            </button>
-            {newItems.length > 0 && (
+          <StatCards
+            label="Product list summary"
+            stats={[
+              { key: "new", label: "New", value: plan.counts.new, hint: "ready to import", tone: "blue" },
+              { key: "exists", label: "Already added", value: plan.counts.exists, hint: "in your catalog", tone: "green" },
+              { key: "invalid", label: "Can't import", value: plan.counts.invalid, hint: plan.counts.invalid ? "see notes below" : "none", tone: plan.counts.invalid ? "red" : "grey" },
+            ]}
+          />
+          <p className="admin-count">Product list version {plan.manifestVersion}</p>
+          {newItems.length === 0 ? (
+            <Callout tone="ok">Everything in the product list is already in your catalog. Nothing new to import.</Callout>
+          ) : (
+            <div className="admin-actions admin-import-bar">
+              <button type="button" className="admin-btn admin-btn--primary" disabled={busy || selected.size === 0} onClick={runImport}>
+                {busy ? "Importing…" : selected.size === 0 ? "Tick products to import" : `Import ${selected.size} as draft${selected.size === 1 ? "" : "s"}`}
+              </button>
               <button
                 type="button"
                 className="admin-btn admin-btn--ghost"
@@ -112,8 +155,8 @@ export default function AdminImport() {
               >
                 {selected.size === newItems.length ? "Select none" : "Select all new"}
               </button>
-            )}
-          </div>
+            </div>
+          )}
           <ul className="admin-list">
             {plan.items.map((item) => (
               <li key={item.id} className={`admin-row admin-row--${item.status}`}>

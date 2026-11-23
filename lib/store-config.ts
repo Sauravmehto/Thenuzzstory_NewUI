@@ -44,6 +44,6 @@ export const CURRENCY_LOCALE: Record<StoreCurrency, string> = {
 
 /**
  * Orders are sent to the team on WhatsApp (click-to-chat). Digits only, with the
- * country code: +91 81306 99818. This is a public contact number, not a secret.
+ * country code: +91 96677 07716. This is a public contact number, not a secret.
  */
-export const WHATSAPP_NUMBER = "918130699818";
+export const WHATSAPP_NUMBER = "919667707716";

@@ -81,7 +81,7 @@ test.describe("WhatsApp checkout", () => {
 
     // WhatsApp opens in a NEW tab, on the official click-to-chat link for the team's number.
     const popup = await popupPromise;
-    await popup.waitForURL(/^https:\/\/wa\.me\/918130699818\?text=/);
+    await popup.waitForURL(/^https:\/\/wa\.me\/919667707716\?text=/);
     const message = new URL(popup.url()).searchParams.get("text")!;
     for (const part of [saved.orderId, "Jane Doe", "+91 98765 43210", "12 Maple Street, Hauz Khas", "New Delhi, Delhi 110016", "cozy dog house", "× 1", "$49.99", "Total: $54.98", "Payment method: WhatsApp"])
       expect(message).toContain(part);
@@ -124,7 +124,7 @@ test.describe("WhatsApp checkout", () => {
     await expect(page).toHaveURL(/\/order\/confirmed$/);
     await expect(page.getByText(/didn't open WhatsApp automatically/)).toBeVisible();
     const button = page.getByRole("link", { name: /^open WhatsApp/ });
-    await expect(button).toHaveAttribute("href", /^https:\/\/wa\.me\/918130699818\?text=/);
+    await expect(button).toHaveAttribute("href", /^https:\/\/wa\.me\/919667707716\?text=/);
     await expect(button).toHaveAttribute("target", "_blank");
 
     // Using the button works, and the note changes to remind them to press send.

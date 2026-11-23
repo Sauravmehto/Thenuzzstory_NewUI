@@ -4,7 +4,7 @@
  * depend on hosts that can move, rate-limit or disappear.)
  */
 export const REMOTE_ASSETS = {
-  logo: "/assets/brand/nuzzstorylogo.png",
+  logo: "/assets/brand/nuzzstorylogo-removebg.png",
   avatar: "/assets/hero/avatar.avif",
   heroBottomLeft: "/assets/hero/dog-left-blue.avif",
   heroBottomCenter: "/assets/hero/dog-center-blue.avif",

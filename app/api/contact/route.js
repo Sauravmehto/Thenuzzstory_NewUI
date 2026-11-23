@@ -26,8 +26,10 @@ export async function POST(request) {
   // Topic-specific fields (the form only shows these for their topic).
   const orderNumber = (body.orderNumber || "").trim().toUpperCase();
   const company = (body.company || "").trim();
-  if (body.topic === "order" && !/^CP-[A-Z0-9]{4,}$/.test(orderNumber))
-    errors.orderNumber = "Order numbers start with CP- (it's on your receipt).";
+  // Current order ids look like NS-241014-7KQ3XM (see newOrderId in lib/server/orders.ts).
+  // "CP-…" numbers from receipts issued before the rebrand are still accepted.
+  if (body.topic === "order" && !/^(?:NS-\d{6}-[A-Z0-9]{6}|CP-[A-Z0-9-]{4,})$/.test(orderNumber))
+    errors.orderNumber = "Order numbers start with NS- (it's on your receipt).";
   if (body.topic === "wholesale" && company.length < 2)
     errors.company = "Which shop or company is this for?";
 

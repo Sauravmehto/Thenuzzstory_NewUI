@@ -2,8 +2,9 @@
 
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { getProduct } from "./catalog";
+import { LEGACY_WISHLIST_KEY, WISHLIST_KEY, readStoredWithLegacy, writeStoredAndDropLegacy } from "./legacy-storage";
 
-const STORAGE_KEY = "cozypaws-wishlist";
+const STORAGE_KEY = WISHLIST_KEY;
 
 interface WishlistContextValue {
   ids: string[];
@@ -22,7 +23,7 @@ const WishlistContext = createContext<WishlistContextValue | null>(null);
 
 function readWishlist(): string[] {
   try {
-    const parsed: unknown = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "[]");
+    const parsed: unknown = JSON.parse(readStoredWithLegacy(STORAGE_KEY, LEGACY_WISHLIST_KEY) ?? "[]");
     return Array.isArray(parsed)
       ? parsed.filter((id): id is string => typeof id === "string" && Boolean(getProduct(id)))
       : [];
@@ -49,7 +50,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+      writeStoredAndDropLegacy(STORAGE_KEY, LEGACY_WISHLIST_KEY, JSON.stringify(ids));
     } catch {
       /* ignore: wishlist still works for this session */
     }

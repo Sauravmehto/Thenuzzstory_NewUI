@@ -6,15 +6,15 @@ import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import AccountMenu from "@/components/AccountMenu";
-import { REMOTE_ASSETS } from "@/lib/remote-assets";
 import { useBump } from "@/lib/hooks/useBump";
 import { IconCart, IconStar, IconMenu, IconClose } from "@/components/icons";
 
-const LOGO_SRC = REMOTE_ASSETS.logo;
+const LOGO_SRC = "/assets/brand/nuzzstorylogo-removebg.png";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
+  { href: "/grooming", label: "Grooming" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -36,7 +36,7 @@ export default function SiteHeader() {
         className="site-header__logo-link"
         aria-label="The Nuzz Story home"
       >
-        <img src={LOGO_SRC} alt="The Nuzz Story" className="site-header__logo" width={2172} height={724} />
+        <img src={LOGO_SRC} alt="The Nuzz Story" className="site-header__logo" width={866} height={288} />
       </Link>
 
       <nav className="site-header__nav" aria-label="Primary">

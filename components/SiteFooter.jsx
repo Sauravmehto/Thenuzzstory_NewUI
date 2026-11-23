@@ -13,6 +13,7 @@ const SHOP_LINKS = [
 ];
 
 const COMPANY_LINKS = [
+  { href: "/grooming", label: "Grooming & spa" },
   { href: "/about", label: "About us" },
   { href: "/contact", label: "Contact" },
   { href: "/cart", label: "Your cart" },
@@ -26,10 +27,10 @@ export default function SiteFooter() {
         <div className="site-footer__brand">
           <h2 className="site-footer__wordmark">
             <img
-              src="/assets/brand/nuzzstorylogo.png"
+              src="/assets/brand/nuzzstorylogo-removebg.png"
               alt="The Nuzz Story"
-              width={2172}
-              height={724}
+              width={866}
+              height={288}
             />
           </h2>
           <p className="site-footer__tagline">

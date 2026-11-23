@@ -7,6 +7,7 @@ import { IconMenu, IconClose } from "@/components/icons";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
+  { href: "/grooming", label: "Grooming" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];

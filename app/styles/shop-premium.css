@@ -2,7 +2,7 @@
    shop-premium.css: /shop visual refresh (blue identity, yellow accents).
    Everything is scoped to .shop-page so the shared .cozy-page pages (about,
    cart, contact, product) keep their own look. Imported last in globals.css,
-   so it wins over shop.css / cozypaws.css / flow.css at equal specificity.
+   so it wins over shop.css / store-chrome.css / flow.css at equal specificity.
 
    Roles: blue = brand surfaces · yellow = attention (CTA hover, badges,
    saved, highlights) · white / soft gray = breathing space.
@@ -44,7 +44,7 @@
 }
 
 /* The two decorative blobs become soft light: two blue glows.
-   `.shop-hero > *` (cozypaws.css) made every child relative, so the blobs and
+   `.shop-hero > *` (store-chrome.css) made every child relative, so the blobs and
    paw lost their absolute positioning; restore it here. */
 .shop-page .shop-hero__blob {
   position: absolute;

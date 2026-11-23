@@ -12,6 +12,7 @@ import {
   type RefObject,
 } from "react";
 import { getProduct } from "./catalog";
+import { CART_KEY, LEGACY_CART_KEY, readStoredWithLegacy, writeStoredAndDropLegacy } from "./legacy-storage";
 import {
   cartReducer,
   initialCartState,
@@ -22,7 +23,7 @@ import {
 } from "./cart-state";
 import type { CartLine, CartUpdateResponse } from "./types";
 
-const STORAGE_KEY = "cozypaws-cart";
+const STORAGE_KEY = CART_KEY;
 
 export interface CartNotice {
   id: number;
@@ -86,7 +87,7 @@ function sanitize(lines: unknown): CartLine[] {
 
 function readStoredCart(): CartLine[] {
   try {
-    return sanitize(JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "[]"));
+    return sanitize(JSON.parse(readStoredWithLegacy(STORAGE_KEY, LEGACY_CART_KEY) ?? "[]"));
   } catch {
     return [];
   }
@@ -152,7 +153,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state.confirmed));
+      writeStoredAndDropLegacy(STORAGE_KEY, LEGACY_CART_KEY, JSON.stringify(state.confirmed));
     } catch {
       /* storage full or blocked: the cart still works for this session */
     }

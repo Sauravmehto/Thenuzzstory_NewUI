@@ -201,24 +201,24 @@
   color: var(--color-dark);
 }
 
-/* Card 1 label — pink, center-left area */
+/* Card 1 label — pink. Sits above the cards so it doesn't cover the photos. */
 .motion-card__floating-label--pink {
   background-color: #efbbd8;
-  top: 31%;
+  top: 11%;
   left: 30%;
 }
 
-/* Card 3 label — orange, bottom area */
+/* Card 3 label — yellow. Sits on the bottom edge of the cards, off the photos. */
 .motion-card__floating-label--orange {
   background-color: var(--color-yellow);
-  top: 69%;
+  top: 90%;
   left: 48%;
 }
 
-/* Card 4 label — green, top-right area */
+/* Card 4 label — green, lower-right of the last card (moved down from 46% to match the chosen position) */
 .motion-card__floating-label--red {
   background-color: #dcec9d;
-  top: 46%;
+  top: 70%;
   left: 89%;
 }
 

@@ -35,12 +35,12 @@ test.describe("contact page", () => {
     await page.getByLabel("Message").fill("My leash hasn't arrived yet.");
     await order.fill("12345");
     await page.getByRole("button", { name: "send message" }).click();
-    await expect(page.getByText("Order numbers start with CP-")).toBeVisible();
+    await expect(page.getByText("Order numbers start with NS-")).toBeVisible();
     await expect(order).toBeFocused();
 
-    await order.fill("CP-M1ABCD");
+    await order.fill("NS-241014-7KQ3XM");
     await page.getByRole("button", { name: "send message" }).click();
-    await expect(page.getByRole("status").filter({ hasText: "CP-M1ABCD" })).toBeVisible();
+    await expect(page.getByRole("status").filter({ hasText: "NS-241014-7KQ3XM" })).toBeVisible();
 
     // Wholesale swaps in a company field instead.
     await page.getByRole("button", { name: "send another" }).click();

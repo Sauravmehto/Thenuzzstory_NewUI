@@ -273,11 +273,11 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-big-text">
           <img
-            src="/assets/brand/thenuzzstory_logo.png"
+            src="/assets/brand/nuzzstorylogo-removebg.png"
             alt=""
             className="footer-big-text__logo"
-            width={652}
-            height={383}
+            width={866}
+            height={288}
           />
           <span>THE NUZZ STORY</span>
         </div>

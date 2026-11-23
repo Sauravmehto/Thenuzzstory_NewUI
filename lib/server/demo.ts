@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
  * on serverless hosting, where in-memory state isn't shared between requests.
  * They let me show slow networks, failures and price changes on camera.
  */
-export const DEMO_COOKIE = "cp-demo";
+export const DEMO_COOKIE = "nuzz-demo";
 
 export interface DemoState {
   /** Artificial latency added to cart + checkout routes. */

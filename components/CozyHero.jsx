@@ -333,13 +333,16 @@ export default function CozyHero() {
   return (
     <section className="cozy-hero" ref={heroRef}>
       <header className="cozy-header cozy-fade-in cozy-delay-100">
-        <img src={ASSETS.logo} alt="The Nuzz Story" className="cozy-header__logo" width={2172} height={724} />
+        <img src={ASSETS.logo} alt="The Nuzz Story" className="cozy-header__logo" width={866} height={288} />
         <nav className="cozy-header__nav">
           <a href="/" className="is-active" style={POINTER_CURSOR}>
             Home
           </a>
           <a href="/shop" style={POINTER_CURSOR}>
             Shop
+          </a>
+          <a href="/grooming" style={POINTER_CURSOR}>
+            Grooming
           </a>
           <a href="/about" style={POINTER_CURSOR}>
             About

@@ -1,4 +1,4 @@
-# CozyPaws: project notes for AI coding assistants
+# The Nuzz Story: project notes for AI coding assistants
 
 Next.js 15 (App Router) + React 19 dog store. Motion-heavy homepage (GSAP, Lenis),
 and a cart → checkout flow built around "instant but never wrong about money".
@@ -17,6 +17,8 @@ and a cart → checkout flow built around "instant but never wrong about money".
 - `data/import/product-list.manifest.json`: reviewed list of products made from `source-assets/product_list` (source photos,
   never modified). Label text is verbatim; unknowns go in `flags`. `npm run catalog:images` builds the 1600px copies in
   `public/assets/products/<id>/<view>.jpg`.
+- Admin UI: `components/admin/AdminHeader.tsx` is the sidebar shell (drawer on phones, pending badges) used by every admin page;
+  shared pieces (PageHeader, StatCards, StatusTabs, Callout, EmptyState) are in `components/admin/AdminUI.tsx`; styles in `app/styles/admin.css`.
 - `/admin` (`app/admin`, `components/admin`, `app/api/admin`): local admin. Needs `ADMIN_PASSWORD` in `.env.local`; off in
   production builds. Every admin API route calls `guardAdminApi` (session + same-origin).
 - `lib/store-config.ts`: currency + shipping, switched together. `lib/shop-filters.ts`: the /shop filter row.
@@ -32,11 +34,18 @@ and a cart → checkout flow built around "instant but never wrong about money".
   `lib/server/account-store.ts` (Netlify Blobs on Netlify, `.data/accounts` files locally; never commit `.data/`),
   `lib/server/account-data.ts` (carts/wishlists re-validated against the catalog; order history appended by `/api/orders`).
   Production needs `AUTH_SECRET` (32+ chars); without it sign-in reports unavailable and shopping still works.
+- Browser storage keys are `nuzz-cart` / `nuzz-wishlist` (`lib/legacy-storage.ts` migrates the old `cozypaws-*` keys once). Cookies: `nuzz_session`, `nuzz_admin`, `nuzz-demo`. Order ids are `NS-<yymmdd>-<6 chars>`.
 - `lib/pricing.ts`: `buildQuote`, `diffQuotes`, shipping rules (pure, unit-tested).
 - `lib/cart-state.ts`: pure reducer: `confirmed` vs `pending`, seq numbers for races.
 - `lib/cart.tsx`: provider; optimistic updates → `POST /api/cart` → confirm / rollback.
 - `app/api/orders/route.ts`: WhatsApp checkout. Re-prices server-side, 409 `quote_changed` with a diff, idempotency key, saves the order (`lib/server/order-store.ts`: Netlify Blobs `orders` / `<DATA_DIR or .data>/orders`) BEFORE the WhatsApp link is returned. No online payments: methods live in `lib/payment-methods.ts`. Customer validation: `lib/validation.ts`; message: `lib/whatsapp-order.ts`.
 - Admin orders: `/admin/orders` (`components/admin/AdminOrders.tsx`, `app/api/admin/orders`): lists saved orders from the order store, changes order/payment status (PATCH only touches those two fields). Same admin login as the catalog admin; on Netlify it needs `ADMIN_ENABLE_IN_PRODUCTION=1`.
+- Grooming (`/grooming`, `/admin/grooming`): separate from catalog/cart/orders. Pure logic in `lib/grooming/` (`pricing.ts`, `availability.ts`
+  in IST wall-clock strings, `breeds.ts`, `validation.ts` shared client/server). Printed menu = `data/grooming/pricing.seed.json` (verbatim, paise);
+  admin edits live in the grooming store (`lib/server/grooming-store.ts`: Blobs `grooming` / `.data/grooming`). Bookings: `lib/server/grooming-bookings.ts`
+  claims seats `claims/<date>/<HHMM>/<seat>` with only-if-new writes (no overbooking); idempotency key is claimed before seats. Grooming prices are
+  always rupees (`lib/grooming/money.ts`), whatever the shop's money profile. Never invent durations, hours, capacity or reviews: booking stays off
+  until the store sets them. Grooming CSS loads only on grooming routes (`app/grooming/layout.tsx`, `app/admin/grooming/layout.tsx`).
 - Demo cookie only works in dev/test builds (`demoEnabled()`), never on live prices.
 - `lib/server/demo.ts` + `components/DemoPanel.tsx`: cookie-driven latency / failure / price / stock demo.
 - Styles: plain CSS per section in `app/styles/`; flow states in `app/styles/flow.css`.
