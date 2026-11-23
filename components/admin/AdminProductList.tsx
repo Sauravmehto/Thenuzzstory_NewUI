@@ -29,7 +29,7 @@ const showPlaceholder = (e: SyntheticEvent<HTMLImageElement>) => {
 
 type StatusFilter = "all" | ProductStatus;
 
-export default function AdminProductList({ products }: { products: CatalogProduct[] }) {
+export default function AdminProductList({ products, readOnly = false }: { products: CatalogProduct[]; readOnly?: boolean }) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [group, setGroup] = useState("all");
@@ -76,16 +76,32 @@ export default function AdminProductList({ products }: { products: CatalogProduc
         }
       />
 
-      <Callout
-        detailsLabel="Details for developers"
-        details={
-          <p>
-            Saved to <code>data/catalog.json</code> on this computer. Commit and redeploy to update the live site.
-          </p>
-        }
-      >
-        Product changes are saved on this computer. They show on the live website after the next publish.
-      </Callout>
+      {readOnly ? (
+        <Callout
+          tone="warn"
+          detailsLabel="Why?"
+          details={
+            <p>
+              Products are stored in <code>data/catalog.json</code> in the code. The live site runs a read-only copy of the last deploy, so changes
+              made here couldn&apos;t be saved. Orders and grooming are stored separately and can be changed here.
+            </p>
+          }
+        >
+          <strong>View only on the live site.</strong> To change products, open the admin on your computer (<code>npm run dev</code> →{" "}
+          <code>/admin</code>), then commit and push to publish.
+        </Callout>
+      ) : (
+        <Callout
+          detailsLabel="Details for developers"
+          details={
+            <p>
+              Saved to <code>data/catalog.json</code> on this computer. Commit and redeploy to update the live site.
+            </p>
+          }
+        >
+          Product changes are saved on this computer. They show on the live website after the next publish.
+        </Callout>
+      )}
 
       <StatCards<StatusFilter>
         label="Products by status (click to filter)"

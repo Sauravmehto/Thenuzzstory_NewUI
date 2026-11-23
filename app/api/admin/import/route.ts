@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { applyImport, planImport, readManifest } from "@/lib/catalog-core/importer";
 import { guardAdminApi } from "@/lib/server/admin-auth";
-import { assetStore, catalogStore } from "@/lib/server/catalog-admin";
+import { assetStore, catalogStore, catalogWriteBlocked } from "@/lib/server/catalog-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const denied = guardAdminApi(req);
   if (denied) return denied;
+  const blocked = catalogWriteBlocked();
+  if (blocked) return blocked;
   const body = (await req.json().catch(() => null)) as { ids?: unknown } | null;
   if (!Array.isArray(body?.ids) || !body.ids.every((id) => typeof id === "string"))
     return NextResponse.json({ ok: false, code: "invalid_request", message: "Choose which products to import." }, { status: 400 });

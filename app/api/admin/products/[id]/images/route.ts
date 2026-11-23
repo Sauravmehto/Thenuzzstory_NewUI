@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { IMAGE_VIEWS, isValidId } from "@/lib/catalog-core/schema";
 import { guardAdminApi } from "@/lib/server/admin-auth";
-import { assetStore, catalogStore } from "@/lib/server/catalog-admin";
+import { assetStore, catalogStore, catalogWriteBlocked } from "@/lib/server/catalog-admin";
 import { MAX_UPLOAD_BYTES, processUpload, UploadError } from "@/lib/server/image-processing";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +28,8 @@ export async function GET(req: NextRequest, { params }: Ctx) {
 export async function POST(req: NextRequest, { params }: Ctx) {
   const denied = guardAdminApi(req);
   if (denied) return denied;
+  const blocked = catalogWriteBlocked();
+  if (blocked) return blocked;
   const { id } = await params;
   if (!(await productExists(id)))
     return NextResponse.json({ ok: false, code: "not_found", message: "Save the product first, then add images." }, { status: 404 });

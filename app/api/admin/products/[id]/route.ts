@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { deleteProduct, updateProduct } from "@/lib/catalog-core/admin-ops";
 import { guardAdminApi } from "@/lib/server/admin-auth";
-import { assetStore, catalogStore } from "@/lib/server/catalog-admin";
+import { assetStore, catalogStore, catalogWriteBlocked } from "@/lib/server/catalog-admin";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ id: string }> };
@@ -20,6 +20,8 @@ export async function GET(req: NextRequest, { params }: Ctx) {
 export async function PATCH(req: NextRequest, { params }: Ctx) {
   const denied = guardAdminApi(req);
   if (denied) return denied;
+  const blocked = catalogWriteBlocked();
+  if (blocked) return blocked;
   const { id } = await params;
   const body = (await req.json().catch(() => null)) as { expectedUpdatedAt?: unknown; fields?: unknown } | null;
   const result = await updateProduct(catalogStore, assetStore, id, body?.expectedUpdatedAt, body?.fields);
@@ -30,6 +32,8 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
 export async function DELETE(req: NextRequest, { params }: Ctx) {
   const denied = guardAdminApi(req);
   if (denied) return denied;
+  const blocked = catalogWriteBlocked();
+  if (blocked) return blocked;
   const { id } = await params;
   const body = (await req.json().catch(() => null)) as { confirmId?: unknown } | null;
   const result = await deleteProduct(catalogStore, id, body?.confirmId);

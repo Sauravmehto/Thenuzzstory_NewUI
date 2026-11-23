@@ -19,6 +19,14 @@ const nextConfig = (phase) => ({
     distDir: distDirFor(phase),
     // The e2e fixture products are priced in US cents: keep the demo money settings for that build.
     env: { NEXT_PUBLIC_STORE_PROFILE: e2e ? 'demo-usd' : '' },
+    // The admin reads data/catalog.json and the import list from disk at run time
+    // (process.cwd()), which file tracing can't see. Without this the files are
+    // missing from the Netlify function and /admin crashes with a 500.
+    outputFileTracingIncludes: {
+        '/admin': ['./data/catalog.json', './data/import/product-list.manifest.json'],
+        '/admin/**/*': ['./data/catalog.json', './data/import/product-list.manifest.json'],
+        '/api/admin/**/*': ['./data/catalog.json', './data/import/product-list.manifest.json'],
+    },
     webpack: (config, { webpack }) => {
         config.resolve.alias['@'] = path.resolve(__dirname);
         if (e2e) {

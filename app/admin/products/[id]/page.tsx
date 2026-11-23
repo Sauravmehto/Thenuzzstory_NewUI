@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminProductEditor from "@/components/admin/AdminProductEditor";
 import { requireAdminPage } from "@/lib/server/admin-auth";
-import { catalogStore } from "@/lib/server/catalog-admin";
+import { Callout } from "@/components/admin/AdminUI";
+import { CATALOG_READ_ONLY_MESSAGE, catalogReadOnly, catalogStore } from "@/lib/server/catalog-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     <>
       <AdminHeader />
       <main className="admin-main">
+        {catalogReadOnly() && <Callout tone="warn">{CATALOG_READ_ONLY_MESSAGE}</Callout>}
         {/* key: a different product (or a reload after saving elsewhere) starts a fresh form */}
         <AdminProductEditor key={`${product.id}:${product.updatedAt}`} mode="edit" product={product} />
       </main>
