@@ -9,14 +9,14 @@ import {
   recordLoginFailure,
   sessionCookie,
 } from "@/lib/server/admin-auth";
+import { isSameOrigin } from "@/lib/server/same-origin";
 
 /** Log in: { password } -> sets the signed session cookie. */
 export async function POST(req: NextRequest) {
   const availability = adminAvailability();
   if (!availability.enabled)
     return NextResponse.json({ ok: false, code: "admin_disabled", message: availability.reason }, { status: 404 });
-  const origin = req.headers.get("origin");
-  if (!origin || origin !== req.nextUrl.origin)
+  if (!isSameOrigin(req))
     return NextResponse.json({ ok: false, code: "forbidden", message: "Cross-site request blocked." }, { status: 403 });
 
   const key = clientKey(req);

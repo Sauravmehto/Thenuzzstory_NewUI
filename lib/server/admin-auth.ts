@@ -3,6 +3,7 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypt
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { NextResponse, type NextRequest } from "next/server";
+import { isSameOrigin } from "@/lib/server/same-origin";
 
 /**
  * Admin access for the local product admin.
@@ -114,8 +115,7 @@ export function guardAdminApi(req: NextRequest): NextResponse | null {
 
   if (req.method !== "GET" && req.method !== "HEAD") {
     // Writes must come from our own pages (the cookie is SameSite=Strict too).
-    const origin = req.headers.get("origin");
-    if (!origin || origin !== req.nextUrl.origin)
+    if (!isSameOrigin(req))
       return NextResponse.json({ ok: false, code: "forbidden", message: "Cross-site request blocked." }, { status: 403 });
   }
 

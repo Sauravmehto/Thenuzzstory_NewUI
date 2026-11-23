@@ -6,6 +6,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { AccountError } from "@/lib/account-types";
 import { accountStore, type StoredUser } from "./account-store";
 import { dataDir } from "./data-dir";
+import { isSameOrigin } from "@/lib/server/same-origin";
 
 /**
  * Customer sign-in.
@@ -119,8 +120,7 @@ export const accountError = (status: number, body: Omit<AccountError, "ok">) =>
 
 /** Writes must come from this site (checked on top of SameSite cookies). */
 export function requireSameOrigin(req: NextRequest): NextResponse | null {
-  const origin = req.headers.get("origin");
-  if (!origin || origin !== req.nextUrl.origin)
+  if (!isSameOrigin(req))
     return accountError(403, { code: "forbidden", message: "This request was blocked for your security. Reload the page and try again." });
   return null;
 }
@@ -129,8 +129,7 @@ export function requireSameOrigin(req: NextRequest): NextResponse | null {
 export function guardAccountWrite(req: NextRequest): NextResponse | null {
   if (!authAvailable())
     return accountError(503, { code: "unavailable", message: "Sign-in isn't available right now. Please try again later." });
-  const origin = req.headers.get("origin");
-  if (!origin || origin !== req.nextUrl.origin)
+  if (!isSameOrigin(req))
     return accountError(403, { code: "forbidden", message: "This request was blocked for your security. Reload the page and try again." });
   return null;
 }
