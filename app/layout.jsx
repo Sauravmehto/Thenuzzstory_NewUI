@@ -39,6 +39,19 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" className={`${inter.variable} ${dmSerifDisplay.variable}`}>
+      <head>
+        {/*
+          A doubled slash in the address (thenuzzstory.com//admin/login) crashes the
+          Next router: it reads "//admin/login" as another host. Netlify serves the
+          page anyway (so middleware.ts never sees it), so tidy the address here,
+          before the app starts. Inline and tiny on purpose.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var p=location.pathname;if(p.indexOf("//")>-1){history.replaceState(history.state,"",p.replace(/\\/{2,}/g,"/")+location.search+location.hash)}})()`,
+          }}
+        />
+      </head>
       <body suppressHydrationWarning>
         <CartProvider>
           <WishlistProvider>

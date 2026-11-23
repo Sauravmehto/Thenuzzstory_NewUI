@@ -34,6 +34,21 @@ test("opening //admin/login in a browser lands on the login page without a crash
   expect(errors).toEqual([]);
 });
 
+test("when the host serves //admin/login without redirecting (Netlify), the page still doesn't crash", async ({ page, baseURL }) => {
+  // Netlify tidies the path on the server, so middleware never redirects and the
+  // browser keeps "//admin/login" in the address bar. Reproduce that: answer the
+  // doubled-slash URL with the normal page's HTML, no redirect.
+  const html = await (await page.request.get(`${baseURL}/admin/login`)).text();
+  await page.route(`${baseURL}//admin/login`, (route) => route.fulfill({ status: 200, contentType: "text/html", body: html }));
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto(`${baseURL}//admin/login`);
+  await expect(page).toHaveURL(`${baseURL}/admin/login`);
+  await expect(page.getByLabel("Password")).toBeVisible();
+  await page.waitForTimeout(500);
+  expect(errors).toEqual([]);
+});
+
 test("a doubled slash on a shop page also recovers", async ({ page, baseURL }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
