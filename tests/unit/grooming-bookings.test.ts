@@ -18,6 +18,7 @@ import {
   publicBooking,
   takenOn,
 } from "@/lib/server/grooming-bookings";
+import { getPricing } from "@/lib/server/grooming-config";
 import { fileGroomingStore, memoryGroomingStore, type GroomingStore } from "@/lib/server/grooming-store";
 
 const NOW = new Date("2026-11-23T01:00:00Z"); // Mon 06:30 IST
@@ -59,6 +60,31 @@ const create = (store: GroomingStore, req: BookingRequest, over: { availability?
   createBooking(store, { request: req, pricing: pricing(), availability: over.availability ?? availability(), idempotencyKey: over.key, now: NOW });
 
 describe("creating a booking", () => {
+  it("normalizes legacy all-null durations so booking can proceed", async () => {
+    const store = memoryGroomingStore(async () => undefined);
+    const legacy = pricing();
+    for (const service of legacy.services) service.slotsNeeded = null;
+    await store.writeJSON("config/pricing", legacy);
+
+    const normalized = await getPricing(store);
+    expect(normalized.services.every((service) => service.slotsNeeded === 1)).toBe(true);
+
+    const res = await createBooking(store, { request: request(), pricing: normalized, availability: availability(), now: NOW });
+    expect(res.ok).toBe(true);
+  });
+
+  it("keeps mixed duration configs unchanged when at least one duration is set", async () => {
+    const store = memoryGroomingStore(async () => undefined);
+    const mixed = pricing();
+    for (const service of mixed.services) service.slotsNeeded = null;
+    mixed.services.find((service) => service.id === "maintenance")!.slotsNeeded = 2;
+    await store.writeJSON("config/pricing", mixed);
+
+    const normalized = await getPricing(store);
+    expect(normalized.services.find((service) => service.id === "maintenance")!.slotsNeeded).toBe(2);
+    expect(normalized.services.some((service) => service.id !== "maintenance" && service.slotsNeeded === null)).toBe(true);
+  });
+
   it("saves it as PENDING CONFIRMATION with a price snapshot, and takes the slot", async () => {
     const store = memoryGroomingStore(async () => undefined);
     const res = await create(store, request({}, "10:00", "dog-spa"));

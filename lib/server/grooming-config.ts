@@ -15,6 +15,7 @@ import { groomingStore, type GroomingStore } from "./grooming-store";
 const PRICING_KEY = "config/pricing";
 const AVAILABILITY_KEY = "config/availability";
 const contentKey = (kind: ContentKind) => `content/${kind}`;
+const LEGACY_DEFAULT_SLOTS_NEEDED = 1;
 
 /** The printed menu, as a pricing config. */
 export function menuPricing(): PricingConfig {
@@ -28,9 +29,24 @@ export class ConfigError extends Error {
   }
 }
 
+function normalizePricingForRuntime(config: PricingConfig): PricingConfig {
+  const allSlotsMissing = config.services.length > 0 && config.services.every((service) => service.slotsNeeded === null);
+  if (!allSlotsMissing) return config;
+  return {
+    ...config,
+    services: config.services.map((service) => ({
+      ...service,
+      // Legacy pricing had null durations for every service, which would hard-disable online booking.
+      // Use safe runtime defaults so booking can proceed until admins set explicit durations.
+      slotsNeeded: service.slotsNeeded ?? LEGACY_DEFAULT_SLOTS_NEEDED,
+    })),
+  };
+}
+
 export async function getPricing(store?: GroomingStore): Promise<PricingConfig> {
   const s = store ?? (await groomingStore());
-  return (await s.readJSON<PricingConfig>(PRICING_KEY)) ?? menuPricing();
+  const pricing = (await s.readJSON<PricingConfig>(PRICING_KEY)) ?? menuPricing();
+  return normalizePricingForRuntime(pricing);
 }
 
 /** Validates, bumps the version and saves. Returns the saved config. */

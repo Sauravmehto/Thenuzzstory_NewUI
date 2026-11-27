@@ -49,6 +49,10 @@ async function openBooking(page: Page, enabled = true) {
   const pricing = (await api<{ pricing: { services: { id: string; slotsNeeded: number | null }[] } }>(page, "/api/admin/grooming/pricing")).body.pricing;
   for (const s of pricing.services) s.slotsNeeded = s.id === "dog-spa" ? 2 : 1;
   expect((await api(page, "/api/admin/grooming/pricing", { method: "PUT", json: { pricing } })).status).toBe(200);
+  await setAvailability(page, enabled);
+}
+
+async function setAvailability(page: Page, enabled = true) {
   const hours = [{ open: "10:00", close: "19:00" }];
   const availability = {
     bookingEnabled: enabled,
@@ -115,6 +119,22 @@ test("while online booking is off, customers are asked to call instead", async (
   await page.getByRole("button", { name: "Continue to services" }).click();
   await expect(page.getByText("Online booking for this service opens soon.")).toBeVisible();
   await expect(page.getByRole("link", { name: /Call/ })).toHaveAttribute("href", /^tel:/);
+});
+
+test("legacy all-null pricing does not hard-disable booking when availability is on", async ({ page }) => {
+  await adminLogin(page);
+  // Keep legacy pricing untouched (all service durations null), only enable availability.
+  await setAvailability(page, true);
+  await page.goto("/grooming");
+  await page.locator(".gr-svc", { hasText: "Maintenance" }).getByRole("button", { name: /Book this/ }).click();
+  await page.getByLabel("Pet's name").fill("Coco");
+  await page.getByRole("combobox", { name: "Breed" }).fill("pug");
+  await page.getByRole("option", { name: "Pug" }).click();
+  await page.getByLabel(/^Weight/).fill("8");
+  await page.getByRole("button", { name: "Continue to services" }).click();
+  await page.getByRole("button", { name: /Continue to date/ }).click();
+  await expect(page.getByText("Online booking for this service opens soon.")).toHaveCount(0);
+  await expect(page.locator(".gr-cal")).toBeVisible();
 });
 
 test("a customer gets a live estimate, picks a time and sends a request (saved as pending)", async ({ page, context }) => {
