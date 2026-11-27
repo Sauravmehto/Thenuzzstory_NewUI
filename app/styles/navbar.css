@@ -35,7 +35,7 @@
 
 .navbar {
   position: fixed;
-  top: 0;
+  top: 34px;
   left: 0;
   width: 100%;
   display: flex;
@@ -45,6 +45,15 @@
   background: transparent;
   z-index: 1000;
   transition: color 0.5s var(--ease-in-out);
+}
+
+.home-offer-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  border-bottom-color: rgba(0, 34, 90, 0.2);
 }
 
 .navbar.on-dark {

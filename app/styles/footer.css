@@ -176,7 +176,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.28em;
+    gap: 0;
 }
 
 .footer-big-text__logo {
@@ -185,10 +185,7 @@
     width: auto;
     flex-shrink: 0;
     object-fit: contain;
-}
-
-.footer-big-text span {
-    white-space: nowrap;
+    margin: 0 auto;
 }
 
 .footer-bottom-row {

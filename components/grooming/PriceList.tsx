@@ -12,10 +12,11 @@ const BookThis = ({ service, species }: { service: GroomingService; species: Spe
   </button>
 );
 
-function ServiceCard({ service, species }: { service: GroomingService; species: Species }) {
+function ServiceCard({ service, species, popular }: { service: GroomingService; species: Species; popular: boolean }) {
   const cents = priceFor(service.price, null);
   return (
     <li className="gr-svc">
+      {popular && <p className="gr-popular-tag">Most booked</p>}
       <div className="gr-svc__top">
         <h4 className="gr-svc__name">{service.name}</h4>
         {cents !== null && <p className="gr-svc__price">{formatRupees(cents)}</p>}
@@ -40,6 +41,7 @@ export default function PriceList({ pricing }: { pricing: PricingConfig }) {
   const packages = active.filter((s) => s.sectionId === grooming?.id);
   const sized = packages.filter((s) => s.price.type === "by_size");
   const flat = packages.filter((s) => s.price.type === "flat");
+  const popular = new Set(active.slice(0, 3).map((s) => s.id));
   const bands = pricing.sizeBands;
 
   return (
@@ -49,6 +51,7 @@ export default function PriceList({ pricing }: { pricing: PricingConfig }) {
         <h2 id="gr-prices-title" className="gr-title">
           Our grooming <em>menu.</em>
         </h2>
+        <p className="gr-section__lead">Pick your pet, check the estimate, and book in a few taps.</p>
         <div className="gr-tabs" role="tablist" aria-label="Pet">
           {(["dog", "cat"] as const).map((s) => (
             <button
@@ -136,6 +139,7 @@ export default function PriceList({ pricing }: { pricing: PricingConfig }) {
                   {flat.map((s) => (
                     <li key={s.id} className="gr-package">
                       <div>
+                        {popular.has(s.id) && <p className="gr-popular-tag">Most booked</p>}
                         <h4>{s.name}</h4>
                         {s.subtitle && <p className="gr-muted">{s.subtitle}</p>}
                       </div>
@@ -159,14 +163,14 @@ export default function PriceList({ pricing }: { pricing: PricingConfig }) {
                 <h3>{sec.title}</h3>
                 <ul className={`gr-svc-grid gr-svc-grid--${sec.id}`}>
                   {list.map((s) => (
-                    <ServiceCard key={s.id} service={s} species={species} />
+                    <ServiceCard key={s.id} service={s} species={species} popular={popular.has(s.id)} />
                   ))}
                 </ul>
               </div>
             );
           })}
         <p className="gr-prices__foot">
-          Prices in ₹ from our grooming menu. You can add any quick service or massage to a grooming package when you book.
+          Prices are in ₹ from our grooming menu. Final price is confirmed with you on call.
         </p>
       </div>
     </section>

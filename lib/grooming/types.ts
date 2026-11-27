@@ -186,7 +186,7 @@ export interface GroomingBooking {
   adminNotes: { at: string; text: string }[];
   history: BookingHistoryEntry[];
   /** When admin opened a pre-filled WhatsApp link. Opening a link is not proof it was sent. */
-  whatsappLog: { at: string; template: string }[];
+  whatsappLog: { at: string; template: string; delivery?: "opened" | "sent" | "failed"; error?: string }[];
 }
 
 // ---- content (admin-managed) ------------------------------------------------------

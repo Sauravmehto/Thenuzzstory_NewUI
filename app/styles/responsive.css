@@ -55,7 +55,13 @@
 /* ─── Mobile (≤ 768px) ───────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   /* ── Navbar ─────────────────────── */
+  .home-offer-bar {
+    min-height: 32px;
+    font-size: 0.72rem;
+  }
+
   .navbar {
+    top: 32px;
     padding: 14px 16px;
   }
 

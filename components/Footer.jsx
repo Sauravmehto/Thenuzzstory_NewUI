@@ -279,7 +279,6 @@ export default function Footer() {
             width={866}
             height={288}
           />
-          <span>THE NUZZ STORY</span>
         </div>
       </div>
     </div>

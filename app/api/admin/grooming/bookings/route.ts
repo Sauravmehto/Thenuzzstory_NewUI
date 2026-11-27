@@ -4,6 +4,7 @@ import { listBookings } from "@/lib/server/grooming-bookings";
 import { getAvailability, getPricing } from "@/lib/server/grooming-config";
 import { fail, json } from "@/lib/server/grooming-http";
 import { groomingStore } from "@/lib/server/grooming-store";
+import { whatsappConfigState } from "@/lib/server/whatsapp-grooming";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
   try {
     const store = await groomingStore();
     const [bookings, pricing, availability] = await Promise.all([listBookings(store), getPricing(store), getAvailability(store)]);
-    return json({ ok: true, bookings, pricing, availability });
+    return json({ ok: true, bookings, pricing, availability, whatsapp: whatsappConfigState() });
   } catch (err) {
     console.error("[admin/grooming/bookings]", err);
     return fail(503, "storage_failed", "Couldn't load bookings. Please try again.");

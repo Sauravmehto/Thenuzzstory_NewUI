@@ -44,12 +44,12 @@ async function api<T = Record<string, unknown>>(page: Page, url: string, init: {
   ) as Promise<{ status: number; body: T }>;
 }
 
-/** Opening hours every day, 1-hour slots, one pet at a time; every service takes one slot (spa takes two). */
+/** Opening hours every day, 10:00-19:00, 1-hour slots, one pet at a time; every service takes one slot (spa takes two). */
 async function openBooking(page: Page, enabled = true) {
   const pricing = (await api<{ pricing: { services: { id: string; slotsNeeded: number | null }[] } }>(page, "/api/admin/grooming/pricing")).body.pricing;
   for (const s of pricing.services) s.slotsNeeded = s.id === "dog-spa" ? 2 : 1;
   expect((await api(page, "/api/admin/grooming/pricing", { method: "PUT", json: { pricing } })).status).toBe(200);
-  const hours = [{ open: "09:00", close: "19:00" }];
+  const hours = [{ open: "10:00", close: "19:00" }];
   const availability = {
     bookingEnabled: enabled,
     slotMinutes: 60,

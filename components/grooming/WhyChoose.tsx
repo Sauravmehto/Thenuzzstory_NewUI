@@ -3,22 +3,22 @@ const REASONS = [
   {
     icon: "🛁",
     title: "Hygiene first",
-    text: "A proper bath with antitick & flea, or sensitive-skin shampoo for rashes and itchy skin.",
+    text: "A proper bath with anti-tick & flea or sensitive-skin shampoo for itchy skin.",
   },
   {
     icon: "✂️",
     title: "Head-to-tail care",
-    text: "Eyes, ears, teeth and nails, plus brushing, combing and deshedding in every spa grooming.",
+    text: "Eyes, ears, teeth and nails, plus brushing, combing and de-shedding care.",
   },
   {
     icon: "🐾",
     title: "The little comforts",
-    text: "Paw-pad conditioning, a gentle blow dry and a cologne spray to finish.",
+    text: "Paw-pad conditioning, a gentle blow dry and a fresh cologne finish.",
   },
   {
     icon: "₹",
     title: "Prices you can see",
-    text: "Every price is on this page. You'll see an estimate before you book, and we confirm it on the call.",
+    text: "Clear prices on-page, live estimate before booking, and final confirmation on call.",
   },
 ];
 

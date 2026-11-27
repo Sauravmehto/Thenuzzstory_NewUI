@@ -5,6 +5,7 @@ import { getAvailability, getPricing } from "@/lib/server/grooming-config";
 import { dateRange } from "@/lib/server/grooming-dates";
 import { fail, json, readJsonBody } from "@/lib/server/grooming-http";
 import { groomingStore } from "@/lib/server/grooming-store";
+import { whatsappConfigState } from "@/lib/server/whatsapp-grooming";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ id: string }> };
@@ -21,14 +22,14 @@ export async function GET(req: NextRequest, { params }: Ctx) {
     const [pricing, availability] = await Promise.all([getPricing(store), getAvailability(store)]);
     const dates = dateRange(req.nextUrl.searchParams.get("from"), req.nextUrl.searchParams.get("to"));
     const days = dates ? await rescheduleAvailability(store, availability, booking, dates) : undefined;
-    return json({ ok: true, booking, pricing, availability, days });
+    return json({ ok: true, booking, pricing, availability, days, whatsapp: whatsappConfigState() });
   } catch (err) {
     console.error("[admin/grooming/bookings/id] GET", err);
     return fail(503, "storage_failed", "Couldn't load the booking. Please try again.");
   }
 }
 
-const ACTIONS = new Set(["confirm", "complete", "cancel", "reject", "reschedule", "note", "whatsapp_opened"]);
+const ACTIONS = new Set(["confirm", "complete", "cancel", "reject", "reschedule", "note", "whatsapp_opened", "send_confirmed_whatsapp", "send_test_whatsapp"]);
 
 /** { action, note?, reason?, date?, start?, template? } */
 export async function PATCH(req: NextRequest, { params }: Ctx) {
@@ -45,12 +46,18 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
     date: str("date") ?? "",
     start: str("start") ?? "",
     template: str("template") ?? "",
+    phone: str("phone") ?? "",
   } as AdminAction;
   try {
     const store = await groomingStore();
     const result = await applyAdminAction(store, id, act, await getAvailability(store));
     if (!result.ok) return fail(result.status, result.code, result.message);
-    return json({ ok: true, booking: result.booking });
+    return json({
+      ok: true,
+      booking: result.booking,
+      ...(result.whatsappSent !== undefined ? { whatsappSent: result.whatsappSent } : {}),
+      ...(result.whatsappError ? { whatsappError: result.whatsappError } : {}),
+    });
   } catch (err) {
     console.error("[admin/grooming/bookings/id] PATCH", err);
     return fail(503, "storage_failed", "Couldn't save the change. Nothing was updated.");

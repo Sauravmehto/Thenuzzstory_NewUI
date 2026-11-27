@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { customerToStoreMessage } from "@/lib/grooming/messages";
 import { isBookingRequestShape } from "@/lib/grooming/validation";
-import { requireSameOrigin } from "@/lib/server/auth";
+import { authAvailable, requireSameOrigin, sessionUser } from "@/lib/server/auth";
 import { createBooking, publicBooking } from "@/lib/server/grooming-bookings";
 import { getAvailability, getPricing } from "@/lib/server/grooming-config";
 import { clientIp, fail, json, readJsonBody, throttled } from "@/lib/server/grooming-http";
@@ -18,6 +18,8 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const blocked = requireSameOrigin(req);
   if (blocked) return blocked;
+  if (!authAvailable()) return fail(503, "unavailable", "Sign-in is not available right now. Please try again later.");
+  if (!(await sessionUser(req))) return fail(401, "unauthorized", "Please sign in before booking a grooming slot.");
 
   const body = await readJsonBody(req, 20_000);
   if (!isBookingRequestShape(body)) return fail(400, "invalid_request", "Something went wrong with the form. Please reload the page and try again.");

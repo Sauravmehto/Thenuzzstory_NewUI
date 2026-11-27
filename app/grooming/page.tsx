@@ -59,10 +59,10 @@ export default async function GroomingPage() {
       <SiteHeader />
       <main id="main">
         <GroomingHero fromCents={from} />
-        <WhyChoose />
         <PriceList pricing={pricing} />
-        <ReelStack videos={videos.slice(0, 8)} />
         <BookingFlow pricing={pricing} bookingEnabled={availability.bookingEnabled} maxDaysAhead={availability.maxDaysAhead} />
+        <WhyChoose />
+        <ReelStack videos={videos.slice(0, 8)} />
         <PetGallery items={gallery} />
         <Testimonials items={testimonials} />
         <GroomingFaq pricing={pricing} />

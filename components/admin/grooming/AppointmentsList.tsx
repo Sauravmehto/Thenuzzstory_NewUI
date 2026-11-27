@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { adminRequest } from "@/lib/admin-client";
-import { PageHeader, StatCards } from "@/components/admin/AdminUI";
+import { Callout, PageHeader, StatCards } from "@/components/admin/AdminUI";
 import { capacityOn, openSlots, storeNow, toMinutes } from "@/lib/grooming/availability";
 import { formatDate, formatSlot, formatTime, serviceNames } from "@/lib/grooming/messages";
 import { formatRupees } from "@/lib/grooming/money";
@@ -26,7 +26,12 @@ const when = (iso: string) => new Date(iso).toLocaleString("en-IN", { timeZone: 
 export const phoneText = (p: string) => `+91 ${p.slice(0, 5)} ${p.slice(5)}`;
 
 export default function AppointmentsList() {
-  const [data, setData] = useState<{ bookings: GroomingBooking[]; pricing: PricingConfig; availability: AvailabilityConfig } | null>(null);
+  const [data, setData] = useState<{
+    bookings: GroomingBooking[];
+    pricing: PricingConfig;
+    availability: AvailabilityConfig;
+    whatsapp: { enabled: boolean; configured: boolean; ready: boolean; reason: string };
+  } | null>(null);
   const [error, setError] = useState("");
   const [tab, setTab] = useState<Tab>("pending");
   const [query, setQuery] = useState("");
@@ -37,9 +42,14 @@ export default function AppointmentsList() {
 
   const load = useCallback(async () => {
     setError("");
-    const res = await adminRequest<{ bookings: GroomingBooking[]; pricing: PricingConfig; availability: AvailabilityConfig }>("/api/admin/grooming/bookings");
+    const res = await adminRequest<{
+      bookings: GroomingBooking[];
+      pricing: PricingConfig;
+      availability: AvailabilityConfig;
+      whatsapp: { enabled: boolean; configured: boolean; ready: boolean; reason: string };
+    }>("/api/admin/grooming/bookings");
     if (!res.ok) return setError(res.message);
-    setData({ bookings: res.bookings, pricing: res.pricing, availability: res.availability });
+    setData({ bookings: res.bookings, pricing: res.pricing, availability: res.availability, whatsapp: res.whatsapp });
   }, []);
   useEffect(() => {
     void load();
@@ -112,6 +122,11 @@ export default function AppointmentsList() {
           Online booking is <strong>off</strong>. Customers see a “call us” message until you set hours and turn it on in{" "}
           <Link href="/admin/grooming/availability">Availability</Link> (and set each service&apos;s duration in <Link href="/admin/grooming/pricing">Pricing</Link>).
         </p>
+      )}
+      {data && (
+        <Callout tone={data.whatsapp.ready ? "ok" : "warn"}>
+          <strong>WhatsApp auto-send:</strong> {data.whatsapp.reason}
+        </Callout>
       )}
 
       {error && (

@@ -9,6 +9,8 @@ import { WEEKDAYS, type AvailabilityConfig, type DayAvailability, type OpenRange
  */
 
 export const STORE_UTC_OFFSET_MINUTES = 330; // Asia/Kolkata
+export const BUSINESS_OPEN_TIME = "10:00";
+export const BUSINESS_CLOSE_TIME = "19:00";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -60,8 +62,14 @@ export function openSlots(date: string, config: AvailabilityConfig): { starts: s
   const blocked = config.blockedSlots.filter((b) => b.date === date).map((b) => [toMinutes(b.start), toMinutes(b.end)] as const);
   const starts: string[] = [];
   const step = config.slotMinutes;
+  const dayOpen = toMinutes(BUSINESS_OPEN_TIME);
+  const dayClose = toMinutes(BUSINESS_CLOSE_TIME);
   for (const range of ranges) {
-    for (let t = toMinutes(range.open); t + step <= toMinutes(range.close); t += step) {
+    // Business policy: customer bookings are only between 10:00 and 19:00.
+    const from = Math.max(toMinutes(range.open), dayOpen);
+    const to = Math.min(toMinutes(range.close), dayClose);
+    if (to <= from) continue;
+    for (let t = from; t + step <= to; t += step) {
       if (blocked.some(([from, to]) => t < to && t + step > from)) continue;
       starts.push(fromMinutes(t));
     }
@@ -159,6 +167,10 @@ export function availabilityProblems(config: AvailabilityConfig): string[] {
       if (!isTime(r.open) || !isTime(r.close) || toMinutes(r.close) <= toMinutes(r.open))
         p.push(`${day}: each range needs an opening time before its closing time.`);
       else if (i > 0 && toMinutes(r.open) < toMinutes(sorted[i - 1]!.close)) p.push(`${day}: opening ranges overlap.`);
+      if (isTime(r.open) && isTime(r.close)) {
+        if (toMinutes(r.open) < toMinutes(BUSINESS_OPEN_TIME) || toMinutes(r.close) > toMinutes(BUSINESS_CLOSE_TIME))
+          p.push(`${day}: opening ranges must stay within ${BUSINESS_OPEN_TIME}–${BUSINESS_CLOSE_TIME}.`);
+      }
     });
   }
   for (const c of config.closedDates ?? []) if (!isDate(c.date)) p.push(`Closed date "${c.date}" isn't a valid date.`);

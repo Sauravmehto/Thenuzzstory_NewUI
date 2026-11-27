@@ -247,7 +247,23 @@ describe("admin decisions", () => {
     const store = memoryGroomingStore(async () => undefined);
     const b = await booked(store);
     const res = await applyAdminAction(store, b.bookingId, { action: "whatsapp_opened", template: "confirmed" }, availability(), NOW);
-    expect(res.ok && res.booking.whatsappLog).toEqual([{ at: NOW.toISOString(), template: "confirmed" }]);
+    expect(res.ok && res.booking.whatsappLog).toEqual([{ at: NOW.toISOString(), template: "confirmed", delivery: "opened" }]);
+  });
+
+  it("confirm keeps booking confirmed even when WhatsApp auto-send isn't configured", async () => {
+    const store = memoryGroomingStore(async () => undefined);
+    const b = await booked(store);
+    const res = await applyAdminAction(store, b.bookingId, { action: "confirm" }, availability(), NOW);
+    expect(res).toMatchObject({ ok: true, booking: { status: "confirmed" }, whatsappSent: false });
+  });
+
+  it("can run a test WhatsApp send without changing booking status", async () => {
+    const store = memoryGroomingStore(async () => undefined);
+    const b = await booked(store);
+    const res = await applyAdminAction(store, b.bookingId, { action: "send_test_whatsapp", phone: "98765 43210" }, availability(), NOW);
+    expect(res).toMatchObject({ ok: true, booking: { status: "pending_confirmation" }, whatsappSent: false });
+    if (!res.ok) return;
+    expect(res.booking.whatsappLog.at(-1)).toMatchObject({ delivery: "failed" });
   });
 });
 

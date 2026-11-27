@@ -21,16 +21,18 @@ export interface RenderedItem<T> {
  * their old position, flagged `exiting`. If an item comes back (Undo) before
  * its exit finishes, the live copy simply takes over.
  *
- * `items` must be referentially stable between renders (memoised), because
- * a new array identity is what tells the hook the list changed.
+ * Change detection is key-based, so it still works if upstream reuses array
+ * references.
  */
 export function useExitingItems<T>(items: T[], keyOf: (item: T) => string, ms = 320): RenderedItem<T>[] {
   const [prev, setPrev] = useState(items);
+  const [prevSig, setPrevSig] = useState(() => items.map(keyOf).join("\u0001"));
   const [ghosts, setGhosts] = useState<Ghost<T>[]>([]);
+  const sig = items.map(keyOf).join("\u0001");
 
   // Adjust state during render when the list changes (React's documented
   // pattern for deriving state from props): no extra frame without the row.
-  if (items !== prev) {
+  if (sig !== prevSig) {
     const live = new Set(items.map(keyOf));
     const now = Date.now();
     const removed: Ghost<T>[] = [];
@@ -39,6 +41,7 @@ export function useExitingItems<T>(items: T[], keyOf: (item: T) => string, ms = 
       if (!live.has(key)) removed.push({ key, item, index, since: now });
     });
     setPrev(items);
+    setPrevSig(sig);
     setGhosts((current) => [
       ...current.filter((g) => !live.has(g.key) && !removed.some((r) => r.key === g.key)),
       ...removed,

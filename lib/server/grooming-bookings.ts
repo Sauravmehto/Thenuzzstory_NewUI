@@ -1,7 +1,8 @@
 import "server-only";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
-import { availableStarts, coveredSlots, daysBetween, slotKey, storeNow } from "@/lib/grooming/availability";
+import { availableStarts, capacityOn, coveredSlots, daysBetween, inBookingWindow, openSlots, slotKey, storeNow, toMinutes } from "@/lib/grooming/availability";
 import { findBreed } from "@/lib/grooming/breeds";
+import { storeToCustomerMessage } from "@/lib/grooming/messages";
 import { estimate, estimateChanged, sizeBandFor, slotsNeeded } from "@/lib/grooming/pricing";
 import {
   HOLDS_CAPACITY,
@@ -14,7 +15,9 @@ import {
   type PricingConfig,
 } from "@/lib/grooming/types";
 import { cleanBooking, validateBooking, type BookingErrors, type BookingRequest } from "@/lib/grooming/validation";
+import { getPricing } from "./grooming-config";
 import type { GroomingStore } from "./grooming-store";
+import { sendWhatsappText } from "./whatsapp-grooming";
 
 /*
  * Grooming bookings: requests from the website, then admin decisions.
@@ -73,6 +76,59 @@ export async function availabilityFor(
   now = new Date(),
 ): Promise<DayAvailability[]> {
   return Promise.all(dates.map(async (date) => availableStarts(date, slots, config, await takenOn(store, date), now)));
+}
+
+export interface StartSlotState {
+  time: string;
+  status: "available" | "booked" | "unavailable";
+  taken: number;
+  capacity: number;
+}
+
+function classifyStart(
+  date: string,
+  start: string,
+  slots: number,
+  config: AvailabilityConfig,
+  taken: ReadonlyMap<string, number>,
+  now: Date,
+): StartSlotState {
+  const capacity = capacityOn(date, config);
+  const covered = coveredSlots(date, start, slots, config);
+  if (!covered) return { time: start, status: "unavailable", taken: 0, capacity };
+
+  const maxTaken = Math.max(...covered.map((t) => taken.get(slotKey(t)) ?? 0));
+  if (!inBookingWindow(date, config, now)) return { time: start, status: "unavailable", taken: maxTaken, capacity };
+
+  const current = storeNow(now);
+  const dayOffset = daysBetween(current.date, date) * 1440;
+  const earliest = current.minutes + config.minNoticeMinutes;
+  if (dayOffset + toMinutes(start) < earliest) return { time: start, status: "unavailable", taken: maxTaken, capacity };
+
+  const full = covered.some((t) => (taken.get(slotKey(t)) ?? 0) >= capacity);
+  return { time: start, status: full ? "booked" : "available", taken: maxTaken, capacity };
+}
+
+/**
+ * Customer availability with per-time states.
+ * Useful for rendering "booked" times as visible, non-clickable options.
+ */
+export async function availabilityWithStatesFor(
+  store: GroomingStore,
+  config: AvailabilityConfig,
+  dates: string[],
+  slots: number,
+  now = new Date(),
+): Promise<{ days: DayAvailability[]; slotStates: Record<string, StartSlotState[]> }> {
+  const days: DayAvailability[] = [];
+  const slotStates: Record<string, StartSlotState[]> = {};
+  for (const date of dates) {
+    const taken = await takenOn(store, date);
+    days.push(availableStarts(date, slots, config, taken, now));
+    const open = openSlots(date, config).starts;
+    slotStates[date] = open.map((start) => classifyStart(date, start, slots, config, taken, now));
+  }
+  return { days, slotStates };
 }
 
 /**
@@ -369,6 +425,8 @@ export type AdminAction =
   | { action: "reject"; reason: string }
   | { action: "reschedule"; date: string; start: string; note?: string }
   | { action: "note"; note: string }
+  | { action: "send_confirmed_whatsapp" }
+  | { action: "send_test_whatsapp"; phone: string }
   | { action: "whatsapp_opened"; template: string };
 
 const ALLOWED: Record<string, BookingStatus[]> = {
@@ -377,11 +435,48 @@ const ALLOWED: Record<string, BookingStatus[]> = {
   cancel: ["pending_confirmation", "confirmed"],
   reject: ["pending_confirmation"],
   reschedule: ["pending_confirmation", "confirmed"],
+  send_confirmed_whatsapp: ["confirmed", "completed"],
 };
 
 export type ActionResult =
-  | { ok: true; booking: GroomingBooking }
+  | { ok: true; booking: GroomingBooking; whatsappSent?: boolean; whatsappError?: string }
   | { ok: false; status: 400 | 404 | 409; code: string; message: string };
+
+async function sendConfirmedWhatsapp(
+  store: GroomingStore,
+  booking: GroomingBooking,
+  at: string,
+): Promise<{ booking: GroomingBooking; whatsappSent: boolean; whatsappError?: string }> {
+  let sent = false;
+  let error: string | undefined;
+  try {
+    const pricing = await getPricing(store);
+    const text = storeToCustomerMessage("confirmed", booking, pricing);
+    const result = await sendWhatsappText(booking.customer.whatsapp, text);
+    sent = result.ok;
+    error = result.ok ? undefined : result.error ?? "Couldn't send WhatsApp confirmation.";
+  } catch {
+    sent = false;
+    error = "Couldn't prepare WhatsApp confirmation message.";
+  }
+
+  const logged = await store.updateJSON<GroomingBooking>(bookingKey(booking.bookingId), (cur) => {
+    const b = cur ?? booking;
+    return {
+      ...b,
+      whatsappLog: [
+        ...b.whatsappLog,
+        {
+          at,
+          template: "confirmed",
+          delivery: sent ? "sent" : "failed",
+          ...(error ? { error: error.slice(0, 500) } : {}),
+        },
+      ],
+    };
+  });
+  return { booking: logged, whatsappSent: sent, ...(error ? { whatsappError: error } : {}) };
+}
 
 export async function applyAdminAction(
   store: GroomingStore,
@@ -455,6 +550,10 @@ export async function applyAdminAction(
         adminNotes: note ? [...b.adminNotes, { at, text: note }] : b.adminNotes,
       };
     });
+    if (act.action === "confirm") {
+      const sent = await sendConfirmedWhatsapp(store, next, at);
+      return { ok: true, ...sent };
+    }
     return { ok: true, booking: next };
   }
 
@@ -471,9 +570,40 @@ export async function applyAdminAction(
     const template = String(act.template ?? "").slice(0, 40);
     const next = await store.updateJSON<GroomingBooking>(bookingKey(id), (cur) => {
       const b = cur ?? booking;
-      return { ...b, whatsappLog: [...b.whatsappLog, { at, template }] };
+      return { ...b, whatsappLog: [...b.whatsappLog, { at, template, delivery: "opened" }] };
     });
     return { ok: true, booking: next };
+  }
+
+  if (act.action === "send_confirmed_whatsapp") {
+    const sent = await sendConfirmedWhatsapp(store, booking, at);
+    return { ok: true, ...sent };
+  }
+
+  if (act.action === "send_test_whatsapp") {
+    const phone = String(act.phone ?? "").trim();
+    if (!phone) return { ok: false, status: 400, code: "phone_required", message: "Enter a WhatsApp number for the test." };
+    const first = booking.customer.name.split(" ")[0] ?? "there";
+    const text = `Test message from The Nuzz Story admin.\nBooking: ${booking.bookingId}\nPet: ${booking.pet.name}\nIf you received this, WhatsApp auto-send is working.`;
+    const result = await sendWhatsappText(phone, text);
+    const sent = result.ok;
+    const error = result.ok ? undefined : result.error ?? "Couldn't send test WhatsApp.";
+    const next = await store.updateJSON<GroomingBooking>(bookingKey(id), (cur) => {
+      const b = cur ?? booking;
+      return {
+        ...b,
+        whatsappLog: [
+          ...b.whatsappLog,
+          {
+            at,
+            template: `test:${first}`,
+            delivery: sent ? "sent" : "failed",
+            ...(error ? { error: error.slice(0, 500) } : {}),
+          },
+        ],
+      };
+    });
+    return { ok: true, booking: next, whatsappSent: sent, ...(error ? { whatsappError: error } : {}) };
   }
 
   return { ok: false, status: 400, code: "invalid_request", message: "Unknown action." };

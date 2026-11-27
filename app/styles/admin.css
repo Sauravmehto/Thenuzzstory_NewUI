@@ -316,9 +316,8 @@
 
 /* ─── Layout ─────────────────────────────────────────────────────────────── */
 .admin-main {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem clamp(1rem, 4vw, 2rem) 4rem;
+  padding: 1.5rem;
 }
 
 .admin-toolbar {
@@ -950,7 +949,7 @@ fieldset.admin-card legend + * {
   /* A grid item with auto margins would shrink to its content: keep every page full width. */
   width: 100%;
   box-sizing: border-box;
-  padding-top: clamp(1.25rem, 3vw, 2rem);
+  padding-top: 0.5rem;
 }
 
 .admin-toolbar {
@@ -1363,6 +1362,93 @@ button.admin-stat__btn {
 
 .admin-chip--pay { background: #fde8e8; color: #7f1d1d; }
 
+/* ─── Dashboard ───────────────────────────────────────────────────────────── */
+.admin-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-dash-grid + .admin-dash-grid {
+  margin-top: 0.75rem;
+}
+
+.admin-dash-card {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.admin-dash-card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.admin-dash-card__meta {
+  margin: 0;
+  color: var(--admin-muted);
+  font-size: 0.9rem;
+}
+
+.admin-dash-status {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.admin-dash-status li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--admin-line);
+}
+
+.admin-dash-activity {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.admin-dash-activity li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: start;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--admin-line);
+}
+
+.admin-dash-activity li:first-child {
+  border-top: 0;
+  padding-top: 0.15rem;
+}
+
+.admin-dash-activity p {
+  margin: 0.1rem 0 0;
+  color: var(--admin-muted);
+  font-size: 0.84rem;
+}
+
+.admin-dash-activity strong {
+  display: block;
+  text-align: right;
+}
+
+.admin-dash-link {
+  color: var(--admin-navy);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-dash-link:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 1100px) {
   .admin-order__body {
     grid-template-columns: 1fr 1fr;
@@ -1391,6 +1477,12 @@ button.admin-stat__btn {
     margin-left: 0;
     flex-basis: 100%;
     order: 5;
+  }
+  .admin-dash-activity li {
+    grid-template-columns: 1fr;
+  }
+  .admin-dash-activity strong {
+    text-align: left;
   }
 }
 

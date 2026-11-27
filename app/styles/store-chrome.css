@@ -44,19 +44,68 @@
 
 /* ─── Shared section title ─────────────────────────────────────────────────── */
 
+/* ─── Shared offer marquee ─────────────────────────────────────────────────── */
+.offer-marquee {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  background: color-mix(in srgb, var(--color-yellow) 68%, #ffffff);
+  color: var(--color-navy, #00387d);
+  font-size: 0.79rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  min-height: 34px;
+}
+
+.offer-marquee__track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: offer-marquee-slide 22s linear infinite;
+}
+
+.offer-marquee__track span {
+  display: inline-block;
+  padding: 0.52rem 1rem;
+}
+
+.offer-marquee__static {
+  display: none;
+  margin: 0;
+  padding: 0.52rem 1rem;
+  text-align: center;
+}
+
+@keyframes offer-marquee-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ─── Shared header ────────────────────────────────────────────────────────── */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
+  display: block;
+  background: var(--color-royal);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.site-header__offer {
+  border-bottom-color: rgba(0, 34, 90, 0.16);
+}
+
+.site-header__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  background: var(--color-royal);
-  color: #ffffff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .site-header__logo {
@@ -177,7 +226,7 @@
 /* Small phones: five 40px buttons + logo don't fit a 360px row — tighten the
    whole strip so it never pushes past the viewport edge. */
 @media (max-width: 480px) {
-  .site-header {
+  .site-header__row {
     padding: 0.75rem 1rem;
     gap: 0.5rem;
   }
@@ -206,12 +255,22 @@
 }
 
 @media (min-width: 1024px) {
-  .site-header {
+  .site-header__row {
     padding: 1rem 3rem;
   }
   .site-header__logo {
     width: 190px;
     height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offer-marquee__track {
+    display: none;
+    animation: none;
+  }
+  .offer-marquee__static {
+    display: block;
   }
 }
 

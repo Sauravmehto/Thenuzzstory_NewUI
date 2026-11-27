@@ -28,12 +28,13 @@ export default function GroomingHero({ fromCents }: { fromCents: number | null }
         </p>
         <div className="gr-hero__ctas">
           <a href="#book" className="gr-btn gr-btn--amber gr-btn--lg">
-            Check price &amp; book
+            Book in 2 minutes
           </a>
           <a href="#prices" className="gr-btn gr-btn--ghost-light gr-btn--lg">
             See the price list
           </a>
         </div>
+        <p className="gr-hero__note">No online payment. We confirm every appointment on call.</p>
         <ul className="gr-chips" aria-label="Highlights">
           {chips.map((c) => (
             <li key={c}>{c}</li>

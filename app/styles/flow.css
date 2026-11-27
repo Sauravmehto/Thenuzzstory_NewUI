@@ -756,6 +756,7 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  line-height: 1;
 }
 
 .checkout-steps__step + .checkout-steps__step::before {
@@ -774,17 +775,22 @@
 .checkout-steps__dot {
   display: inline-grid;
   place-items: center;
+  flex: 0 0 24px;
   width: 24px;
   height: 24px;
   border-radius: 9999px;
   border: 1.5px solid rgba(26, 61, 26, 0.3);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .checkout-steps__dot svg {
+  display: block;
   width: 12px;
   height: 12px;
+  overflow: visible;
 }
 
 .checkout-steps__step[data-state="done"] .checkout-steps__dot {
@@ -801,6 +807,37 @@
   background: var(--flow-ink);
   border-color: var(--flow-ink);
   color: #ffffff;
+}
+
+/* Completed dots draw their check neatly in the centre, then settle with a
+   small pop. The connector fills in behind the completed step. */
+.checkout-steps__step[data-state="done"] .checkout-steps__dot svg {
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+  animation: checkout-check-draw var(--dur-base) var(--ease-out) forwards;
+}
+
+.checkout-steps__step[data-state="done"] .checkout-steps__dot {
+  animation: checkout-step-pop var(--dur-base) var(--ease-spring) both;
+}
+
+.checkout-steps__step[data-state="current"] .checkout-steps__dot {
+  animation: checkout-current-pulse 2s var(--ease-in-out) infinite;
+}
+
+@keyframes checkout-check-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes checkout-step-pop {
+  0% { transform: scale(0.7); opacity: 0.65; }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes checkout-current-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13, 31, 60, 0); }
+  50% { box-shadow: 0 0 0 5px rgba(13, 31, 60, 0.12); }
 }
 
 /* ─── Checkout: cart heading + fields ──────────────────────────────────── */
@@ -1189,7 +1226,10 @@
   .cozy-badge--bump,
   .shop-cart__line[data-just-added],
   .order-confirm__check,
-  .order-confirm__hero h1 {
+  .order-confirm__hero h1,
+  .checkout-steps__step[data-state="done"] .checkout-steps__dot,
+  .checkout-steps__step[data-state="done"] .checkout-steps__dot svg,
+  .checkout-steps__step[data-state="current"] .checkout-steps__dot {
     animation: none;
   }
 }

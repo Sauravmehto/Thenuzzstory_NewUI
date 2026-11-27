@@ -43,6 +43,16 @@
   background-size: 24px 24px, 100% 100%;
 }
 
+.shop-page .shop-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url("/assets/home/Premium%20Pet%20Nutrition%20Showcase.png") center / cover no-repeat;
+  opacity: 0.4;
+}
+
 /* The two decorative blobs become soft light: two blue glows.
    `.shop-hero > *` (store-chrome.css) made every child relative, so the blobs and
    paw lost their absolute positioning; restore it here. */

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import AnimatedPrice from "@/components/AnimatedPrice";
+import { useAccount } from "@/lib/account";
 import { STORE } from "@/lib/contact-places";
 import { findBreed, OTHER_BREED_ID, type Breed } from "@/lib/grooming/breeds";
 import { SELECT_EVENT, type SelectDetail } from "@/lib/grooming/events";
@@ -15,6 +16,7 @@ import AvailabilityCalendar, { type LoadDays } from "./AvailabilityCalendar";
 import BreedCombobox from "./BreedCombobox";
 
 type Step = 1 | 2 | 3 | 4;
+const STEPS: Step[] = [1, 2, 3, 4];
 
 interface Success {
   bookingId: string;
@@ -55,6 +57,7 @@ function coatFromBreed(b: Breed): string {
 }
 
 export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: { pricing: PricingConfig; bookingEnabled: boolean; maxDaysAhead: number }) {
+  const { status: accountStatus, openPanel } = useAccount();
   const uid = useId();
   const id = (name: string) => `${uid}-${name}`;
   const [step, setStep] = useState<Step>(1);
@@ -86,6 +89,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
 
   const [errors, setErrors] = useState<BookingErrors>({});
   const [notice, setNotice] = useState<{ tone: "info" | "error"; text: string } | null>(null);
+  const [slotNeedsRefresh, setSlotNeedsRefresh] = useState(false);
   const [serverEstimate, setServerEstimate] = useState<Estimate | null | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<Success | null>(null);
@@ -101,6 +105,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
   }, [weightText]);
   const sizeBand: SizeBand | null = species === "dog" ? (weightKg ? sizeBandFor(weightKg, pricing.sizeBands) : manualBand || null) : null;
   const services = useMemo(() => servicesFor(pricing, species), [pricing, species]);
+  const popularServiceIds = useMemo(() => new Set(services.slice(0, 3).map((s) => s.id)), [services]);
   const main = services.find((s) => s.id === mainId);
   const extras = services.filter((s) => s.role === "main_or_extra" && s.id !== mainId);
   const selection = { species, sizeBand, mainId, extraIds };
@@ -200,14 +205,23 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
     requestAnimationFrame(() => document.getElementById(id(first))?.focus());
   }
 
+  const stepHasError = (s: Step) =>
+    Object.entries(errors).some(([field, message]) => Boolean(message) && STEP_OF[field as BookingField] === s);
+
   const loadDays: LoadDays = useCallback(
     async (from, to) => {
       const qs = new URLSearchParams({ from, to, main: mainId, extras: extraIds.join(",") });
       try {
         const res = await fetch(`/api/grooming/availability?${qs}`, { cache: "no-store" });
-        const data = (await res.json().catch(() => null)) as { ok: boolean; open?: boolean; days?: { date: string; starts: string[] }[]; message?: string } | null;
+        const data = (await res.json().catch(() => null)) as {
+          ok: boolean;
+          open?: boolean;
+          days?: { date: string; starts: string[] }[];
+          slotStates?: Record<string, { time: string; status: "available" | "booked" | "unavailable"; taken: number; capacity: number }[]>;
+          message?: string;
+        } | null;
         if (!data?.ok) return { error: data?.message ?? "We couldn't load the calendar." };
-        return { open: !!data.open, days: data.days ?? [] };
+        return { open: !!data.open, days: data.days ?? [], slotStates: data.slotStates ?? {} };
       } catch {
         return { error: "We couldn't reach the store. Check your connection." };
       }
@@ -218,6 +232,11 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
   // ---- submit ---------------------------------------------------------------------
   const submit = async () => {
     if (submitLock.current) return;
+    if (accountStatus !== "signedIn") {
+      setNotice({ tone: "error", text: "Please sign in first, then send your booking request." });
+      openPanel("signin");
+      return;
+    }
     const contactErrors = validateContact({ name, phone, whatsapp: waSame ? "" : whatsapp, email }, notes);
     const all = { ...petErrors(), ...contactErrors, ...(slot ? {} : { slot: "Pick a date and a time." }) };
     setErrors(all);
@@ -264,20 +283,24 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
       const message = (data?.message as string) ?? "Something went wrong. Please try again.";
       if (code === "slot_unavailable") {
         setSlot(null);
+        setSlotNeedsRefresh(true);
         setReloadKey((k) => k + 1);
         setStep(3);
-        setNotice({ tone: "error", text: "That time was just taken. Please pick another: your details are kept." });
+        setNotice({ tone: "error", text: "That slot got booked just now. Pick another one - your details are safe." });
       } else if (code === "quote_changed") {
         const fresh = (data?.estimate as Estimate | null) ?? null;
         setServerEstimate(fresh);
         setNotice({
           tone: "info",
-          text: `Our prices were updated: the estimate is now ${fresh ? formatRupees(fresh.totalCents) : "a custom quote"}${shownEstimate ? ` (was ${formatRupees(shownEstimate.totalCents)})` : ""}. Check it, then send the request again.`,
+          text: `Prices just updated: your estimate is now ${fresh ? formatRupees(fresh.totalCents) : "a custom quote"}${shownEstimate ? ` (was ${formatRupees(shownEstimate.totalCents)})` : ""}. Please review and send again.`,
         });
       } else if (code === "validation" && data?.errors) {
         const e = data.errors as BookingErrors;
         setErrors(e);
         focusFirstError(e);
+      } else if (code === "unauthorized") {
+        setNotice({ tone: "error", text: "Please sign in first, then send your booking request." });
+        openPanel("signin");
       } else {
         setNotice({ tone: "error", text: message });
       }
@@ -301,6 +324,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
     setMainId("");
     setExtraIds([]);
     setSlot(null);
+    setSlotNeedsRefresh(false);
     setNotes("");
     setErrors({});
     setStep(1);
@@ -328,7 +352,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
           <h2 id="gr-book-done" className="gr-title gr-title--light" tabIndex={-1} ref={(el) => el?.focus()}>
             Request received!
           </h2>
-          <p className="gr-done__lead">Your grooming appointment request has been received! Our team will contact you shortly to confirm your appointment.</p>
+          <p className="gr-done__lead">Your request is in! Our team will call you shortly to confirm your appointment.</p>
           <dl className="gr-done__facts">
             <div>
               <dt>Booking ID</dt>
@@ -359,7 +383,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
               <dd>{success.estimate ? `${formatRupees(success.estimate.totalCents)} (confirmed on the call)` : "We'll quote it on the call"}</dd>
             </div>
           </dl>
-          <p className="gr-done__note">This time isn&apos;t confirmed yet: we&apos;ll call you on your mobile to confirm it.</p>
+          <p className="gr-done__note">This time is not final yet - we&apos;ll call you soon to confirm it.</p>
           <div className="gr-done__actions">
             {success.statusUrl && (
               <a className="gr-btn gr-btn--amber" href={success.statusUrl}>
@@ -410,8 +434,31 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
         <h2 id="gr-book-title" className="gr-title gr-title--light">
           Book in <em>4 easy steps.</em>
         </h2>
-        <p className="gr-section__lead gr-section__lead--light">See your price, pick a time, send the request. We call you to confirm.</p>
+        <p className="gr-section__lead gr-section__lead--light">Tell us about your floof, pick a service, choose a time, and send your request.</p>
       </div>
+      <ol className="gr-progress" aria-label="Booking progress">
+        {STEPS.map((s) => {
+          const status = s < step ? "done" : s === step ? "current" : "upcoming";
+          return (
+            <li key={s} className="gr-progress__item">
+              <button
+                type="button"
+                className="gr-progress__button"
+                data-status={status}
+                data-error={stepHasError(s) || undefined}
+                aria-current={s === step ? "step" : undefined}
+                disabled={s > reached}
+                onClick={() => s <= reached && setStep(s)}
+              >
+                <span className="gr-progress__dot" aria-hidden="true">
+                  {status === "done" ? "✓" : s}
+                </span>
+                <span className="gr-progress__label">{STEP_TITLES[s]}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
 
       <div className="gr-book__layout">
         <div className="gr-book__steps">
@@ -422,7 +469,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
           )}
 
           {/* ---- 1. pet ---- */}
-          <div className="gr-step" data-state={step === 1 ? "open" : "closed"}>
+          <div className="gr-step" data-state={step === 1 ? "open" : "closed"} data-has-error={stepHasError(1) || undefined}>
             {stepHeader(1, petName ? `${petName}${breed ? `, ${breed.id === OTHER_BREED_ID ? breedOther : breed.name}` : ""}${sizeBand ? `, ${pricing.sizeBands.find((b) => b.id === sizeBand)?.label}` : ""}` : null)}
             {step === 1 && (
               <div className="gr-step__body">
@@ -521,27 +568,30 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
                   </div>
                 )}
 
-                <fieldset className="gr-field">
-                  <legend>
-                    Coat <span className="gr-field__opt">(optional)</span>
-                  </legend>
-                  <div className="gr-chipset">
-                    {COATS.map((c) => (
-                      <label key={c} className="gr-chip-opt">
-                        <input type="radio" name={id("coat")} checked={coat === c} onChange={() => setCoat(c)} />
-                        <span>{COAT_LABEL[c]}</span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
+                <details className="gr-more-fields">
+                  <summary>Add more details (optional)</summary>
+                  <fieldset className="gr-field">
+                    <legend>
+                      Coat <span className="gr-field__opt">(optional)</span>
+                    </legend>
+                    <div className="gr-chipset">
+                      {COATS.map((c) => (
+                        <label key={c} className="gr-chip-opt">
+                          <input type="radio" name={id("coat")} checked={coat === c} onChange={() => setCoat(c)} />
+                          <span>{COAT_LABEL[c]}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
 
-                <div className="gr-field gr-field--narrow">
-                  <label htmlFor={id("ageText")}>
-                    Age <span className="gr-field__opt">(optional)</span>
-                  </label>
-                  <input id={id("ageText")} value={ageText} onChange={(e) => setAgeText(e.target.value)} maxLength={30} placeholder="e.g. 2 years" aria-invalid={!!errors.ageText || undefined} aria-describedby={describedBy("ageText")} />
-                  {err("ageText")}
-                </div>
+                  <div className="gr-field gr-field--narrow">
+                    <label htmlFor={id("ageText")}>
+                      Age <span className="gr-field__opt">(optional)</span>
+                    </label>
+                    <input id={id("ageText")} value={ageText} onChange={(e) => setAgeText(e.target.value)} maxLength={30} placeholder="e.g. 2 years" aria-invalid={!!errors.ageText || undefined} aria-describedby={describedBy("ageText")} />
+                    {err("ageText")}
+                  </div>
+                </details>
 
                 <div className="gr-step__actions">
                   <button type="button" className="gr-btn gr-btn--amber" onClick={next1}>
@@ -553,12 +603,13 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
           </div>
 
           {/* ---- 2. service ---- */}
-          <div className="gr-step" data-state={step === 2 ? "open" : step < 2 && reached < 2 ? "locked" : "closed"}>
+          <div className="gr-step" data-state={step === 2 ? "open" : step < 2 && reached < 2 ? "locked" : "closed"} data-has-error={stepHasError(2) || undefined}>
             {stepHeader(2, main ? [main.name, ...extraIds.map((x) => pricing.services.find((s) => s.id === x)?.name)].filter(Boolean).join(" + ") : null)}
             {step === 2 && (
               <div className="gr-step__body">
                 <fieldset className="gr-field">
                   <legend>Choose one main service</legend>
+                  <p className="gr-hint">Most booked picks are tagged, so choosing is faster.</p>
                   {suggestLongCoat && <p className="gr-hint">Long coat? Our long-coat grooming + haircut packages are made for that.</p>}
                   <div className="gr-svc-pick" id={id("mainId")}>
                     {services.map((s) => {
@@ -575,6 +626,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
                             <span className="gr-svc-opt__name">{s.name}</span>
                             {s.condition && <span className="gr-svc-opt__cond">{s.condition}</span>}
                             {recommended && <span className="gr-svc-opt__tag">Suggested for long coats</span>}
+                            {popularServiceIds.has(s.id) && <span className="gr-svc-opt__tag">Most booked</span>}
                           </span>
                           <span className="gr-svc-opt__price">{cents !== null ? formatRupees(cents) : s.price.type === "by_size" ? "Add size" : "Ask us"}</span>
                         </label>
@@ -621,7 +673,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
                 ) : (
                   <div className="gr-step__actions">
                     <button type="button" className="gr-btn gr-btn--amber" onClick={next2} disabled={!main}>
-                      Continue to date &amp; time
+                      Continue to date & time
                     </button>
                   </div>
                 )}
@@ -630,13 +682,31 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
           </div>
 
           {/* ---- 3. date & time ---- */}
-          <div className="gr-step" data-state={step === 3 ? "open" : reached < 3 ? "locked" : "closed"}>
+          <div className="gr-step" data-state={step === 3 ? "open" : reached < 3 ? "locked" : "closed"} data-has-error={stepHasError(3) || undefined}>
             {stepHeader(3, slot ? formatSlot(slot) : null)}
             {step === 3 && (
               <div className="gr-step__body" id={id("slot")} tabIndex={-1}>
-                <AvailabilityCalendar loadDays={loadDays} value={slot} onChange={setSlot} maxDaysAhead={maxDaysAhead} reloadKey={reloadKey} label="Appointment date" />
+                <AvailabilityCalendar
+                  loadDays={loadDays}
+                  value={slot}
+                  onChange={(nextSlot) => {
+                    setSlot(nextSlot);
+                    if (nextSlot) setSlotNeedsRefresh(false);
+                  }}
+                  maxDaysAhead={maxDaysAhead}
+                  reloadKey={reloadKey}
+                  label="Appointment date"
+                />
+                {slotNeedsRefresh && (
+                  <div className="gr-retry-slot" role="status">
+                    <p>We refreshed live slots. If your preferred time disappeared, pick another available one.</p>
+                    <button type="button" className="gr-btn gr-btn--ghost gr-btn--sm" onClick={() => setReloadKey((k) => k + 1)}>
+                      Reload times
+                    </button>
+                  </div>
+                )}
                 {err("slot")}
-                <p className="gr-hint">You&apos;re requesting a time. It&apos;s held for you while our team calls to confirm.</p>
+                <p className="gr-hint">This is a request. We hold it while our team calls to confirm.</p>
                 <div className="gr-step__actions">
                   <button type="button" className="gr-btn gr-btn--amber" onClick={next3} disabled={!slot}>
                     Continue to your details
@@ -647,7 +717,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
           </div>
 
           {/* ---- 4. details ---- */}
-          <div className="gr-step" data-state={step === 4 ? "open" : reached < 4 ? "locked" : "closed"}>
+          <div className="gr-step" data-state={step === 4 ? "open" : reached < 4 ? "locked" : "closed"} data-has-error={stepHasError(4) || undefined}>
             {stepHeader(4)}
             {step === 4 && (
               <form
@@ -658,6 +728,14 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
                   void submit();
                 }}
               >
+                {accountStatus !== "signedIn" && (
+                  <div className="gr-login-need" role="status">
+                    <p>Sign in to continue with booking. Your selected service and slot will stay here.</p>
+                    <button type="button" className="gr-btn gr-btn--ghost gr-btn--sm" onClick={() => openPanel("signin")}>
+                      Sign in
+                    </button>
+                  </div>
+                )}
                 <div className="gr-field-row">
                   <div className="gr-field">
                     <label htmlFor={id("name")}>Your full name</label>
@@ -711,7 +789,7 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
                         <span className="gr-spinner" aria-hidden="true" /> Sending request…
                       </>
                     ) : (
-                      "Request Grooming Appointment"
+                      "Send booking request"
                     )}
                   </button>
                   <p className="gr-hint">Nothing is charged online. Your request is pending until we call to confirm.</p>

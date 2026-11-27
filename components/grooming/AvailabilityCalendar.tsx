@@ -5,7 +5,17 @@ import { addDays, daysBetween, storeNow, weekdayOf } from "@/lib/grooming/availa
 import { formatDate, formatTime } from "@/lib/grooming/messages";
 import type { DayAvailability } from "@/lib/grooming/types";
 
-export type LoadDays = (from: string, to: string) => Promise<{ open: boolean; days: DayAvailability[] } | { error: string }>;
+export interface SlotState {
+  time: string;
+  status: "available" | "booked" | "unavailable";
+  taken: number;
+  capacity: number;
+}
+
+export type LoadDays = (
+  from: string,
+  to: string,
+) => Promise<{ open: boolean; days: DayAvailability[]; slotStates?: Record<string, SlotState[]> } | { error: string }>;
 
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const MONTH = new Intl.DateTimeFormat("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -44,6 +54,7 @@ export default function AvailabilityCalendar({
   const lastDay = addDays(today, maxDaysAhead);
   const [month, setMonth] = useState(() => monthStart(value?.date ?? today));
   const [days, setDays] = useState<Map<string, DayAvailability>>(new Map());
+  const [slotStates, setSlotStates] = useState<Map<string, SlotState[]>>(new Map());
   const [state, setState] = useState<"loading" | "ready" | "closed" | "error">("loading");
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState<string | null>(value?.date ?? null);
@@ -55,6 +66,7 @@ export default function AvailabilityCalendar({
     const to = monthEnd(month) > lastDay ? lastDay : monthEnd(month);
     if (to < from) {
       setDays(new Map());
+      setSlotStates(new Map());
       setState("ready");
       return;
     }
@@ -66,10 +78,12 @@ export default function AvailabilityCalendar({
       return;
     }
     if (!res.open) {
+      setSlotStates(new Map());
       setState("closed");
       return;
     }
     setDays(new Map(res.days.map((d) => [d.date, d])));
+    setSlotStates(new Map(Object.entries(res.slotStates ?? {})));
     setState("ready");
   }, [month, today, lastDay, loadDays]);
 
@@ -109,7 +123,13 @@ export default function AvailabilityCalendar({
     }
   };
 
-  const slots = selectedDate ? (days.get(selectedDate)?.starts ?? []) : [];
+  const slotsForDay =
+    selectedDate && slotStates.has(selectedDate)
+      ? slotStates.get(selectedDate) ?? []
+      : selectedDate
+        ? (days.get(selectedDate)?.starts ?? []).map((time) => ({ time, status: "available", taken: 0, capacity: 1 } satisfies SlotState))
+        : [];
+  const showLoad = slotsForDay.some((s) => s.capacity > 1);
   const focusable = cells.includes(focusDate) ? focusDate : (cells.find(bookable) ?? cells[0]!);
 
   return (
@@ -186,21 +206,68 @@ export default function AvailabilityCalendar({
           <p className="gr-cal__status">Online booking isn&apos;t open for this service yet.</p>
         ) : !selectedDate ? (
           <p className="gr-cal__hint">Pick a highlighted date to see the times.</p>
-        ) : slots.length === 0 ? (
+        ) : slotsForDay.length === 0 ? (
           <p className="gr-cal__hint">No free times on {formatDate(selectedDate)}.</p>
         ) : (
           <>
             <p className="gr-cal__slots-title">{formatDate(selectedDate)}</p>
             <div className="gr-cal__times" role="group" aria-label={`Times on ${formatDate(selectedDate)}`}>
-              {slots.map((t) => {
+              {slotsForDay.map((slot) => {
+                const t = slot.time;
                 const isSel = value?.date === selectedDate && value.start === t;
+                const disabled = slot.status !== "available";
+                const occupancy = slot.capacity > 1 ? `${slot.taken}/${slot.capacity}` : null;
+                const metaText =
+                  slot.status === "booked"
+                    ? "Booked"
+                    : slot.status === "unavailable"
+                      ? "Unavailable"
+                      : showLoad && occupancy
+                        ? `${occupancy} booked`
+                        : null;
+                const label =
+                  slot.status === "booked"
+                    ? `${formatTime(t)} (booked)`
+                    : slot.status === "unavailable"
+                      ? `${formatTime(t)} (not available)`
+                      : showLoad && occupancy
+                        ? `${formatTime(t)} (${occupancy} booked)`
+                        : formatTime(t);
                 return (
-                  <button key={t} type="button" className="gr-cal__time" aria-pressed={isSel} data-selected={isSel || undefined} onClick={() => onChange({ date: selectedDate, start: t })}>
-                    {formatTime(t)}
+                  <button
+                    key={t}
+                    type="button"
+                    className="gr-cal__time"
+                    aria-pressed={isSel}
+                    data-selected={isSel || undefined}
+                    data-booked={slot.status === "booked" || undefined}
+                    data-unavailable={slot.status === "unavailable" || undefined}
+                    aria-label={label}
+                    disabled={disabled}
+                    onClick={() => {
+                      if (disabled) return;
+                      onChange({ date: selectedDate, start: t });
+                    }}
+                  >
+                    <span className="gr-cal__time-main">{formatTime(t)}</span>
+                    {metaText && (
+                      <span className="gr-cal__time-meta">
+                        {slot.status === "booked" && (
+                          <span className="gr-cal__time-lock" aria-hidden="true">
+                            🔒
+                          </span>
+                        )}
+                        {metaText}
+                      </span>
+                    )}
                   </button>
                 );
               })}
             </div>
+            <p className="gr-cal__legend">
+              <span className="gr-cal__legend-dot gr-cal__legend-dot--free" aria-hidden="true" /> Available
+              <span className="gr-cal__legend-dot gr-cal__legend-dot--booked" aria-hidden="true" /> Booked
+            </p>
           </>
         )}
       </div>

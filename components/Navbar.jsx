@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
 import { WIGGLE_CONFIG } from "@/lib/data";
 import MobileNav from "@/components/MobileNav";
+import OfferMarquee from "@/components/OfferMarquee";
 import SmartImage from "@/components/SmartImage";
 
 function initWiggle(element, intensity) {
@@ -381,6 +382,7 @@ export default function Navbar() {
 
   return (
     <>
+      <OfferMarquee className="home-offer-bar" />
       <div className="nav-overlay"></div>
       <nav className="navbar">
         <div

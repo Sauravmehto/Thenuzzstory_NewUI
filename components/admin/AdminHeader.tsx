@@ -19,6 +19,7 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
   {
     title: "Shop",
     items: [
+      { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
       { href: "/admin", label: "Products", icon: "📦", match: /^\/admin\/products\// },
       { href: "/admin/orders", label: "Orders", icon: "🧾", badge: "orders" },
       { href: "/admin/import", label: "Import from photos", icon: "📥" },

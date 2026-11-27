@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import AvailabilityCalendar, { type LoadDays } from "@/components/grooming/AvailabilityCalendar";
+import { Callout } from "@/components/admin/AdminUI";
 import { adminRequest } from "@/lib/admin-client";
 import { formatSlot, serviceNames, storeToCustomerMessage, TEMPLATE_LABEL, type CustomerTemplate } from "@/lib/grooming/messages";
 import { formatRupees } from "@/lib/grooming/money";
@@ -10,8 +11,14 @@ import { BOOKING_STATUS_LABEL, type AvailabilityConfig, type BookingHistoryEntry
 import { whatsappUrl } from "@/lib/whatsapp-order";
 import { phoneText, statusChip } from "./AppointmentsList";
 
-type Data = { booking: GroomingBooking; pricing: PricingConfig; availability: AvailabilityConfig };
+type Data = {
+  booking: GroomingBooking;
+  pricing: PricingConfig;
+  availability: AvailabilityConfig;
+  whatsapp: { enabled: boolean; configured: boolean; ready: boolean; reason: string };
+};
 type Panel = null | "confirm" | "reschedule" | "cancel" | "reject" | "complete" | "note";
+type ActionResponse = { booking: GroomingBooking; whatsappSent?: boolean; whatsappError?: string };
 
 const when = (iso: string) => new Date(iso).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" });
 
@@ -31,6 +38,7 @@ export default function AppointmentDetail({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [panel, setPanel] = useState<Panel>(null);
   const [text, setText] = useState("");
+  const [testPhone, setTestPhone] = useState("");
   const [slot, setSlot] = useState<{ date: string; start: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
@@ -39,7 +47,7 @@ export default function AppointmentDetail({ id }: { id: string }) {
   const load = useCallback(async () => {
     const res = await adminRequest<Data>(`/api/admin/grooming/bookings/${id}`);
     if (!res.ok) return setError(res.message);
-    setData({ booking: res.booking, pricing: res.pricing, availability: res.availability });
+    setData({ booking: res.booking, pricing: res.pricing, availability: res.availability, whatsapp: res.whatsapp });
   }, [id]);
   useEffect(() => {
     void load();
@@ -56,7 +64,7 @@ export default function AppointmentDetail({ id }: { id: string }) {
   const act = async (body: Record<string, unknown>, done: string) => {
     setBusy(true);
     setMessage(null);
-    const res = await adminRequest<{ booking: GroomingBooking }>(`/api/admin/grooming/bookings/${id}`, { method: "PATCH", json: body });
+    const res = await adminRequest<ActionResponse>(`/api/admin/grooming/bookings/${id}`, { method: "PATCH", json: body });
     setBusy(false);
     if (!res.ok) {
       setMessage({ tone: "error", text: res.message });
@@ -67,6 +75,21 @@ export default function AppointmentDetail({ id }: { id: string }) {
     setPanel(null);
     setText("");
     setSlot(null);
+    if (body.action === "confirm") {
+      if (res.whatsappSent) setMessage({ tone: "ok", text: "Appointment confirmed and WhatsApp sent to the customer." });
+      else setMessage({ tone: "error", text: `Appointment confirmed, but WhatsApp wasn't sent. ${res.whatsappError ?? ""}`.trim() });
+      return;
+    }
+    if (body.action === "send_confirmed_whatsapp") {
+      if (res.whatsappSent) setMessage({ tone: "ok", text: "Confirmation WhatsApp sent to the customer." });
+      else setMessage({ tone: "error", text: `Couldn't send WhatsApp. ${res.whatsappError ?? ""}`.trim() });
+      return;
+    }
+    if (body.action === "send_test_whatsapp") {
+      if (res.whatsappSent) setMessage({ tone: "ok", text: `Test WhatsApp sent to ${testPhoneValue}.` });
+      else setMessage({ tone: "error", text: `Couldn't send test WhatsApp. ${res.whatsappError ?? ""}`.trim() });
+      return;
+    }
     setMessage({ tone: "ok", text: done });
   };
 
@@ -80,6 +103,7 @@ export default function AppointmentDetail({ id }: { id: string }) {
   const { booking: b, pricing } = data;
   const canConfirm = b.status === "pending_confirmation";
   const canMove = b.status === "pending_confirmation" || b.status === "confirmed";
+  const testPhoneValue = testPhone.trim() || b.customer.whatsapp;
   const openWhatsapp = (t: CustomerTemplate) => {
     window.open(whatsappUrl(storeToCustomerMessage(t, b, pricing), `91${b.customer.whatsapp}`), "_blank", "noopener");
     void act({ action: "whatsapp_opened", template: t }, `WhatsApp opened with the “${TEMPLATE_LABEL[t]}” message. Check it was sent in WhatsApp.`);
@@ -197,6 +221,16 @@ export default function AppointmentDetail({ id }: { id: string }) {
               Mark completed
             </button>
           )}
+          {(b.status === "confirmed" || b.status === "completed") && (
+            <button
+              type="button"
+              className="admin-btn"
+              onClick={() => void act({ action: "send_confirmed_whatsapp" }, "Confirmation WhatsApp sent.")}
+              disabled={busy}
+            >
+              Retry confirmation WhatsApp
+            </button>
+          )}
           {canMove && (
             <button type="button" className="admin-btn admin-btn--danger" onClick={() => setPanel("cancel")} disabled={busy}>
               Cancel appointment
@@ -262,6 +296,9 @@ export default function AppointmentDetail({ id }: { id: string }) {
 
       <div className="admin-card">
         <h2 className="admin-subtitle">WhatsApp the customer</h2>
+        <Callout tone={data.whatsapp.ready ? "ok" : "warn"}>
+          <strong>WhatsApp auto-send:</strong> {data.whatsapp.reason}
+        </Callout>
         <p className="admin-hint">Opens WhatsApp with the message filled in. Opening it doesn&apos;t send it: press send in WhatsApp.</p>
         <div className="admin-actions">
           {(Object.keys(TEMPLATE_LABEL) as CustomerTemplate[]).map((t) => (
@@ -269,6 +306,27 @@ export default function AppointmentDetail({ id }: { id: string }) {
               WhatsApp: {TEMPLATE_LABEL[t]}
             </button>
           ))}
+        </div>
+        <div className="admin-field-row">
+          <label className="admin-field admin-field--inline">
+            <span>Send test to number</span>
+            <input
+              type="tel"
+              inputMode="numeric"
+              placeholder={b.customer.whatsapp}
+              value={testPhone}
+              onChange={(e) => setTestPhone(e.target.value)}
+              disabled={busy}
+            />
+          </label>
+          <button
+            type="button"
+            className="admin-btn admin-btn--sm"
+            onClick={() => void act({ action: "send_test_whatsapp", phone: testPhoneValue }, "Test WhatsApp sent.")}
+            disabled={busy}
+          >
+            Send test WhatsApp
+          </button>
         </div>
       </div>
 
@@ -306,7 +364,14 @@ export default function AppointmentDetail({ id }: { id: string }) {
           )}
           {b.whatsappLog.length > 0 && (
             <p className="admin-muted">
-              WhatsApp opened: {b.whatsappLog.map((w) => `${TEMPLATE_LABEL[w.template as CustomerTemplate] ?? w.template} (${when(w.at)})`).join(", ")}
+              WhatsApp activity:{" "}
+              {b.whatsappLog
+                .map((w) => {
+                  const label = TEMPLATE_LABEL[w.template as CustomerTemplate] ?? w.template;
+                  const state = w.delivery === "sent" ? "sent" : w.delivery === "failed" ? "failed" : "opened";
+                  return `${label} (${state}, ${when(w.at)})`;
+                })
+                .join(", ")}
             </p>
           )}
         </div>

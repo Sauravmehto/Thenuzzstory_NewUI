@@ -8,6 +8,7 @@ import { useWishlist } from "@/lib/wishlist";
 import AccountMenu from "@/components/AccountMenu";
 import { useBump } from "@/lib/hooks/useBump";
 import { IconCart, IconStar, IconMenu, IconClose } from "@/components/icons";
+import OfferMarquee from "@/components/OfferMarquee";
 
 const LOGO_SRC = "/assets/brand/nuzzstorylogo-removebg.png";
 
@@ -31,63 +32,66 @@ export default function SiteHeader() {
 
   return (
     <header className="site-header">
-      <Link
-        href="/"
-        className="site-header__logo-link"
-        aria-label="The Nuzz Story home"
-      >
-        <img src={LOGO_SRC} alt="The Nuzz Story" className="site-header__logo" width={866} height={288} />
-      </Link>
+      <OfferMarquee className="site-header__offer" />
+      <div className="site-header__row">
+        <Link
+          href="/"
+          className="site-header__logo-link"
+          aria-label="The Nuzz Story home"
+        >
+          <img src={LOGO_SRC} alt="The Nuzz Story" className="site-header__logo" width={866} height={288} />
+        </Link>
 
-      <nav className="site-header__nav" aria-label="Primary">
-        {NAV_LINKS.map(({ href, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className={isActive(href) ? "is-active" : ""}
+        <nav className="site-header__nav" aria-label="Primary">
+          {NAV_LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={isActive(href) ? "is-active" : ""}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="site-header__actions">
+          <button
+            className="cozy-icon-btn cozy-icon-btn--orange"
+            aria-label="Wishlist"
+            onClick={openWishlist}
           >
-            {label}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="site-header__actions">
-        <button
-          className="cozy-icon-btn cozy-icon-btn--orange"
-          aria-label="Wishlist"
-          onClick={openWishlist}
-        >
-          <IconStar className="cozy-icon" />
-          {wishlistCount > 0 && (
-            <span className="cozy-badge">{wishlistCount}</span>
-          )}
-        </button>
-        <button
-          ref={cartTargetRef}
-          className="cozy-icon-btn"
-          aria-label={count > 0 ? `Open cart, ${count} item${count === 1 ? "" : "s"}` : "Open cart"}
-          onClick={openCart}
-        >
-          <IconCart className="cozy-icon" />
-          {count > 0 && (
-            <span key={cartBump} className={`cozy-badge ${cartBump ? "cozy-badge--bump" : ""}`} aria-hidden="true">
-              {count}
-            </span>
-          )}
-        </button>
-        <AccountMenu />
-        <button
-          className="cozy-icon-btn site-header__burger"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? (
-            <IconClose className="cozy-icon" />
-          ) : (
-            <IconMenu className="cozy-icon" />
-          )}
-        </button>
+            <IconStar className="cozy-icon" />
+            {wishlistCount > 0 && (
+              <span className="cozy-badge">{wishlistCount}</span>
+            )}
+          </button>
+          <button
+            ref={cartTargetRef}
+            className="cozy-icon-btn"
+            aria-label={count > 0 ? `Open cart, ${count} item${count === 1 ? "" : "s"}` : "Open cart"}
+            onClick={openCart}
+          >
+            <IconCart className="cozy-icon" />
+            {count > 0 && (
+              <span key={cartBump} className={`cozy-badge ${cartBump ? "cozy-badge--bump" : ""}`} aria-hidden="true">
+                {count}
+              </span>
+            )}
+          </button>
+          <AccountMenu />
+          <button
+            className="cozy-icon-btn site-header__burger"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? (
+              <IconClose className="cozy-icon" />
+            ) : (
+              <IconMenu className="cozy-icon" />
+            )}
+          </button>
+        </div>
       </div>
 
       <nav

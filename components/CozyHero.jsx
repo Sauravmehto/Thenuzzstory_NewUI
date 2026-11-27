@@ -449,7 +449,7 @@ export default function CozyHero() {
             </a>
           </div>
           <p className="cozy-card__name">Cozy Dog Bed</p>
-          <p className="cozy-card__price">Rs.3200/-</p>
+          <p className="cozy-card__price">Starting from Rs. 3200/- only</p>
         </div>
 
         <div className="cozy-card cozy-card--video cozy-slide-in-right cozy-delay-700" data-tilt>

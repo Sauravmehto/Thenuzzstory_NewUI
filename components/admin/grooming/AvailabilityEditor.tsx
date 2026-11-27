@@ -125,6 +125,7 @@ export default function AvailabilityEditor() {
           </label>
         </div>
         <p className="admin-hint">A service&apos;s duration is a number of slots (set per service in Pricing). Pending requests hold their slots until you confirm, cancel or reject them.</p>
+        <p className="admin-hint">Customer booking window is fixed to 10:00 AM–7:00 PM.</p>
       </div>
 
       <div className="admin-card">

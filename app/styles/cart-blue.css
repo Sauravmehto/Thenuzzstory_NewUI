@@ -57,6 +57,15 @@
   border-color: var(--cb-blue-deep);
 }
 
+.cart-page .checkout-steps__step[data-state="current"] .checkout-steps__dot {
+  animation-name: checkout-current-pulse-blue;
+}
+
+@keyframes checkout-current-pulse-blue {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(0 56 125 / 0); }
+  50% { box-shadow: 0 0 0 5px rgb(0 56 125 / 0.14); }
+}
+
 /* ─── White cards ──────────────────────────────────────────────────────── */
 .cart-page .cart-line,
 .cart-page .cart-shipping,
