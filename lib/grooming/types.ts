@@ -97,7 +97,7 @@ export interface AvailabilityConfig {
   /** Older saved availability includes this. It no longer hides the calendar. */
   bookingEnabled: boolean;
   slotMinutes: number;
-  /** Null = closed that day. Several ranges = a break in between. */
+  /** Null or empty = 10:00–19:00. Several ranges = a break in between. */
   weekly: Record<Weekday, OpenRange[] | null>;
   /** Pets that can be groomed at the same time (e.g. number of groomers). */
   capacityPerSlot: number;

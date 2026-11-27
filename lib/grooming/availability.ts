@@ -51,12 +51,14 @@ export function capacityOn(date: string, config: AvailabilityConfig): number {
   return config.capacityOverrides.find((o) => o.date === date)?.capacity ?? config.capacityPerSlot;
 }
 
-/** Every slot start the store is open for that day (before bookings), or a reason it's closed. */
+const DEFAULT_OPEN_DAY: OpenRange[] = [{ open: BUSINESS_OPEN_TIME, close: BUSINESS_CLOSE_TIME }];
+
+/** Every slot start the store is open for that day (before bookings), or a reason it's closed. A weekday with no saved hours uses 10:00–19:00. */
 export function openSlots(date: string, config: AvailabilityConfig): { starts: string[]; closedReason?: string } {
   const closed = config.closedDates.find((c) => c.date === date);
   if (closed) return { starts: [], closedReason: closed.reason || "Closed" };
-  const ranges = config.weekly[weekdayOf(date)];
-  if (!ranges || ranges.length === 0) return { starts: [], closedReason: "Closed" };
+  const configured = config.weekly[weekdayOf(date)];
+  const ranges = configured && configured.length > 0 ? configured : DEFAULT_OPEN_DAY;
   if (capacityOn(date, config) < 1) return { starts: [], closedReason: "Fully booked" };
 
   const blocked = config.blockedSlots.filter((b) => b.date === date).map((b) => [toMinutes(b.start), toMinutes(b.end)] as const);
@@ -131,10 +133,21 @@ export function availableStarts(
   return starts.length ? { date, starts } : { date, starts: [], closedReason: "Fully booked" };
 }
 
+const shopHours = (): OpenRange[] => [{ open: BUSINESS_OPEN_TIME, close: BUSINESS_CLOSE_TIME }];
+
+/** A weekday saved as closed still uses the shop day, 10:00–19:00. */
+export function withShopWeek(config: AvailabilityConfig): AvailabilityConfig {
+  const weekly = { ...config.weekly };
+  for (const day of WEEKDAYS) {
+    if (!weekly[day]?.length) weekly[day] = shopHours();
+  }
+  return { ...config, weekly };
+}
+
 export const DEFAULT_AVAILABILITY: AvailabilityConfig = {
   bookingEnabled: false,
   slotMinutes: 30,
-  weekly: { mon: null, tue: null, wed: null, thu: null, fri: null, sat: null, sun: null },
+  weekly: { mon: shopHours(), tue: shopHours(), wed: shopHours(), thu: shopHours(), fri: shopHours(), sat: shopHours(), sun: shopHours() },
   capacityPerSlot: 1,
   capacityOverrides: [],
   closedDates: [],

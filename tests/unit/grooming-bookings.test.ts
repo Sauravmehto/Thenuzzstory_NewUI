@@ -131,7 +131,7 @@ describe("creating a booking", () => {
 
   it("refuses closed days, past times and invalid fields", async () => {
     const store = memoryGroomingStore(async () => undefined);
-    expect(await create(store, request({ slot: { date: "2026-11-26", start: "10:00" } }))).toMatchObject({ code: "slot_unavailable" }); // Thursday closed
+    expect(await create(store, request({ slot: { date: "2026-11-24", start: "10:00" } }), { availability: availability({ closedDates: [{ date: "2026-11-24", reason: "Diwali" }] }) })).toMatchObject({ code: "slot_unavailable" });
     expect(await create(store, request({ slot: { date: "2026-11-22", start: "10:00" } }))).toMatchObject({ code: "slot_unavailable" });
     expect(await create(store, request({ customer: { name: "", phone: "1" } }))).toMatchObject({ code: "validation" });
   });

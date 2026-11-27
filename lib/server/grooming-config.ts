@@ -1,6 +1,6 @@
 import "server-only";
 import seed from "@/data/grooming/pricing.seed.json";
-import { availabilityProblems, DEFAULT_AVAILABILITY } from "@/lib/grooming/availability";
+import { availabilityProblems, DEFAULT_AVAILABILITY, withShopWeek } from "@/lib/grooming/availability";
 import { SAMPLE_GALLERY } from "@/lib/grooming/samples";
 import { pricingProblems } from "@/lib/grooming/pricing";
 import type { AvailabilityConfig, ContentKind, ContentMap, PricingConfig } from "@/lib/grooming/types";
@@ -64,7 +64,8 @@ export async function savePricing(next: PricingConfig, store?: GroomingStore): P
 export async function getAvailability(store?: GroomingStore): Promise<AvailabilityConfig> {
   const s = store ?? (await groomingStore());
   const saved = await s.readJSON<AvailabilityConfig>(AVAILABILITY_KEY);
-  return saved ? { ...DEFAULT_AVAILABILITY, ...saved } : structuredClone(DEFAULT_AVAILABILITY);
+  const config = saved ? { ...DEFAULT_AVAILABILITY, ...saved } : structuredClone(DEFAULT_AVAILABILITY);
+  return withShopWeek(config);
 }
 
 export async function saveAvailability(next: AvailabilityConfig, store?: GroomingStore): Promise<AvailabilityConfig> {

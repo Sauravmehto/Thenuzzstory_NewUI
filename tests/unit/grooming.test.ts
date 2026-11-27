@@ -185,7 +185,28 @@ describe("availability", () => {
 
   it("generates slots inside opening hours, skipping the break", () => {
     expect(openSlots("2026-11-23", cfg()).starts).toEqual(["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "14:00", "14:30", "15:00", "15:30"]);
-    expect(openSlots("2026-11-25", cfg())).toEqual({ starts: [], closedReason: "Closed" }); // Wednesday
+    // No hours saved for Wednesday: the day still offers 10:00–19:00.
+    const wednesday = openSlots("2026-11-25", cfg());
+    expect(wednesday.starts[0]).toBe("10:00");
+    expect(wednesday.starts.at(-1)).toBe("18:30");
+    expect(wednesday.closedReason).toBeUndefined();
+  });
+
+  it("closes the 27th once 10:00–19:00 is over, and keeps the 28th open", () => {
+    // 18:40 IST on Friday 27 Nov 2026. Two hours' notice puts the rest of the 27th past 7 pm.
+    const evening = new Date("2026-11-27T13:10:00Z");
+    const unsetWeek: AvailabilityConfig = {
+      ...DEFAULT_AVAILABILITY,
+      weekly: { mon: null, tue: null, wed: null, thu: null, fri: null, sat: null, sun: null },
+    };
+    expect(availableStarts("2026-11-27", 2, unsetWeek, new Map(), evening).starts).toEqual([]);
+    const tomorrow = availableStarts("2026-11-28", 2, unsetWeek, new Map(), evening);
+    expect(tomorrow.closedReason).toBeUndefined();
+    expect(tomorrow.starts[0]).toBe("10:00");
+    expect(tomorrow.starts.at(-1)).toBe("18:00");
+    const dayAfter = availableStarts("2026-11-29", 1, unsetWeek, new Map(), evening);
+    expect(dayAfter.starts[0]).toBe("10:00");
+    expect(dayAfter.starts.at(-1)).toBe("18:30");
   });
 
   it("honours holidays, blocked times and capacity overrides", () => {

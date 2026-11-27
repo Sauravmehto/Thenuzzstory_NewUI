@@ -142,7 +142,7 @@ export default function AvailabilityEditor() {
                     )}
                   </div>
                 ) : (
-                  <span className="admin-muted">Closed</span>
+                  <span className="admin-muted">10:00–19:00</span>
                 )}
               </div>
             );
