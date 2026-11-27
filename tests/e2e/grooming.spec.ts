@@ -100,7 +100,7 @@ test("admin APIs and pages are closed to visitors", async ({ page, request }) =>
   await expect(page).toHaveURL(/\/admin\/login/);
 });
 
-test("while online booking is off, customers are asked to call instead", async ({ page }) => {
+test("customers reach date and time even when the old booking switch is off", async ({ page }) => {
   await adminLogin(page);
   await openBooking(page, false);
   await page.goto("/grooming");
@@ -117,8 +117,9 @@ test("while online booking is off, customers are asked to call instead", async (
   await page.getByRole("option", { name: "Pug" }).click();
   await page.getByLabel(/^Weight/).fill("8");
   await page.getByRole("button", { name: "Continue to services" }).click();
-  await expect(page.getByText("Online booking for this service opens soon.")).toBeVisible();
-  await expect(page.getByRole("link", { name: /Call/ })).toHaveAttribute("href", /^tel:/);
+  await expect(page.getByText("Online booking for this service opens soon.")).toHaveCount(0);
+  await page.getByRole("button", { name: /Continue to date/ }).click();
+  await expect(page.locator(".gr-cal")).toBeVisible();
 });
 
 test("legacy all-null pricing does not hard-disable booking when availability is on", async ({ page }) => {
@@ -133,7 +134,6 @@ test("legacy all-null pricing does not hard-disable booking when availability is
   await page.getByLabel(/^Weight/).fill("8");
   await page.getByRole("button", { name: "Continue to services" }).click();
   await page.getByRole("button", { name: /Continue to date/ }).click();
-  await expect(page.getByText("Online booking for this service opens soon.")).toHaveCount(0);
   await expect(page.locator(".gr-cal")).toBeVisible();
 });
 

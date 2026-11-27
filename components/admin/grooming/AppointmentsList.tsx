@@ -117,12 +117,6 @@ export default function AppointmentsList() {
           ]}
         />
       )}
-      {data && !data.availability.bookingEnabled && (
-        <p className="admin-warn">
-          Online booking is <strong>off</strong>. Customers see a “call us” message until you set hours and turn it on in{" "}
-          <Link href="/admin/grooming/availability">Availability</Link> (and set each service&apos;s duration in <Link href="/admin/grooming/pricing">Pricing</Link>).
-        </p>
-      )}
       {data && (
         <Callout tone={data.whatsapp.ready ? "ok" : "warn"}>
           <strong>WhatsApp auto-send:</strong> {data.whatsapp.reason}

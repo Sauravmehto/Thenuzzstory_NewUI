@@ -112,13 +112,14 @@ describe("estimate", () => {
     expect(estimateChanged(a, null)).toBe(true);
   });
 
-  it("duration is null until every chosen service has one", () => {
+  it("a service with no duration takes one slot; an unknown service does not", () => {
     const edited = menu();
-    expect(slotsNeeded({ mainId: "dog-spa", extraIds: [] }, edited)).toBeNull();
+    expect(slotsNeeded({ mainId: "dog-spa", extraIds: [] }, edited)).toBe(1);
     svc(edited, "dog-spa").slotsNeeded = 3;
     svc(edited, "face-trim").slotsNeeded = 1;
     expect(slotsNeeded({ mainId: "dog-spa", extraIds: ["face-trim"] }, edited)).toBe(4);
-    expect(slotsNeeded({ mainId: "dog-spa", extraIds: ["maintenance"] }, edited)).toBeNull();
+    expect(slotsNeeded({ mainId: "dog-spa", extraIds: ["maintenance"] }, edited)).toBe(4);
+    expect(slotsNeeded({ mainId: "not-a-service", extraIds: [] }, edited)).toBeNull();
   });
 
   it("config validation catches bad prices and cat services priced by size", () => {
@@ -222,7 +223,6 @@ describe("availability", () => {
 
   it("validates admin settings", () => {
     expect(availabilityProblems(cfg())).toEqual([]);
-    expect(availabilityProblems({ ...DEFAULT_AVAILABILITY, bookingEnabled: true })).toContain("Set opening hours for at least one day before turning online booking on.");
     expect(availabilityProblems(cfg({ weekly: { ...cfg().weekly, mon: [{ open: "12:00", close: "10:00" }] } })).length).toBeGreaterThan(0);
     expect(availabilityProblems(cfg({ capacityPerSlot: 0 })).length).toBeGreaterThan(0);
   });

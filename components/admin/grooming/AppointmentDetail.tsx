@@ -56,7 +56,7 @@ export default function AppointmentDetail({ id }: { id: string }) {
   const loadDays: LoadDays = useCallback(
     async (from, to) => {
       const res = await adminRequest<{ days: DayAvailability[] }>(`/api/admin/grooming/bookings/${id}?from=${from}&to=${to}`);
-      return res.ok ? { open: true, days: res.days ?? [] } : { error: res.message };
+      return res.ok ? { days: res.days ?? [] } : { error: res.message };
     },
     [id],
   );

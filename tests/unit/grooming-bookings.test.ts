@@ -114,13 +114,19 @@ describe("creating a booking", () => {
     expect(await listBookings(store)).toHaveLength(0);
   });
 
-  it("refuses when booking is off or a service has no duration", async () => {
+  it("still books when the old online-booking switch is off", async () => {
     const store = memoryGroomingStore(async () => undefined);
-    expect(await create(store, request(), { availability: availability({ bookingEnabled: false }) })).toMatchObject({ ok: false, code: "booking_closed" });
+    expect((await create(store, request(), { availability: availability({ bookingEnabled: false }) })).ok).toBe(true);
+  });
+
+  it("a service with no duration books as one slot", async () => {
+    const store = memoryGroomingStore(async () => undefined);
     const p = pricing();
     p.services.find((s) => s.id === "maintenance")!.slotsNeeded = null;
     const res = await createBooking(store, { request: request(), pricing: p, availability: availability(), now: NOW });
-    expect(res).toMatchObject({ ok: false, code: "booking_closed" });
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.booking.appointment.slots).toBe(1);
   });
 
   it("refuses closed days, past times and invalid fields", async () => {

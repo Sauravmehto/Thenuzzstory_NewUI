@@ -15,7 +15,7 @@ export interface SlotState {
 export type LoadDays = (
   from: string,
   to: string,
-) => Promise<{ open: boolean; days: DayAvailability[]; slotStates?: Record<string, SlotState[]> } | { error: string }>;
+) => Promise<{ days: DayAvailability[]; slotStates?: Record<string, SlotState[]> } | { error: string }>;
 
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const MONTH = new Intl.DateTimeFormat("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -55,7 +55,7 @@ export default function AvailabilityCalendar({
   const [month, setMonth] = useState(() => monthStart(value?.date ?? today));
   const [days, setDays] = useState<Map<string, DayAvailability>>(new Map());
   const [slotStates, setSlotStates] = useState<Map<string, SlotState[]>>(new Map());
-  const [state, setState] = useState<"loading" | "ready" | "closed" | "error">("loading");
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState<string | null>(value?.date ?? null);
   const [focusDate, setFocusDate] = useState<string>(value?.date ?? today);
@@ -75,11 +75,6 @@ export default function AvailabilityCalendar({
     if ("error" in res) {
       setError(res.error);
       setState("error");
-      return;
-    }
-    if (!res.open) {
-      setSlotStates(new Map());
-      setState("closed");
       return;
     }
     setDays(new Map(res.days.map((d) => [d.date, d])));
@@ -202,9 +197,7 @@ export default function AvailabilityCalendar({
       </div>
 
       <div className="gr-cal__slots" aria-live="polite">
-        {state === "closed" ? (
-          <p className="gr-cal__status">Online booking isn&apos;t open for this service yet.</p>
-        ) : !selectedDate ? (
+        {!selectedDate ? (
           <p className="gr-cal__hint">Pick a highlighted date to see the times.</p>
         ) : slotsForDay.length === 0 ? (
           <p className="gr-cal__hint">No free times on {formatDate(selectedDate)}.</p>

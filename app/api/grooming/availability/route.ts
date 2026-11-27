@@ -24,9 +24,9 @@ export async function GET(req: NextRequest) {
     const store = await groomingStore();
     const [pricing, availability] = await Promise.all([getPricing(store), getAvailability(store)]);
     const slots = slotsNeeded({ mainId, extraIds }, pricing);
-    if (!availability.bookingEnabled || slots === null) return json({ ok: true, open: false, days: [] });
+    if (slots === null) return fail(400, "invalid_request", "Choose a service from the menu.");
     const { days, slotStates } = await availabilityWithStatesFor(store, availability, dates, slots);
-    return json({ ok: true, open: true, slotMinutes: availability.slotMinutes, slots, days, slotStates });
+    return json({ ok: true, slotMinutes: availability.slotMinutes, slots, days, slotStates });
   } catch (err) {
     console.error("[grooming/availability]", err);
     return fail(503, "storage_failed", "We couldn't load the calendar. Please try again in a moment.");

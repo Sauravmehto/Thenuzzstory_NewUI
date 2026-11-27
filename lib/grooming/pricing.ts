@@ -102,14 +102,15 @@ export function estimate(sel: ServiceSelection, config: PricingConfig): Estimate
   return { kind: "estimate", estimate: { lines, totalCents: lines.reduce((sum, l) => sum + l.cents, 0) } };
 }
 
-/** Calendar slots the selection needs. Null when a service has no duration set (can't be booked online yet). */
+/** Calendar slots the selection needs. A service with no duration set takes one slot. Null when a chosen id isn't on the menu. */
 export function slotsNeeded(sel: Pick<ServiceSelection, "mainId" | "extraIds">, config: PricingConfig): number | null {
   const byId = new Map(config.services.map((s) => [s.id, s]));
   let total = 0;
   for (const id of [sel.mainId, ...sel.extraIds]) {
-    const n = byId.get(id)?.slotsNeeded;
-    if (!n || n < 1) return null;
-    total += n;
+    const service = byId.get(id);
+    if (!service) return null;
+    const n = service.slotsNeeded;
+    total += n && n >= 1 ? n : 1;
   }
   return total;
 }

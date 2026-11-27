@@ -94,7 +94,7 @@ export interface OpenRange {
 }
 
 export interface AvailabilityConfig {
-  /** Master switch. Off until the store has set its hours and service durations. */
+  /** Older saved availability includes this. It no longer hides the calendar. */
   bookingEnabled: boolean;
   slotMinutes: number;
   /** Null = closed that day. Several ranges = a break in between. */

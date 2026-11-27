@@ -230,8 +230,7 @@ export type CreateResult =
   | { ok: false; status: 409; code: "quote_changed"; estimate: Estimate | null; message: string }
   | { ok: false; status: 409; code: "slot_unavailable"; message: string }
   | { ok: false; status: 409; code: "idempotency_conflict"; message: string }
-  | { ok: false; status: 400; code: "invalid_request"; message: string }
-  | { ok: false; status: 503; code: "booking_closed"; message: string };
+  | { ok: false; status: 400; code: "invalid_request"; message: string };
 
 interface IdemRecord {
   /** Null while the first request with this key is still being processed. */
@@ -315,8 +314,7 @@ export async function createBooking(
     };
 
   const slots = slotsNeeded(selection, pricing);
-  if (!availability.bookingEnabled || slots === null)
-    return { ok: false, status: 503, code: "booking_closed", message: "Online booking isn't open for this service yet. Please call or WhatsApp us to book." };
+  if (slots === null) return { ok: false, status: 422, code: "validation", errors: { mainId: "Choose a service from the menu." } };
 
   const { date, start } = request.slot;
   const fingerprint = sha256(JSON.stringify([cleaned.customer.phone, cleaned.pet.name, selection, date, start]));

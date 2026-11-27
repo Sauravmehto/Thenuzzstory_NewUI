@@ -3,15 +3,13 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import AnimatedPrice from "@/components/AnimatedPrice";
 import { useAccount } from "@/lib/account";
-import { STORE } from "@/lib/contact-places";
 import { findBreed, OTHER_BREED_ID, type Breed } from "@/lib/grooming/breeds";
 import { SELECT_EVENT, type SelectDetail } from "@/lib/grooming/events";
 import { formatSlot } from "@/lib/grooming/messages";
 import { formatRupees } from "@/lib/grooming/money";
-import { estimate, priceFor, servicesFor, sizeBandFor, slotsNeeded } from "@/lib/grooming/pricing";
+import { estimate, priceFor, servicesFor, sizeBandFor } from "@/lib/grooming/pricing";
 import type { Estimate, GroomingService, PricingConfig, SizeBand, Species } from "@/lib/grooming/types";
 import { COAT_LABEL, COATS, validateContact, validatePet, type BookingErrors, type BookingField, type BookingRequest } from "@/lib/grooming/validation";
-import { whatsappUrl } from "@/lib/whatsapp-order";
 import AvailabilityCalendar, { type LoadDays } from "./AvailabilityCalendar";
 import BreedCombobox from "./BreedCombobox";
 
@@ -56,7 +54,7 @@ function coatFromBreed(b: Breed): string {
   return b.coat === "wire" || b.coat === "curly" ? "other" : b.coat;
 }
 
-export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: { pricing: PricingConfig; bookingEnabled: boolean; maxDaysAhead: number }) {
+export default function BookingFlow({ pricing, maxDaysAhead }: { pricing: PricingConfig; maxDaysAhead: number }) {
   const { status: accountStatus, openPanel } = useAccount();
   const uid = useId();
   const id = (name: string) => `${uid}-${name}`;
@@ -111,8 +109,6 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
   const selection = { species, sizeBand, mainId, extraIds };
   const result = mainId ? estimate(selection, pricing) : null;
   const shownEstimate: Estimate | null = serverEstimate !== undefined ? serverEstimate : result?.kind === "estimate" ? result.estimate : null;
-  const slotsForSelection = mainId ? slotsNeeded({ mainId, extraIds }, pricing) : null;
-  const onlineOpen = bookingEnabled && slotsForSelection !== null;
   const breed = breedId ? findBreed(species, breedId) : undefined;
   const sectionTitle = (s: GroomingService) => pricing.sections.find((x) => x.id === s.sectionId)?.title ?? "";
   const suggestLongCoat = coat === "long";
@@ -215,13 +211,12 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
         const res = await fetch(`/api/grooming/availability?${qs}`, { cache: "no-store" });
         const data = (await res.json().catch(() => null)) as {
           ok: boolean;
-          open?: boolean;
           days?: { date: string; starts: string[] }[];
           slotStates?: Record<string, { time: string; status: "available" | "booked" | "unavailable"; taken: number; capacity: number }[]>;
           message?: string;
         } | null;
         if (!data?.ok) return { error: data?.message ?? "We couldn't load the calendar." };
-        return { open: !!data.open, days: data.days ?? [], slotStates: data.slotStates ?? {} };
+        return { days: data.days ?? [], slotStates: data.slotStates ?? {} };
       } catch {
         return { error: "We couldn't reach the store. Check your connection." };
       }
@@ -339,8 +334,6 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
       </p>
     ) : null;
   const describedBy = (f: BookingField, hint?: string) => [errors[f] ? `${id(f)}-error` : null, hint].filter(Boolean).join(" ") || undefined;
-
-  const callMessage = `Hi The Nuzz Story, I'd like to book ${main?.name ?? "grooming"}${petName ? ` for ${petName}` : ""}${breed ? ` (${breed.id === OTHER_BREED_ID ? breedOther || "breed not listed" : breed.name})` : ""}.`;
 
   if (success) {
     return (
@@ -657,26 +650,11 @@ export default function BookingFlow({ pricing, bookingEnabled, maxDaysAhead }: {
                   </fieldset>
                 )}
 
-                {main && !onlineOpen ? (
-                  <div className="gr-closed" role="status">
-                    <p className="gr-closed__title">Online booking for this service opens soon.</p>
-                    <p>Call or WhatsApp us and we&apos;ll book {petName || "your pet"} in. Your estimate is shown here.</p>
-                    <div className="gr-step__actions">
-                      <a className="gr-btn gr-btn--amber" href={STORE.phoneHref}>
-                        Call {STORE.phone}
-                      </a>
-                      <a className="gr-btn gr-btn--ghost" href={whatsappUrl(callMessage)} target="_blank" rel="noopener noreferrer">
-                        WhatsApp us<span className="visually-hidden"> (opens WhatsApp)</span>
-                      </a>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="gr-step__actions">
-                    <button type="button" className="gr-btn gr-btn--amber" onClick={next2} disabled={!main}>
-                      Continue to date & time
-                    </button>
-                  </div>
-                )}
+                <div className="gr-step__actions">
+                  <button type="button" className="gr-btn gr-btn--amber" onClick={next2} disabled={!main}>
+                    Continue to date & time
+                  </button>
+                </div>
               </div>
             )}
           </div>

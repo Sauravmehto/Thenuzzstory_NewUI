@@ -24,8 +24,9 @@ export const metadata: Metadata = {
     "Spa grooming, haircuts, quick services and massages for dogs and cats at The Nuzz Story, Chittaranjan Park, New Delhi. See prices and request an appointment online.",
 };
 
-// Admin changes refresh this page on demand; this is the fallback interval.
-export const revalidate = 300;
+// Hours and prices are read on every request. A cached copy was keeping the old
+// "booking opens soon" state on the page after admin saves.
+export const dynamic = "force-dynamic";
 
 async function loadPage(): Promise<{
   pricing: PricingConfig;
@@ -60,7 +61,7 @@ export default async function GroomingPage() {
       <main id="main">
         <GroomingHero fromCents={from} />
         <PriceList pricing={pricing} />
-        <BookingFlow pricing={pricing} bookingEnabled={availability.bookingEnabled} maxDaysAhead={availability.maxDaysAhead} />
+        <BookingFlow pricing={pricing} maxDaysAhead={availability.maxDaysAhead} />
         <WhyChoose />
         <ReelStack videos={videos.slice(0, 8)} />
         <PetGallery items={gallery} />

@@ -4,13 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { adminRequest } from "@/lib/admin-client";
 import { addDays, availabilityProblems, availableStarts, storeNow } from "@/lib/grooming/availability";
 import { formatDate, formatTime } from "@/lib/grooming/messages";
-import { WEEKDAYS, type AvailabilityConfig, type PricingConfig, type Weekday } from "@/lib/grooming/types";
+import { WEEKDAYS, type AvailabilityConfig, type Weekday } from "@/lib/grooming/types";
 
 const DAY_LABEL: Record<Weekday, string> = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" };
 
 export default function AvailabilityEditor() {
   const [cfg, setCfg] = useState<AvailabilityConfig | null>(null);
-  const [pricing, setPricing] = useState<PricingConfig | null>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ tone: "ok" | "error"; text: string; problems?: string[] } | null>(null);
@@ -20,15 +19,13 @@ export default function AvailabilityEditor() {
 
   useEffect(() => {
     void (async () => {
-      const res = await adminRequest<{ availability: AvailabilityConfig; pricing: PricingConfig }>("/api/admin/grooming/availability");
+      const res = await adminRequest<{ availability: AvailabilityConfig }>("/api/admin/grooming/availability");
       if (!res.ok) return setError(res.message);
       setCfg(res.availability);
-      setPricing(res.pricing);
     })();
   }, []);
 
   const problems = useMemo(() => (cfg ? availabilityProblems(cfg) : []), [cfg]);
-  const missingDurations = pricing?.services.filter((s) => s.active && !s.slotsNeeded).map((s) => s.name) ?? [];
 
   if (error) return <p className="admin-empty" role="alert">{error}</p>;
   if (!cfg) return <p className="admin-empty">Loading…</p>;
@@ -82,21 +79,6 @@ export default function AvailabilityEditor() {
           </ul>
         </div>
       )}
-
-      <div className="admin-card">
-        <label className="admin-check admin-gr-switch">
-          <input type="checkbox" checked={cfg.bookingEnabled} onChange={(e) => set({ bookingEnabled: e.target.checked })} />
-          <span>
-            <strong>Online booking is {cfg.bookingEnabled ? "ON" : "OFF"}</strong>
-            <span className="admin-muted"> · when off, customers see “call or WhatsApp us” instead of the calendar.</span>
-          </span>
-        </label>
-        {missingDurations.length > 0 && (
-          <p className="admin-warn">
-            These services have no duration yet, so they can&apos;t be booked online: {missingDurations.join(", ")}. Set durations in <a href="/admin/grooming/pricing">Pricing</a>.
-          </p>
-        )}
-      </div>
 
       <div className="admin-card">
         <h2 className="admin-subtitle">Slots &amp; capacity</h2>

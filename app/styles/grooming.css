@@ -1411,19 +1411,6 @@
 .gr-extra__price {
   font-weight: 800;
 }
-.gr-closed {
-  padding: 1rem 1.1rem;
-  border-radius: 16px;
-  background: var(--g-amber-soft);
-  border-left: 4px solid var(--g-amber);
-}
-.gr-closed p {
-  margin: 0 0 0.6rem;
-  line-height: 1.5;
-}
-.gr-closed__title {
-  font-weight: 800;
-}
 
 /* combobox */
 .gr-combo {

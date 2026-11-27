@@ -179,7 +179,5 @@ export function availabilityProblems(config: AvailabilityConfig): string[] {
   for (const b of config.blockedSlots ?? [])
     if (!isDate(b.date) || !isTime(b.start) || !isTime(b.end) || toMinutes(b.end) <= toMinutes(b.start))
       p.push(`Blocked time on ${b.date} needs a start before its end.`);
-  if (config.bookingEnabled && WEEKDAYS.every((d) => !config.weekly[d]?.length))
-    p.push("Set opening hours for at least one day before turning online booking on.");
   return p;
 }

@@ -233,14 +233,6 @@
   padding-left: 0.8rem;
   border-left: 3px solid #e7a44d;
 }
-.admin-gr-switch {
-  font-size: 1rem;
-}
-.admin-gr-switch input {
-  width: 22px;
-  height: 22px;
-  accent-color: var(--admin-navy);
-}
 .admin-gr-week {
   display: grid;
   gap: 0.5rem;

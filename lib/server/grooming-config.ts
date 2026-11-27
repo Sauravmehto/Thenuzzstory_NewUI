@@ -36,8 +36,7 @@ function normalizePricingForRuntime(config: PricingConfig): PricingConfig {
     ...config,
     services: config.services.map((service) => ({
       ...service,
-      // Legacy pricing had null durations for every service, which would hard-disable online booking.
-      // Use safe runtime defaults so booking can proceed until admins set explicit durations.
+      // Older menus stored no duration. One slot keeps the calendar able to offer a time.
       slotsNeeded: service.slotsNeeded ?? LEGACY_DEFAULT_SLOTS_NEEDED,
     })),
   };

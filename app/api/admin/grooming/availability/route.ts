@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import type { AvailabilityConfig } from "@/lib/grooming/types";
 import { guardAdminApi } from "@/lib/server/admin-auth";
-import { ConfigError, getAvailability, getPricing, saveAvailability } from "@/lib/server/grooming-config";
+import { ConfigError, getAvailability, saveAvailability } from "@/lib/server/grooming-config";
 import { fail, json, readJsonBody, refreshGroomingPage } from "@/lib/server/grooming-http";
 import { groomingStore } from "@/lib/server/grooming-store";
 
@@ -11,9 +11,8 @@ export async function GET(req: NextRequest) {
   const denied = guardAdminApi(req);
   if (denied) return denied;
   try {
-    const store = await groomingStore();
-    const [availability, pricing] = await Promise.all([getAvailability(store), getPricing(store)]);
-    return json({ ok: true, availability, pricing });
+    const availability = await getAvailability(await groomingStore());
+    return json({ ok: true, availability });
   } catch (err) {
     console.error("[admin/grooming/availability] GET", err);
     return fail(503, "storage_failed", "Couldn't load availability.");
